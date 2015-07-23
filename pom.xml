@@ -26,8 +26,8 @@
             <groupId>com.airhacks.rulz</groupId>
             <artifactId>em</artifactId>
             <version>0.0.1</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
@@ -75,12 +75,12 @@
             <scope>test</scope>
         </dependency>
 
-       <!-- <dependency>
+       <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 
@@ -97,6 +97,23 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-assertions</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packages>
+                        <param>com.github.dbunit.rules.model</param>
+                    </packages>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

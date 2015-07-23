@@ -6,7 +6,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="EclipseLink" />
         <datasource-mapping />
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/test/resources/META-INF/Persistence.xml" />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/test/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>
   </component>
@@ -33,7 +33,7 @@
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml-schemas:3.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.xmlbeans:xmlbeans:2.6.0" level="project" />
     <orderEntry type="library" name="Maven: stax:stax-api:1.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.airhacks.rulz:em:0.0.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.airhacks.rulz:em:0.0.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.10.19" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-lgpl:1.2.1" level="project" />
@@ -44,5 +44,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:javax.persistence:2.1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.eclipse.persistence:commonj.sdo:2.1.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax:javaee-api:7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.mail:javax.mail:1.5.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.activation:activation:1.1" level="project" />
   </component>
 </module>
