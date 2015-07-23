@@ -94,10 +94,13 @@ public class DBUnitRule implements MethodRule {
         }
 
       } catch (DatabaseUnitException e) {
+        closeConn();
         throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
       } catch (SQLException e) {
+        closeConn();
         throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
       } catch (IOException e) {
+        closeConn();
         throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
       }
 
