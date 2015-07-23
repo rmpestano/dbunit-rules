@@ -26,8 +26,24 @@ public class DBUnitRulesIt {
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true)
-    public void shouldSeedDataSet() {
+    @DataSet(value = "datasets/yml/incomplete-user-dataset.yml",disableConstraints = true)
+    public void shouldSeedDataSetDisablingContraints() {
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/incomplete-user-dataset.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;")
+    public void shouldSeedDataSetDisablingContraintsViaStatement() {
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/incomplete-user-dataset.yml", useSequenceFiltering = true)
+    public void shouldSeedDataSetUsingSequenceFilter() {
         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
