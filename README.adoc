@@ -1,0 +1,6 @@
+= DBUnit rules
+
+https://github.com/junit-team/junit/wiki/Rules[JUnit rules] for http://dbunit.sourceforge.net/[DBUnit].
+
+
+

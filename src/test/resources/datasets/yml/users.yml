@@ -1,0 +1,11 @@
+user:
+  - id: 1
+    name: @realpestano
+  - id: 2
+    name: @dbunit
+
+tweet:
+  - id: abcdef12345
+    content: "dbunit rules!"
+    user_id: 1
+    date:
