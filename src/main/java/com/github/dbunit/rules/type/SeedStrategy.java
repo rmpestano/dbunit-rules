@@ -1,4 +1,4 @@
-package com.github.dbunit.rules;
+package com.github.dbunit.rules.type;
 
 /**
  * Created by pestano on 23/07/15.

@@ -4,4 +4,7 @@ https://github.com/junit-team/junit/wiki/Rules[JUnit rules] for http://dbunit.so
 
 
 
+NOTE: Most of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] so if you're on JavaEE and need a more robust solution, I'd suggest arquillian persistence.
+
+
 

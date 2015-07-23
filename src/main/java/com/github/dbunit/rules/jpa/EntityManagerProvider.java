@@ -1,8 +1,8 @@
-package com.github.dbunit.rules;
+package com.github.dbunit.rules.jpa;
 
 /**
  * from https://github.com/AdamBien/rulz/tree/master/em/
- * only difference is is that weneed jdbc connection to create dataset
+ * only difference is is that we need jdbc connection to create dataset
  */
 
 import org.junit.rules.TestRule;

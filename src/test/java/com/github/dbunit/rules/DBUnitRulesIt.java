@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.dataset.UsingDataSet;
+import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,9 +26,9 @@ public class DBUnitRulesIt {
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
     @Test
-    @UsingDataSet("datasets/yml/users.yml")
-    public void shouldSeedDataSet(){
-        User user = (User) emProvider.em().createQuery("select User from User u where u.id = 1").getSingleResult();
+    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true)
+    public void shouldSeedDataSet() {
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
     }

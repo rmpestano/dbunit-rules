@@ -1,14 +1,17 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.dataset.JSONDataSet;
-import com.github.dbunit.rules.dataset.UsingDataSet;
+import com.github.dbunit.rules.dataset.DataSet;
 import com.github.dbunit.rules.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.DatabaseSequenceFilter;
+import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
+import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.rules.MethodRule;
@@ -18,6 +21,7 @@ import org.junit.runners.model.Statement;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -40,37 +44,53 @@ public class DBUnitRule implements MethodRule {
   @Override
   public Statement apply(final Statement statement, FrameworkMethod frameworkMethod, Object o){
 
-    UsingDataSet usingDataSet = frameworkMethod.getAnnotation(UsingDataSet.class);
-    if(usingDataSet != null && usingDataSet.value() != null){
-      DatabaseOperation operation = usingDataSet.strategy().getOperation();
-      String dataSet = usingDataSet.value();
+    final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
+    if(dataSet != null && dataSet.value() != null){
+      DatabaseOperation operation = dataSet.strategy().getOperation();
+      String dataSetName = dataSet.value();
+      IDataSet target = null;
       try {
         initConn();
-        String extension = dataSet.substring(dataSet.lastIndexOf('.')+1).toLowerCase();
+        if(dataSet.disableConstraints()){
+          disableContraints();
+        }
+        if(dataSet.executeStatementsBefore() != null && dataSet.executeStatementsBefore().length > 0){
+
+          executeStatements(dataSet.executeStatementsBefore());
+        }
+        String extension = dataSetName.substring(dataSetName.lastIndexOf('.')+1).toLowerCase();
         switch (extension){
           case "yml": {
-            operation.execute(databaseConnection, performReplacements(new YamlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet))));
+            target = new YamlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
             break;
           }
           case "xml": {
-            operation.execute(databaseConnection, new XmlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet)));
+            target = new XmlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
             break;
           }
           case "csv": {
-            operation.execute(databaseConnection, new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSet).getFile())));
+            target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
             break;
           }
           case "xls": {
-            operation.execute(databaseConnection, new XlsDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet)));
+            target = new XlsDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
             break;
           }
           case "json": {
-            operation.execute(databaseConnection, new JSONDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet)));
+           target = new JSONDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
             break;
           }
           default:
             closeConn();
             throw new RuntimeException("Unsupported dataset extension" + extension);
+        }
+
+        if(target != null){
+          if(dataSet.useSequenceFiltering()){
+            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
+            target = new FilteredDataSet(filteredTable,target);
+          }
+          operation.execute(databaseConnection, performReplacements(target));
         }
 
       } catch (DatabaseUnitException e) {
@@ -89,11 +109,59 @@ public class DBUnitRule implements MethodRule {
         try {
           statement.evaluate();
         }finally {
+          if(dataSet.executeStatementsAfter() != null && dataSet.executeStatementsAfter().length > 0){
+            try {
+              executeStatements(dataSet.executeStatementsAfter());
+            }catch (Exception e){
+              //not rethrow to not leak the connection
+              e.printStackTrace();
+            }
+          }
           closeConn();
         }
       }
 
     };
+  }
+
+  private void disableContraints() throws SQLException{
+
+    String driverName = connection.getMetaData().getDriverName().toLowerCase();
+    boolean isH2 = driverName.contains("hsql");
+    if(isH2){
+      connection.createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
+    }
+
+    boolean isMysql = driverName.contains("mysql");
+    if(isMysql){
+      connection.createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
+    }
+
+    boolean isPostgres = driverName.contains("postgre");
+    if(isPostgres){
+      connection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
+    }
+
+
+  }
+
+  private void executeStatements(String[] statements) {
+    try {
+      boolean autoCommit = connection.getAutoCommit();
+      connection.setAutoCommit(false);
+      java.sql.Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+              ResultSet.CONCUR_UPDATABLE);
+      for (String stm : statements) {
+        statement.addBatch(stm);
+      }
+      statement.executeBatch();
+      connection.commit();
+      connection.setAutoCommit(autoCommit);
+    } catch (Exception e) {
+        throw new RuntimeException("Cound not execute statements: "+statements,e);
+    }
+
+
   }
 
   private IDataSet performReplacements(IDataSet dataSet) {
