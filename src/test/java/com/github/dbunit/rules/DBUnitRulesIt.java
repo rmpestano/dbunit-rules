@@ -26,7 +26,7 @@ public class DBUnitRulesIt {
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true)
+    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true)
     public void shouldSeedDataSet() {
         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();

@@ -92,6 +92,20 @@ public class YamlDataSet implements IDataSet {
   }
 
   public ITableMetaData getTableMetaData(String tableName) throws DataSetException {
+    MyTable myTable = tables.get(tableName);
+    if(myTable == null){
+      //try lowercase cause SequenceFilter does upper on table name
+      myTable = tables.get(tableName.toLowerCase());
+      if(myTable == null){
+        //handles tables not declared whithin dataset
+        myTable = new MyTable(tableName,new ArrayList<String>());
+        myTable.createMeta(tableName,new ArrayList<String>());
+        tables.put(tableName,myTable);
+        return myTable.getTableMetaData();
+      } else{
+        return myTable.getTableMetaData();
+      }
+    }
     return tables.get(tableName).getTableMetaData();
   }
 
