@@ -19,7 +19,7 @@ import com.github.dbunit.rules.model.User;
 public class DBUnitRulesIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.persistenceUnit("rules-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());

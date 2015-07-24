@@ -20,14 +20,21 @@ public class EntityManagerProvider implements TestRule {
     private EntityTransaction tx;
     private Connection conn;
 
+    private static EntityManagerProvider instance;
+
+    public static EntityManagerProvider instance(String unitName){
+        if(instance == null){
+            instance = new EntityManagerProvider(unitName);
+        }
+        return instance;
+    }
+
     private EntityManagerProvider(String unitName) {
         this.em = Persistence.createEntityManagerFactory(unitName).createEntityManager();
         this.tx = this.em.getTransaction();
     }
 
-    public static final EntityManagerProvider persistenceUnit(String unitName) {
-        return new EntityManagerProvider(unitName);
-    }
+
 
     /**
      * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
