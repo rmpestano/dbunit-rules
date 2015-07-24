@@ -23,7 +23,6 @@ public class Tweet {
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
     User user;
 
     public String getContent() {

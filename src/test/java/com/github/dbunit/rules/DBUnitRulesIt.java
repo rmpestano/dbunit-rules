@@ -49,4 +49,21 @@ public class DBUnitRulesIt {
         assertThat(user.getId()).isEqualTo(1);
     }
 
+    @Test
+    @DataSet(value = "datasets/yml/user-dataset.yml", useSequenceFiltering = true)
+    public void shouldSeedUserDataSet() {
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/user-dataset.yml", useSequenceFiltering = true)
+    public void shouldLoadUserFollowers() {
+        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.followers where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+    }
+
 }

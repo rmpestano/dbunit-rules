@@ -12,9 +12,8 @@ public class Follower {
     @GeneratedValue
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+
+    private User follower;
 
     public long getId() {
         return id;
@@ -24,11 +23,11 @@ public class Follower {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public User getFollower() {
+        return follower;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setFollower(User follower) {
+        this.follower = follower;
     }
 }

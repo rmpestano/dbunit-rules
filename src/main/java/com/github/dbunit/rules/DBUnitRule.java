@@ -52,7 +52,7 @@ public class DBUnitRule implements MethodRule {
       try {
         initConn();
         if(dataSet.disableConstraints()){
-          disableContraints();
+          disableConstraints();
         }
         if(dataSet.executeStatementsBefore() != null && dataSet.executeStatementsBefore().length > 0){
 
@@ -127,7 +127,7 @@ public class DBUnitRule implements MethodRule {
     };
   }
 
-  private void disableContraints() throws SQLException{
+  private void disableConstraints() throws SQLException{
 
     String driverName = connection.getMetaData().getDriverName().toLowerCase();
     boolean isH2 = driverName.contains("hsql");
