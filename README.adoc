@@ -1,6 +1,9 @@
 = DBUnit rules
+image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
+
 
 https://github.com/junit-team/junit/wiki/Rules[JUnit rules] for http://dbunit.sourceforge.net/[DBUnit].
+
 
 
 

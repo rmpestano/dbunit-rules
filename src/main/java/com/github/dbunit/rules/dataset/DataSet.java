@@ -9,6 +9,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Inherited
 public @interface DataSet {
 
@@ -20,9 +21,15 @@ public @interface DataSet {
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
   /**
-   * looks at the constraints and the dataset and determines the correct ordering for the SQL statements
+   * looks at constraints and dataset and tries to determine the correct ordering for the SQL statements
    */
   boolean useSequenceFiltering() default true;
+
+  /**
+   * can be used to reorder DELETE operations to prevent failures due to circular dependencies
+   *
+   */
+  String[] tableCreationOrder() default {};
 
 
   boolean disableConstraints() default false;

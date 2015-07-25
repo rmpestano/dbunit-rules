@@ -1,7 +1,7 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.dataset.JSONDataSet;
 import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.dataset.JSONDataSet;
 import com.github.dbunit.rules.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import com.sun.istack.internal.logging.Logger;
@@ -13,14 +13,14 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.filter.ITableFilter;
-import org.dbunit.dataset.xml.XmlDataSet;
+import org.dbunit.dataset.filter.SequenceTableFilter;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,19 +39,19 @@ public class DBUnitRule implements MethodRule {
 
   private static DBUnitRule instance;
 
-  private DBUnitRule(Connection conn) {
-    this.connection = conn;
+  private DBUnitRule() {
   }
 
   public final static DBUnitRule instance(Connection connection) {
     if(instance == null){
-      instance = new DBUnitRule(connection);
+      instance = new DBUnitRule();
     }
+    instance.connection = connection;
     return instance;
   }
 
   @Override
-  public Statement apply(final Statement statement, FrameworkMethod frameworkMethod, Object o){
+  public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
 
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     if(dataSet != null && dataSet.value() != null){
@@ -65,7 +65,7 @@ public class DBUnitRule implements MethodRule {
         }
         if(dataSet.executeStatementsBefore() != null && dataSet.executeStatementsBefore().length > 0){
 
-          executeStatements(dataSet.executeStatementsBefore());
+          executeStatements(dataSet.executeStatementsBefore(),frameworkMethod.getName());
         }
         String extension = dataSetName.substring(dataSetName.lastIndexOf('.')+1).toLowerCase();
         switch (extension){
@@ -74,7 +74,7 @@ public class DBUnitRule implements MethodRule {
             break;
           }
           case "xml": {
-            target = new XmlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
+            target = new FlatXmlDataSetBuilder().build(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
             break;
           }
           case "csv": {
@@ -99,12 +99,17 @@ public class DBUnitRule implements MethodRule {
             ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
             target = new FilteredDataSet(filteredTable,target);
           }
-          operation.execute(databaseConnection, performReplacements(target));
+          if(dataSet.tableCreationOrder().length > 0){
+            target = new FilteredDataSet(new SequenceTableFilter(dataSet.tableCreationOrder()), target);
+          }
+
+          target = performReplacements(target);
+          operation.execute(databaseConnection, target);
         }
 
       } catch (Exception e) {
         closeConn();
-        log.severe("Could not initialize dataset " + dataSetName, e);
+        log.severe(frameworkMethod.getName() + "() - Could not create dataset " + dataSetName, e);
       }
 
     }
@@ -117,7 +122,7 @@ public class DBUnitRule implements MethodRule {
         }finally {
           if(dataSet.executeStatementsAfter() != null && dataSet.executeStatementsAfter().length > 0){
             try {
-              executeStatements(dataSet.executeStatementsAfter());
+              executeStatements(dataSet.executeStatementsAfter(),frameworkMethod.getName());
             }catch (Exception e){
               log.log(Level.SEVERE, "Could not execute statements after:" + e.getMessage(), e);
             }
@@ -150,7 +155,7 @@ public class DBUnitRule implements MethodRule {
 
   }
 
-  private void executeStatements(String[] statements) {
+  private void executeStatements(String[] statements, String methodName) {
     try {
       boolean autoCommit = connection.getAutoCommit();
       connection.setAutoCommit(false);
@@ -163,7 +168,7 @@ public class DBUnitRule implements MethodRule {
       connection.commit();
       connection.setAutoCommit(autoCommit);
     } catch (Exception e) {
-      log.log(Level.SEVERE,"Could not execute statements:" +e.getMessage(), e);
+      log.log(Level.SEVERE,methodName + "() -Could not execute statements:" +e.getMessage(), e);
     }
 
 
