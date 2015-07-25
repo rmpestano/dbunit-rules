@@ -91,6 +91,20 @@
             <version>1.15</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
+
+
         <!-- test -->
 
 
@@ -138,6 +152,18 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <skipTests>false</skipTests>
+                    <runOrder>reversealphabetical</runOrder>
+                    <includes>
+                        <include>**/*It.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
                 </configuration>
             </plugin>
 

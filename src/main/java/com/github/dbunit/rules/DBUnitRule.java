@@ -4,7 +4,6 @@ import com.github.dbunit.rules.dataset.DataSet;
 import com.github.dbunit.rules.dataset.JSONDataSet;
 import com.github.dbunit.rules.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
-import com.sun.istack.internal.logging.Logger;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -21,11 +20,13 @@ import org.dbunit.operation.DatabaseOperation;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+import org.slf4j.*;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -36,7 +37,7 @@ public class DBUnitRule implements MethodRule {
 
   private DatabaseConnection databaseConnection;
 
-  private Logger log = Logger.getLogger(DBUnitRule.class);
+  private Logger log = LoggerFactory.getLogger(DBUnitRule.class);
 
   private String currentMethod;
 
@@ -94,7 +95,7 @@ public class DBUnitRule implements MethodRule {
           }
           default:
             closeConn();
-            log.severe(currentMethod+"() - Unsupported dataset extension" + extension);
+            log.error(currentMethod+"() - Unsupported dataset extension" + extension);
         }
 
         if(target != null) {
@@ -106,13 +107,13 @@ public class DBUnitRule implements MethodRule {
 
           operation.execute(databaseConnection, target);
         } else{
-          log.warning(currentMethod + "() - Dataset not created" + dataSetName);
+          log.warn(currentMethod + "() - Dataset not created" + dataSetName);
         }
 
 
       } catch (Exception e) {
         closeConn();
-        log.severe(currentMethod + "() - Could not create dataset " + dataSetName, e);
+        log.error(currentMethod + "() - Could not create dataset " + dataSetName, e);
       }
 
     }
@@ -127,7 +128,7 @@ public class DBUnitRule implements MethodRule {
             try {
               executeStatements(dataSet.executeStatementsAfter());
             }catch (Exception e){
-              log.severe(currentMethod+"() - Could not execute statements after:" + e.getMessage(), e);
+              log.error(currentMethod+"() - Could not execute statements after:" + e.getMessage(), e);
             }
           }
           closeConn();
@@ -186,7 +187,7 @@ public class DBUnitRule implements MethodRule {
       connection.commit();
       connection.setAutoCommit(autoCommit);
     } catch (Exception e) {
-      log.severe(currentMethod + "() -Could not execute statements:" + e.getMessage(), e);
+      log.error(currentMethod + "() -Could not execute statements:" + e.getMessage(), e);
     }
 
   }
@@ -202,7 +203,7 @@ public class DBUnitRule implements MethodRule {
         databaseConnection.getConnection().close();
       }
     } catch (SQLException e) {
-      log.severe(currentMethod+"() - Cound not close connection:" + e.getMessage(), e);
+      log.error(currentMethod+"() - Cound not close connection:" + e.getMessage(), e);
     }
 
   }

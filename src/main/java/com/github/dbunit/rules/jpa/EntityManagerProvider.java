@@ -5,7 +5,6 @@ package com.github.dbunit.rules.jpa;
  * only difference is is that we need jdbc connection to create dataset
  */
 
-import com.sun.istack.internal.logging.Logger;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 import org.junit.rules.TestRule;
@@ -19,6 +18,7 @@ import javax.persistence.Persistence;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.*;
 
 public class EntityManagerProvider implements TestRule {
 
@@ -27,7 +27,7 @@ public class EntityManagerProvider implements TestRule {
     private EntityTransaction tx;
     private Connection conn;
     private Map<String,Object> emfProps;
-    private static Logger log = Logger.getLogger(EntityManagerProvider.class);
+    private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private static EntityManagerProvider instance;
 
@@ -42,7 +42,7 @@ public class EntityManagerProvider implements TestRule {
         try {
             instance.init(unitName);
         }catch (Exception e){
-            log.severe("Could not initialize persistence unit " + unitName, e);
+            log.error("Could not initialize persistence unit " + unitName, e);
         }
 
         return instance;
