@@ -2,6 +2,7 @@ package com.github.dbunit.rules;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.dbunit.rules.model.Follower;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +43,7 @@ public class DBUnitRulesIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/partial-user-dataset.yml", useSequenceFiltering = true)
+    @DataSet(value = "datasets/yml/partial-user-dataset.yml", useSequenceFiltering = false)
     public void shouldSeedDataSetUsingSequenceFilter() {
         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -58,12 +59,14 @@ public class DBUnitRulesIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/user-dataset.yml", useSequenceFiltering = true)
+    @DataSet(value = "datasets/yml/user-dataset.yml")
     public void shouldLoadUserFollowers() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
     }
 
 }

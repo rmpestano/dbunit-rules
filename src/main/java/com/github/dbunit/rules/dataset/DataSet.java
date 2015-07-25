@@ -22,7 +22,7 @@ public @interface DataSet {
   /**
    * looks at the constraints and the dataset and determines the correct ordering for the SQL statements
    */
-  boolean useSequenceFiltering() default false;
+  boolean useSequenceFiltering() default true;
 
 
   boolean disableConstraints() default false;

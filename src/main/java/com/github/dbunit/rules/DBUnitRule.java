@@ -4,6 +4,7 @@ import com.github.dbunit.rules.dataset.JSONDataSet;
 import com.github.dbunit.rules.dataset.DataSet;
 import com.github.dbunit.rules.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
+import com.sun.istack.internal.logging.Logger;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -33,12 +35,19 @@ public class DBUnitRule implements MethodRule {
 
   private DatabaseConnection databaseConnection;
 
+  private Logger log = Logger.getLogger(DBUnitRule.class);
+
+  private static DBUnitRule instance;
+
   private DBUnitRule(Connection conn) {
     this.connection = conn;
   }
 
   public final static DBUnitRule instance(Connection connection) {
-    return new DBUnitRule(connection);
+    if(instance == null){
+      instance = new DBUnitRule(connection);
+    }
+    return instance;
   }
 
   @Override
@@ -82,7 +91,7 @@ public class DBUnitRule implements MethodRule {
           }
           default:
             closeConn();
-            throw new RuntimeException("Unsupported dataset extension" + extension);
+            log.severe("Unsupported dataset extension" + extension);
         }
 
         if(target != null){
@@ -93,15 +102,9 @@ public class DBUnitRule implements MethodRule {
           operation.execute(databaseConnection, performReplacements(target));
         }
 
-      } catch (DatabaseUnitException e) {
+      } catch (Exception e) {
         closeConn();
-        throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
-      } catch (SQLException e) {
-        closeConn();
-        throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
-      } catch (IOException e) {
-        closeConn();
-        throw new RuntimeException("Could not initialize dataset:"+e.getMessage(),e);
+        log.severe("Could not initialize dataset " + dataSetName, e);
       }
 
     }
@@ -116,8 +119,7 @@ public class DBUnitRule implements MethodRule {
             try {
               executeStatements(dataSet.executeStatementsAfter());
             }catch (Exception e){
-              //not rethrow to not leak the connection
-              e.printStackTrace();
+              log.log(Level.SEVERE, "Could not execute statements after:" + e.getMessage(), e);
             }
           }
           closeConn();
@@ -161,7 +163,7 @@ public class DBUnitRule implements MethodRule {
       connection.commit();
       connection.setAutoCommit(autoCommit);
     } catch (Exception e) {
-        throw new RuntimeException("Cound not execute statements: "+statements,e);
+      log.log(Level.SEVERE,"Could not execute statements:" +e.getMessage(), e);
     }
 
 
@@ -178,8 +180,7 @@ public class DBUnitRule implements MethodRule {
         databaseConnection.getConnection().close();
       }
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new RuntimeException("could not close conection \nmessage: " + e.getMessage(),e);
+      log.log(Level.SEVERE, "Cound not close connection:" + e.getMessage(), e);
     }
 
   }

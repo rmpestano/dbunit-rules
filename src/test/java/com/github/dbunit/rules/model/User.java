@@ -18,8 +18,15 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Tweet> tweets;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "followedUser")
     private List<Follower> followers;
+
+    public User() {
+    }
+
+    public User(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -51,5 +58,21 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id == user.id;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

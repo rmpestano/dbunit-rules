@@ -5,53 +5,93 @@ package com.github.dbunit.rules.jpa;
  * only difference is is that we need jdbc connection to create dataset
  */
 
+import com.sun.istack.internal.logging.Logger;
+import org.hibernate.Session;
+import org.hibernate.internal.SessionImpl;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EntityManagerProvider implements TestRule {
 
+    private EntityManagerFactory emf;
     private EntityManager em;
     private EntityTransaction tx;
     private Connection conn;
+    private Map<String,Object> emfProps;
+    private static Logger log = Logger.getLogger(EntityManagerProvider.class);
 
     private static EntityManagerProvider instance;
 
+    private EntityManagerProvider() {
+    }
+
     public static EntityManagerProvider instance(String unitName){
         if(instance == null){
-            instance = new EntityManagerProvider(unitName);
+            instance = new EntityManagerProvider();
         }
+
+        try {
+            instance.init(unitName);
+        }catch (Exception e){
+            log.severe("Could not initialize persistence unit " + unitName, e);
+        }
+
         return instance;
     }
 
-    private EntityManagerProvider(String unitName) {
-        this.em = Persistence.createEntityManagerFactory(unitName).createEntityManager();
+    private void init(String unitName) {
+        if(emfProps != null){
+            emf = Persistence.createEntityManagerFactory(unitName, emfProps);
+        }else{
+            //first time create database and store emf properties
+            emf = Persistence.createEntityManagerFactory(unitName);
+            emfProps = new HashMap<>();
+            emfProps.putAll(emf.getProperties());
+            //avoid database (re)creation
+            //FIXME identify current provider and set its property
+            emfProps.put("javax.persistence.schema-generation.database.action","none");
+            emfProps.put("eclipselink.ddl-generation","none");
+            emfProps.put("hibernate.hbm2ddl.auto","validate");
+        }
+        this.em = emf.createEntityManager();
         this.tx = this.em.getTransaction();
+        if(em.getDelegate() instanceof Session){
+            conn = ((SessionImpl) em.unwrap(Session.class)).connection();
+        } else{
+            /**
+             * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
+             */
+            tx.begin();
+            conn = em.unwrap(java.sql.Connection.class);
+            tx.commit();
+        }
+
     }
 
 
 
-    /**
-     * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
-     */
-    public Connection getConnection() {
-        tx.begin();
-        conn = em.unwrap(java.sql.Connection.class);
-        tx.commit();
-        return conn;
+
+
+
+    public static Connection getConnection() {
+        return instance.conn;
     }
 
-    public EntityManager em() {
-        return this.em;
+    public static EntityManager em() {
+        return instance.em;
     }
 
-    public EntityTransaction tx() {
-        return this.tx;
+    public static EntityTransaction tx() {
+        return instance.tx;
     }
 
     @Override
