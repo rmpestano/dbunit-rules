@@ -78,10 +78,6 @@ public class EntityManagerProvider implements TestRule {
     }
 
 
-
-
-
-
     public static Connection getConnection() {
         return instance.conn;
     }

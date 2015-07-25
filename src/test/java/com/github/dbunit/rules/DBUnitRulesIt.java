@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import com.github.dbunit.rules.model.Follower;
 import org.junit.Rule;
@@ -48,7 +49,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",
             useSequenceFiltering = false,
-            executeStatementsBefore = "DELETE FROM User"//needed because other tests created user dataset
+            executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
     )
     public void shouldNotSeedDataSetWithoutSequenceFilter() {
         List<User> users =  emProvider.em().createQuery("select u from User u").getResultList();
@@ -80,8 +81,23 @@ public class DBUnitRulesIt {
         User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals(user.getTweets().get(0).getContent(), "dbunit rules!");
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+
+    @Test
+    @DataSet(value = "datasets/json/users.json")
+    public void shouldLoadUsersFromJsonDataset() {
+        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 3").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(3);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals("dbunit rules json example",user.getTweets().get(0).getContent());
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(4,3);
         assertThat(user.getFollowers()).contains(expectedFollower);
     }
 
