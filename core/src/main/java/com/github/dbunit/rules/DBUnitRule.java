@@ -95,7 +95,7 @@ public class DBUnitRule implements MethodRule {
           }
           default:
             closeConn();
-            log.error(currentMethod+"() - Unsupported dataset extension" + extension);
+            log.error(currentMethod + "() - Unsupported dataset extension" + extension);
         }
 
         if(target != null) {
@@ -128,7 +128,7 @@ public class DBUnitRule implements MethodRule {
             try {
               executeStatements(dataSet.executeStatementsAfter());
             }catch (Exception e){
-              log.error(currentMethod+"() - Could not execute statements after:" + e.getMessage(), e);
+              log.error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
             }
           }
           closeConn();
@@ -203,7 +203,7 @@ public class DBUnitRule implements MethodRule {
         databaseConnection.getConnection().close();
       }
     } catch (SQLException e) {
-      log.error(currentMethod+"() - Cound not close connection:" + e.getMessage(), e);
+      log.error(currentMethod + "() - Cound not close connection:" + e.getMessage(), e);
     }
 
   }

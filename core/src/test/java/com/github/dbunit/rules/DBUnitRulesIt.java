@@ -1,19 +1,18 @@
 package com.github.dbunit.rules;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-
+import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import com.github.dbunit.rules.model.Follower;
+import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.github.dbunit.rules.dataset.DataSet;
-import com.github.dbunit.rules.jpa.EntityManagerProvider;
-import com.github.dbunit.rules.model.User;
-
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by pestano on 23/07/15.

@@ -6,4 +6,4 @@ cache:
     - '$HOME/.m2/repository'
 
 script:
-       - mvn clean install
+       - cd core && mvn clean install
