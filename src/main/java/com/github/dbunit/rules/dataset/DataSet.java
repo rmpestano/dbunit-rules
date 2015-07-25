@@ -29,7 +29,7 @@ public @interface DataSet {
    * can be used to reorder DELETE operations to prevent failures due to circular dependencies
    *
    */
-  String[] tableCreationOrder() default {};
+  String[] tableOrdering() default {};
 
 
   boolean disableConstraints() default false;

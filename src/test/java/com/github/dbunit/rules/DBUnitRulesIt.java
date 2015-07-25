@@ -58,7 +58,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",
             useSequenceFiltering = false,
-            tableCreationOrder = {"FOLLOWER","TWEET","USER"},
+            tableOrdering = {"USER","TWEET","FOLLOWER"},
             executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
     )
     public void shouldSeedDataSetUsingTableCreationOrder() {

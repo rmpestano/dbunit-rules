@@ -6,8 +6,10 @@ import com.github.dbunit.rules.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import com.sun.istack.internal.logging.Logger;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
@@ -24,7 +26,6 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -37,6 +38,8 @@ public class DBUnitRule implements MethodRule {
 
   private Logger log = Logger.getLogger(DBUnitRule.class);
 
+  private String currentMethod;
+
   private static DBUnitRule instance;
 
   private DBUnitRule() {
@@ -46,26 +49,26 @@ public class DBUnitRule implements MethodRule {
     if(instance == null){
       instance = new DBUnitRule();
     }
-    instance.connection = connection;
+    instance.setConnection(connection);
     return instance;
   }
 
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
-
+    currentMethod = frameworkMethod.getName();
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     if(dataSet != null && dataSet.value() != null){
       DatabaseOperation operation = dataSet.strategy().getOperation();
       String dataSetName = dataSet.value();
       IDataSet target = null;
       try {
-        initConn();
+        initDatabaseConnection();
         if(dataSet.disableConstraints()){
           disableConstraints();
         }
         if(dataSet.executeStatementsBefore() != null && dataSet.executeStatementsBefore().length > 0){
 
-          executeStatements(dataSet.executeStatementsBefore(),frameworkMethod.getName());
+          executeStatements(dataSet.executeStatementsBefore());
         }
         String extension = dataSetName.substring(dataSetName.lastIndexOf('.')+1).toLowerCase();
         switch (extension){
@@ -91,25 +94,25 @@ public class DBUnitRule implements MethodRule {
           }
           default:
             closeConn();
-            log.severe("Unsupported dataset extension" + extension);
+            log.severe(currentMethod+"() - Unsupported dataset extension" + extension);
         }
 
-        if(target != null){
-          if(dataSet.useSequenceFiltering()){
-            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
-            target = new FilteredDataSet(filteredTable,target);
-          }
-          if(dataSet.tableCreationOrder().length > 0){
-            target = new FilteredDataSet(new SequenceTableFilter(dataSet.tableCreationOrder()), target);
-          }
+        if(target != null) {
+          target = performSequenceFiltering(dataSet, target);
+
+          target = performTableOrdering(dataSet, target);
 
           target = performReplacements(target);
+
           operation.execute(databaseConnection, target);
+        } else{
+          log.warning(currentMethod + "() - Dataset not created" + dataSetName);
         }
+
 
       } catch (Exception e) {
         closeConn();
-        log.severe(frameworkMethod.getName() + "() - Could not create dataset " + dataSetName, e);
+        log.severe(currentMethod + "() - Could not create dataset " + dataSetName, e);
       }
 
     }
@@ -122,9 +125,9 @@ public class DBUnitRule implements MethodRule {
         }finally {
           if(dataSet.executeStatementsAfter() != null && dataSet.executeStatementsAfter().length > 0){
             try {
-              executeStatements(dataSet.executeStatementsAfter(),frameworkMethod.getName());
+              executeStatements(dataSet.executeStatementsAfter());
             }catch (Exception e){
-              log.log(Level.SEVERE, "Could not execute statements after:" + e.getMessage(), e);
+              log.severe(currentMethod+"() - Could not execute statements after:" + e.getMessage(), e);
             }
           }
           closeConn();
@@ -132,6 +135,21 @@ public class DBUnitRule implements MethodRule {
       }
 
     };
+  }
+
+  private IDataSet performTableOrdering(DataSet dataSet, IDataSet target) throws AmbiguousTableNameException {
+    if(dataSet.tableOrdering().length > 0){
+      target = new FilteredDataSet(new SequenceTableFilter(dataSet.tableOrdering()), target);
+    }
+    return target;
+  }
+
+  private IDataSet performSequenceFiltering(DataSet dataSet, IDataSet target) throws DataSetException, SQLException {
+    if(dataSet.useSequenceFiltering()){
+      ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
+      target = new FilteredDataSet(filteredTable,target);
+    }
+    return target;
   }
 
   private void disableConstraints() throws SQLException{
@@ -155,7 +173,7 @@ public class DBUnitRule implements MethodRule {
 
   }
 
-  private void executeStatements(String[] statements, String methodName) {
+  private void executeStatements(String[] statements) {
     try {
       boolean autoCommit = connection.getAutoCommit();
       connection.setAutoCommit(false);
@@ -168,9 +186,8 @@ public class DBUnitRule implements MethodRule {
       connection.commit();
       connection.setAutoCommit(autoCommit);
     } catch (Exception e) {
-      log.log(Level.SEVERE,methodName + "() -Could not execute statements:" +e.getMessage(), e);
+      log.severe(currentMethod + "() -Could not execute statements:" + e.getMessage(), e);
     }
-
 
   }
 
@@ -185,13 +202,20 @@ public class DBUnitRule implements MethodRule {
         databaseConnection.getConnection().close();
       }
     } catch (SQLException e) {
-      log.log(Level.SEVERE, "Cound not close connection:" + e.getMessage(), e);
+      log.severe(currentMethod+"() - Cound not close connection:" + e.getMessage(), e);
     }
 
   }
 
-  private void initConn() throws DatabaseUnitException {
+  private void initDatabaseConnection() throws DatabaseUnitException {
     databaseConnection = new DatabaseConnection(connection);
   }
 
+  public void setConnection(Connection connection) {
+    this.connection = connection;
+  }
+
+  public Connection getConnection() {
+    return connection;
+  }
 }
