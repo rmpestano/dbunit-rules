@@ -101,4 +101,17 @@ public class DBUnitRulesIt {
         assertThat(user.getFollowers()).contains(expectedFollower);
     }
 
+    @Test
+    @DataSet(value = "datasets/xml/users.xml")
+    public void shouldLoadUsersFromXmlDataset() {
+        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals("dbunit rules flat xml example",user.getTweets().get(0).getContent());
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+
 }
