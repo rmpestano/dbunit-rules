@@ -1,26 +1,26 @@
 {
   "user": [
     {
-      "id": 3,
+      "id": 1,
       "name": "@realpestano"
     },
     {
-      "id": 4,
+      "id": 2,
       "name": "@dbunit"
     }
   ],
   "tweet": [
     {
-      "id": "abcdef123456",
+      "id": "abcdef12345",
       "content": "dbunit rules json example",
-      "user_id": 3
+      "user_id": 1
     }
   ],
   "follower": [
     {
-      "id": 2,
-      "user_id": 3,
-      "follower_id": 4
+      "id": 1,
+      "user_id": 1,
+      "follower_id": 2
     }
   ]
 }

@@ -63,6 +63,7 @@ public class EntityManagerProvider implements TestRule {
             emfProps.put("hibernate.hbm2ddl.auto","validate");
         }
         this.em = emf.createEntityManager();
+        emf.getCache().evictAll();
         this.tx = this.em.getTransaction();
         if(em.getDelegate() instanceof Session){
             conn = ((SessionImpl) em.unwrap(Session.class)).connection();
