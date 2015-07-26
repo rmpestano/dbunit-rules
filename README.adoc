@@ -3,10 +3,157 @@
 image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
 
 
-https://github.com/junit-team/junit/wiki/Rules[JUnit rules] for http://dbunit.sourceforge.net/[DBUnit].
+https://github.com/junit-team/junit/wiki/Rules[JUnit rules] based on http://dbunit.sourceforge.net/[DBUnit] for your *integration tests*.
 
 
-Most of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension]. If you're on JavaEE and need a more robust solution, I'd suggest arquillian persistence.
+Most of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable solution, I'd suggest arquillian persistence.
 
+
+
+== Example
+
+Consider the following (jpa) entities:
+
+[source, java]
+----
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    private String name;
+
+    @OneToMany(mappedBy = "user")
+    private List<Tweet> tweets;
+
+    @OneToMany(mappedBy = "followedUser")
+    private List<Follower> followers;
+
+    //getters/setters
+
+ }
+
+@Entity
+public class Tweet {
+
+    @Id
+    @GeneratedValue
+    private String id;
+
+    @Size(min = 1, max = 140)
+    private String content;
+
+    private Integer likes;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
+    @ManyToOne
+    private User user;
+}
+
+@Entity
+public class Follower {
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @JoinColumn(name = "follower_id")
+    private User followerUser;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User followedUser;
+
+}
+
+----
+
+and the following dbunit yaml dataset:
+
+----
+user:
+  - id: 1
+    name: "@realpestano"
+  - id: 2
+    name: "@dbunit"
+tweet:
+  - id: abcdef12345
+    content: "dbunit rules!"
+    user_id: 1
+follower:
+  - id: 1
+    user_id: 1
+    follower_id: 2
+----
+
+You should be able to prepare your database before test execution, like below:
+
+[source,java]
+----
+@RunWith(JUnit4.class)
+public class UserIt {
+
+   @Rule
+   public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+   @Rule
+   public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
+
+   @Test
+   @DataSet(value = "datasets/yml/users.yml")
+   public void shouldLoadUserFollowers() {
+        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals(user.getTweets().get(0).getContent(), "dbunit rules!");
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
+   }
+----
+
+NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
+
+DBunit rule needs a *JDBC* connection to be instantiated. The connection can be provided at declaration level (as above) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
+
+[source, java]
+----
+@RunWith(JUnit4.class)
+public class ConnectionHolderIt {
+
+    @Rule
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolder() {
+        @Override
+        public Connection getConnection() {
+            return initConnection();
+        }
+    });
+
+    private Connection initConnection() {
+        return emProvider.getConnection();
+    }
+
+    @Test
+    @DataSet(value = "datasets/json/users.json")
+    public void shouldLoadUsersFromJsonDataset() {
+        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals("dbunit rules json example",user.getTweets().get(0).getContent());
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+----
 
 
