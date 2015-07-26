@@ -1,5 +1,7 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.connection.ConnectionHolder;
+import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSet;
 import com.github.dbunit.rules.dataset.JSONDataSet;
 import com.github.dbunit.rules.dataset.YamlDataSet;
@@ -33,7 +35,7 @@ import java.sql.SQLException;
  */
 public class DBUnitRule implements MethodRule {
 
-  private Connection connection;
+  private ConnectionHolder connectionHolder;
 
   private DatabaseConnection databaseConnection;
 
@@ -50,7 +52,16 @@ public class DBUnitRule implements MethodRule {
     if(instance == null){
       instance = new DBUnitRule();
     }
-    instance.setConnection(connection);
+    instance.connectionHolder = new ConnectionHolderImpl(connection);
+    return instance;
+  }
+
+  public final static DBUnitRule instance(ConnectionHolder connectionHolder) {
+
+    if(instance == null){
+      instance = new DBUnitRule();
+    }
+    instance.connectionHolder = connectionHolder;
     return instance;
   }
 
@@ -124,7 +135,7 @@ public class DBUnitRule implements MethodRule {
         try {
           statement.evaluate();
         }finally {
-          if(dataSet.executeStatementsAfter() != null && dataSet.executeStatementsAfter().length > 0){
+          if(dataSet != null && dataSet.executeStatementsAfter() != null && dataSet.executeStatementsAfter().length > 0){
             try {
               executeStatements(dataSet.executeStatementsAfter());
             }catch (Exception e){
@@ -155,20 +166,20 @@ public class DBUnitRule implements MethodRule {
 
   private void disableConstraints() throws SQLException{
 
-    String driverName = connection.getMetaData().getDriverName().toLowerCase();
+    String driverName = connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
     boolean isH2 = driverName.contains("hsql");
     if(isH2){
-      connection.createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
+      connectionHolder.getConnection().createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
     }
 
     boolean isMysql = driverName.contains("mysql");
     if(isMysql){
-      connection.createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
+      connectionHolder.getConnection().createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
     }
 
     boolean isPostgres = driverName.contains("postgre");
     if(isPostgres){
-      connection.createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
+      connectionHolder.getConnection().createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
     }
 
 
@@ -176,16 +187,16 @@ public class DBUnitRule implements MethodRule {
 
   private void executeStatements(String[] statements) {
     try {
-      boolean autoCommit = connection.getAutoCommit();
-      connection.setAutoCommit(false);
-      java.sql.Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+      boolean autoCommit = connectionHolder.getConnection().getAutoCommit();
+      connectionHolder.getConnection().setAutoCommit(false);
+      java.sql.Statement statement = connectionHolder.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
               ResultSet.CONCUR_UPDATABLE);
       for (String stm : statements) {
         statement.addBatch(stm);
       }
       statement.executeBatch();
-      connection.commit();
-      connection.setAutoCommit(autoCommit);
+      connectionHolder.getConnection().commit();
+      connectionHolder.getConnection().setAutoCommit(autoCommit);
     } catch (Exception e) {
       log.error(currentMethod + "() -Could not execute statements:" + e.getMessage(), e);
     }
@@ -209,14 +220,11 @@ public class DBUnitRule implements MethodRule {
   }
 
   private void initDatabaseConnection() throws DatabaseUnitException {
-    databaseConnection = new DatabaseConnection(connection);
+    databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
   }
 
-  public void setConnection(Connection connection) {
-    this.connection = connection;
-  }
 
-  public Connection getConnection() {
-    return connection;
+  public void setConnectionHolder(ConnectionHolder connectionHolder) {
+    this.connectionHolder = connectionHolder;
   }
 }
