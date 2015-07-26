@@ -105,7 +105,6 @@ public class DBUnitRule implements MethodRule {
             break;
           }
           default:
-            closeConn();
             log.error(currentMethod + "() - Unsupported dataset extension" + extension);
         }
 
@@ -123,7 +122,6 @@ public class DBUnitRule implements MethodRule {
 
 
       } catch (Exception e) {
-        closeConn();
         log.error(currentMethod + "() - Could not create dataset " + dataSetName, e);
       }
 
@@ -142,7 +140,6 @@ public class DBUnitRule implements MethodRule {
               log.error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
             }
           }
-          closeConn();
         }
       }
 
@@ -208,16 +205,7 @@ public class DBUnitRule implements MethodRule {
   }
 
 
-  private void closeConn() {
-    try {
-      if (databaseConnection != null && !databaseConnection.getConnection().isClosed()) {
-        databaseConnection.getConnection().close();
-      }
-    } catch (SQLException e) {
-      log.error(currentMethod + "() - Cound not close connection:" + e.getMessage(), e);
-    }
 
-  }
 
   private void initDatabaseConnection() throws DatabaseUnitException {
     databaseConnection = new DatabaseConnection(connectionHolder.getConnection());

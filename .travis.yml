@@ -7,3 +7,4 @@ cache:
 
 script:
        - cd core && mvn clean install
+       - cd ../examples && mvn clean install
