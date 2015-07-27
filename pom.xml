@@ -13,6 +13,7 @@
         <module>core</module>
         <module>jpa</module>
         <module>examples</module>
+        <module>cdi</module>
     </modules>
 
     <name>dbunit-rules</name>

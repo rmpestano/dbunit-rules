@@ -49,32 +49,23 @@ public class EntityManagerProvider implements TestRule {
     }
 
     private void init(String unitName) {
-        if(emfProps != null){
-            emf = Persistence.createEntityManagerFactory(unitName, emfProps);
-        }else{
-            //first time create database and store emf properties
+        if(emf == null){
             emf = Persistence.createEntityManagerFactory(unitName);
-            emfProps = new HashMap<>();
-            emfProps.putAll(emf.getProperties());
-            //avoid database (re)creation
-            //FIXME identify current provider and set its property
-            emfProps.put("javax.persistence.schema-generation.database.action","none");
-            emfProps.put("eclipselink.ddl-generation","none");
-            emfProps.put("hibernate.hbm2ddl.auto","validate");
+            em = emf.createEntityManager();
+            this.tx = this.em.getTransaction();
+            if(em.getDelegate() instanceof Session){
+                conn = ((SessionImpl) em.unwrap(Session.class)).connection();
+            } else{
+                /**
+                 * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
+                 */
+                tx.begin();
+                conn = em.unwrap(java.sql.Connection.class);
+                tx.commit();
+            }
+
         }
-        this.em = emf.createEntityManager();
         emf.getCache().evictAll();
-        this.tx = this.em.getTransaction();
-        if(em.getDelegate() instanceof Session){
-            conn = ((SessionImpl) em.unwrap(Session.class)).connection();
-        } else{
-            /**
-             * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
-             */
-            tx.begin();
-            conn = em.unwrap(java.sql.Connection.class);
-            tx.commit();
-        }
 
     }
 
