@@ -1,7 +1,6 @@
 package com.github.dbunit.rules.dataset;
 
 import com.github.dbunit.rules.connection.ConnectionHolder;
-import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
@@ -20,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -41,6 +41,10 @@ public class DataSetExecutor {
             instance = new DataSetExecutor(connectionHolder);
         }
         return instance;
+    }
+
+    public static DataSetExecutor currentInstance(){
+         return instance;
     }
 
     private DataSetExecutor(ConnectionHolder connectionHolder) {
@@ -178,5 +182,8 @@ public class DataSetExecutor {
         this.connectionHolder = connectionHolder;
     }
 
+    public Connection getCurrentConnection(){
+        return connectionHolder.getConnection();
+    }
 
 }

@@ -60,6 +60,13 @@ public class DBUnitRule implements MethodRule {
     return instance;
   }
 
+  public static DBUnitRule currentInstance(){
+    if(instance.executor == null){
+      throw new RuntimeException("There is no instance to retrieve.");
+    }
+    return instance;
+  }
+
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
@@ -86,5 +93,7 @@ public class DBUnitRule implements MethodRule {
     };
   }
 
-
+  public DataSetExecutor getExecutor() {
+    return executor;
+  }
 }
