@@ -66,6 +66,14 @@
         </dependency>
 
         <dependency>
+            <!-- see DeltaspikeUsingInterceptorIt -->
+            <groupId>com.github.dbunit.rules</groupId>
+            <artifactId>cdi</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-api</artifactId>
             <version>1.4.2</version>
