@@ -1,0 +1,101 @@
+= DBUnit rules CDI
+
+A CDI interceptor to configure DBUnit datasets in your tests.
+
+== Example
+
+1 - Make sure you have CDI enabled in your tests. If you're using Deltaspike test control just enable the following
+property in test/resources/META-INF/apache-deltaspike.properties:
+
+----
+deltaspike.testcontrol.use_test_class_as_cdi_bean=true
+----
+
+2 - Enable dbunit interceptor in test beans.xml:
+
+[source,xml]
+----
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+       <interceptors>
+              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
+       </interceptors>
+</beans>
+----
+
+3 - DBunit interceptor depends on a produced EntityManager:
+
+[source,java]
+----
+@ApplicationScoped
+public class CdiTestConfig {
+
+   private EntityManagerFactory emf;
+   private EntityManager em;
+
+
+    @Produces
+    public EntityManager produce(){
+        if(emf == null){
+            emf = Persistence.createEntityManagerFactory("customerTestDb");
+        }
+        if(em == null || !em.isOpen()){
+            em = emf.createEntityManager();
+        }
+        return em;
+    }
+
+}
+
+----
+
+Now you're ready to use DBUnit in your tests:
+
+[source,java]
+----
+@RunWith(CdiTestRunner.class)
+@DataSetInterceptor
+public class ContactServiceIt {
+
+    @Inject
+    DeltaSpikeContactService contactService;
+
+
+    @Test
+    @DataSet("datasets/contacts.yml")
+    public void shouldQueryAllCompanies() {
+        assertNotNull(contactService);
+        assertThat(contactService.findCompanies()).hasSize(4);
+    }
+}
+----
+
+.contacts.yml
+----
+contact:
+  - id: 1
+    name: "deltaspike"
+    email: "users@deltaspike.apache.org"
+    company_id: 1
+  - id: 2
+    name: "querydsl"
+    email: "info@mysema.com"
+    company_id: 2
+  - id: 3
+    name: "Spring"
+    email: "spring@pivotal.io"
+    company_id: 3
+
+company:
+  - id: 1
+    name: "Apache"
+  - id: 2
+    name: "Mysema"
+  - id: 3
+    name: "Pivotal"
+  - id: 4
+    name: "Google"
+
+----
