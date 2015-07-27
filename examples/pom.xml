@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>dbunit-rules</artifactId>
-        <groupId>com.github.dbunit.rules</groupId>
+        <groupId>com.github.dbunit-rules</groupId>
+        <artifactId>parent</artifactId>
         <version>0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -59,7 +59,7 @@
         <!-- test deps -->
 
         <dependency>
-            <groupId>com.github.dbunit.rules</groupId>
+            <groupId>com.github.dbunit-rules</groupId>
             <artifactId>core</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
@@ -67,7 +67,7 @@
 
         <dependency>
             <!-- see DeltaspikeUsingInterceptorIt -->
-            <groupId>com.github.dbunit.rules</groupId>
+            <groupId>com.github.dbunit-rules</groupId>
             <artifactId>cdi</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>

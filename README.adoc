@@ -156,7 +156,7 @@ public class ConnectionHolderIt {
 [source, xml]
 ----
 <dependency>
-      <groupId>com.github.dbunit.rules</groupId>
+      <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
       <version>0.1</version>
       <scope>test</scope>
@@ -189,7 +189,7 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 [source,xml]
 ----
 <dependency>
-    <groupId>com.github.dbunit.rules</groupId>
+    <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
     <version>0.1</version>
     <scope>test</scope>
@@ -230,7 +230,7 @@ As stated before, DBunit needs a jdbc connection, a way to create one is using J
 [source,xml]
 ----
 <dependency>
-	<groupId>com.github.dbunit.rules</groupId>
+	<groupId>com.github.dbunit-rules</groupId>
 	<artifactId>jpa</artifactId>
 	<version>0.1</version>
 	<scope>test</scope>
