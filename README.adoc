@@ -77,6 +77,7 @@ public class Follower {
 
 and the following dbunit yaml dataset:
 
+.src/test/resources/datasets/users.yml
 ----
 user:
   - id: 1
@@ -220,10 +221,11 @@ and then annotate your test with dataset interceptor:
 @DataSetInterceptor
 public class DeltaspikeUsingInterceptorIt {
 
+...
 }
 ----
 
-As stated before, dbunit needs a jdbc connection, a way to create one is using JPA entity manager. You can use https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] for that:
+As stated before, DBunit needs a jdbc connection, a way to create one is using JPA entity manager. You can use https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] for that:
 
 [source,xml]
 ----
@@ -235,7 +237,7 @@ As stated before, dbunit needs a jdbc connection, a way to create one is using J
 </dependency>
 ----
 
-and then activate the RntityManagerProvider rule in your test:
+and then activate the EntityManagerProvider rule in your test:
 
 [source,java]
 ----
@@ -248,7 +250,7 @@ public class DBUnitRulesIt {
 }
 ----
 
-and then use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
+Then you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 
 *PU-NAME* refers to test persistence.xml persistence unit name:
 
@@ -258,7 +260,7 @@ and then use emProvider.getConnection() to retrieve jdbc connection and emProvid
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
-    <persistence-unit name="rules-it" transaction-type="RESOURCE_LOCAL">
+    <persistence-unit name="PU-NAME" transaction-type="RESOURCE_LOCAL">
 
     <class>com.github.dbunit.rules.model.User</class>
     <class>com.github.dbunit.rules.model.Tweet</class>
@@ -280,7 +282,7 @@ and then use emProvider.getConnection() to retrieve jdbc connection and emProvid
 </persistence>
 ----
 
-this JPA configuration depends on hsqldb (an in memory database) and eclipse link (JPA provider:
+this JPA configuration depends on hsqldb (an in memory database) and eclipse link (JPA provider):
 
 [source,xml]
 ----
