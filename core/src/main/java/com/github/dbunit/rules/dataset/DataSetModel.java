@@ -11,9 +11,9 @@ public class DataSetModel {
     private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;
-    private String[] tableOrdering;
-    private String[] executeStatementsBefore;
-    private String[] executeStatementsAfter;
+    private String[] tableOrdering = {};
+    private String[] executeStatementsBefore = {};
+    private String[] executeStatementsAfter = {};
 
     public DataSetModel name(String name) {
         this.name = name;
