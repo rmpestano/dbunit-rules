@@ -14,19 +14,19 @@ import java.lang.annotation.*;
 public @interface DataSet {
 
   /**
-   * dataset file name using resources folder as root directory
+   * @return dataset file name using resources folder as root directory
    */
   String value();
 
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
   /**
-   * looks at constraints and dataset and tries to determine the correct ordering for the SQL statements
+   * @return a boolean looks at constraints and dataset and tries to determine the correct ordering for the SQL statements
    */
   boolean useSequenceFiltering() default true;
 
   /**
-   * can be used to reorder DELETE operations to prevent failures due to circular dependencies
+   * @return a list of table names used to reorder DELETE operations to prevent failures due to circular dependencies
    *
    */
   String[] tableOrdering() default {};
@@ -35,12 +35,13 @@ public @interface DataSet {
   boolean disableConstraints() default false;
 
   /**
-   * a list of jdbc statements to execute before test
+   * @return a list of jdbc statements to execute before test
+   *
    */
   String[] executeStatementsBefore() default {};
 
   /**
-   * a list of jdbc statements to execute after test
+   * @return a list of jdbc statements to execute after test
    */
   String[] executeStatementsAfter() default {};
 
