@@ -17,7 +17,7 @@ import java.util.*;
  * processor. <br/>
  * <br/>
  * The format looks like this: <br/>
- * 
+ *
  * <pre>
  * {
  *    "&lt;table_name&gt;": [
@@ -30,10 +30,10 @@ import java.util.*;
  *    ...
  * }
  * </pre>
- * 
+ *
  * <br/>
  * I.e.: <br/>
- * 
+ *
  * <pre>
  * {
  *    "test_table": [
@@ -59,7 +59,7 @@ import java.util.*;
  *    ...
  * }
  * </pre>
- * 
+ *
  * @author Lieven DOCLO
  */
 public class JSONDataSet extends AbstractDataSet {

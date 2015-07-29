@@ -299,3 +299,26 @@ this JPA configuration depends on hsqldb (an in memory database) and eclipse lin
     <scope>test</scope>
 </dependency>
 ----
+
+JPA module also provides a JPA based dataset executor based on Entity Manager:
+
+[source,java]
+----
+@RunWith(JUnit4.class)
+public class JPADatasetExecutorIt {
+
+    @Rule
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+
+    @Test
+    public void shouldSeedUserDataSetUsing() {
+        DataSetModel dataModel = new DataSetModel("datasets/yml/users.yml");
+        JPADataSetExecutor.instance(emProvider.em()).execute(dataModel);
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+
+}
+----

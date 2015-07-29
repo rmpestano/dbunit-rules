@@ -2,7 +2,6 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.connection.ConnectionHolder;
 import com.github.dbunit.rules.dataset.DataSet;
-import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
@@ -11,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.sql.Connection;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;

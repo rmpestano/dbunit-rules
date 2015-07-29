@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
  * Created by pestano on 26/07/15.
  */
 public class DataSetExecutor {

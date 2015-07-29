@@ -15,6 +15,14 @@ public class DataSetModel {
     private String[] executeStatementsBefore = {};
     private String[] executeStatementsAfter = {};
 
+
+    public DataSetModel() {
+    }
+
+    public DataSetModel(String name) {
+        this.name = name;
+    }
+
     public DataSetModel name(String name) {
         this.name = name;
         return this;

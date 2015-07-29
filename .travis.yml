@@ -7,4 +7,5 @@ cache:
 
 script:
        - cd core && mvn clean install -Pcoverage
-       - cd ../examples && mvn clean install
+       - cd ../examples && mvn clean package
+       - cd ../jpa && mvn clean package

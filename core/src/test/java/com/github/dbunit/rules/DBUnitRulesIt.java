@@ -1,7 +1,6 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.dataset.DataSet;
-import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
