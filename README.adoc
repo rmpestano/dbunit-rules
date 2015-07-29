@@ -300,7 +300,7 @@ this JPA configuration depends on hsqldb (an in memory database) and eclipse lin
 </dependency>
 ----
 
-JPA module also provides a JPA based dataset executor based on Entity Manager:
+JPA module also provides a dataset executor based on JPA Entity Manager:
 
 [source,java]
 ----
