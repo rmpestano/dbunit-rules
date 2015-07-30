@@ -24,7 +24,7 @@ public class DBUnitRulesIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("rules",emProvider.getConnection());
 
 
     @Test

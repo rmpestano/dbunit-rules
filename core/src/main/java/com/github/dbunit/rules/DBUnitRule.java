@@ -3,30 +3,12 @@ package com.github.dbunit.rules;
 import com.github.dbunit.rules.connection.ConnectionHolder;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.*;
-import com.github.dbunit.rules.replacer.DateTimeReplacer;
-import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.AmbiguousTableNameException;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.csv.CsvDataSet;
-import org.dbunit.dataset.excel.XlsDataSet;
-import org.dbunit.dataset.filter.ITableFilter;
-import org.dbunit.dataset.filter.SequenceTableFilter;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.*;
 
-import java.io.File;
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -38,27 +20,25 @@ public class DBUnitRule implements MethodRule {
 
   private DataSetExecutor executor;
 
-  private static DBUnitRule instance;
-
-  private ConnectionHolder connectionHolder;
-
   private DBUnitRule() {
   }
 
-  public final static DBUnitRule instance(Connection connection) {
-    if(instance == null){
-      instance = new DBUnitRule();
-    }
-    instance.connectionHolder = new ConnectionHolderImpl(connection);
-    return instance;
+  public final synchronized static DBUnitRule instance(Connection connection) {
+    return instance(new ConnectionHolderImpl(connection));
   }
 
-  public final static DBUnitRule instance(ConnectionHolder connectionHolder) {
+  public final synchronized static DBUnitRule instance(String executorName, Connection connection) {
+    return instance(executorName,new ConnectionHolderImpl(connection));
+  }
 
-    if(instance == null){
-      instance = new DBUnitRule();
-    }
-    instance.connectionHolder = connectionHolder;
+  public final synchronized static DBUnitRule instance(ConnectionHolder connectionHolder) {
+    return instance(DataSetExecutor.DEFAULT_EXECUTOR_NAME,connectionHolder);
+  }
+
+  public final synchronized static DBUnitRule instance(String executorName, ConnectionHolder connectionHolder) {
+
+    DBUnitRule instance = new DBUnitRule();
+    instance.init(executorName, connectionHolder);
     return instance;
   }
 
@@ -66,7 +46,6 @@ public class DBUnitRule implements MethodRule {
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
-    final DataSetExecutor executor = getExecutor(frameworkMethod.getMethod().getDeclaringClass().getSimpleName());//one executor per testCase
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     final DataSetModel model = new DataSetModel().from(dataSet);
      executor.execute(model);
@@ -90,17 +69,16 @@ public class DBUnitRule implements MethodRule {
     };
   }
 
-  private DataSetExecutor getExecutor(String name) {
+  private void init(String name, ConnectionHolder connectionHolder) {
 
     DataSetExecutor instance = DataSetExecutor.getExecutorByName(name);
     if(instance == null){
-      instance = DataSetExecutor.instance(connectionHolder);
+      instance = DataSetExecutor.instance(name,connectionHolder);
       DataSetExecutor.getExecutors().put(name,instance);
     }
-    return instance;
+    executor = instance;
+
   }
 
-  public DataSetExecutor getExecutor() {
-    return executor;
-  }
+
 }

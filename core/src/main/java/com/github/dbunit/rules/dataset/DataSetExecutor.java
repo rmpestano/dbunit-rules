@@ -41,6 +41,8 @@ public class DataSetExecutor {
 
     private ConnectionHolder connectionHolder;
 
+    private String executorName;
+
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
 
 
@@ -61,15 +63,16 @@ public class DataSetExecutor {
         }
         DataSetExecutor instance = executors.get(instanceName);
         if(instance == null){
-            instance = new DataSetExecutor(connectionHolder);
+            instance = new DataSetExecutor(instanceName,connectionHolder);
             log.debug("creating executor instance "+instanceName);
             executors.put(instanceName,instance);
         }
         return instance;
     }
 
-    private DataSetExecutor(ConnectionHolder connectionHolder) {
+    private DataSetExecutor(String executorName,ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
+        this.executorName = executorName;
     }
 
     public void execute(DataSetModel dataSetModel) {
@@ -233,6 +236,10 @@ public class DataSetExecutor {
         }
 
         return true;
+    }
+
+    public String getExecutorName() {
+        return executorName;
     }
 
     public static DataSetExecutor getExecutorByName(String name) {

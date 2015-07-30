@@ -53,7 +53,8 @@ public class DBUnitInterceptor implements Serializable {
                 }
                 ConnectionHolder connectionHolder = new ConnectionHolderImpl(connection);
                 DataSetModel dataSetModel = new DataSetModel().from(dataSet);
-                DataSetExecutor.instance(connectionHolder).execute(dataSetModel);
+                //one executor per class
+                DataSetExecutor.instance(invocationContext.getMethod().getDeclaringClass().getSimpleName(),connectionHolder).execute(dataSetModel);
             }
         }
 
