@@ -8,6 +8,7 @@ import com.github.dbunit.rules.type.SeedStrategy;
 public class DataSetModel {
 
     private String name;
+    private String executorName = DataSetExecutor.DEFAULT_EXECUTOR_NAME;
     private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;
@@ -58,14 +59,30 @@ public class DataSetModel {
         return this;
     }
 
+    /**
+     *  name of dataset executor for the given dataset. If not specified the default one will be used.
+     *
+     * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
+     * @return datasetModel with executor name configured
+     */
+    public DataSetModel executorName(String dataSetExecutorName) {
+        this.executorName = executorName;
+        return this;
+    }
+
+
     public DataSetModel from(DataSet dataSet) {
         return name(dataSet.value()).seedStrategy(dataSet.strategy()).
                 useSequenceFiltering(dataSet.useSequenceFiltering()).
                 tableOrdering(dataSet.tableOrdering()).
                 disableConstraints(dataSet.disableConstraints()).
+                executorName(dataSet.executorName()).
                 executeStatementsBefore(dataSet.executeStatementsBefore()).
                 executeStatementsAfter(dataSet.executeStatementsAfter());
     }
+
+
+
 
     public String getName() {
         return name;
@@ -93,5 +110,9 @@ public class DataSetModel {
 
     public String[] getExecuteStatementsAfter() {
         return executeStatementsAfter;
+    }
+
+    public String getExecutorName() {
+        return executorName;
     }
 }

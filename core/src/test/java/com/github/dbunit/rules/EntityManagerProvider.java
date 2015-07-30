@@ -37,7 +37,7 @@ public class EntityManagerProvider implements TestRule {
     private EntityManagerProvider() {
     }
 
-    public static EntityManagerProvider instance(String unitName) {
+    public static synchronized EntityManagerProvider instance(String unitName) {
         EntityManagerProvider instance = providers.get(unitName);
         if (instance == null) {
             instance = new EntityManagerProvider();
@@ -72,7 +72,6 @@ public class EntityManagerProvider implements TestRule {
 
         }
         emf.getCache().evictAll();
-
     }
 
 

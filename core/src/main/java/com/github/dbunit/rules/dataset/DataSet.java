@@ -18,6 +18,14 @@ public @interface DataSet {
    */
   String value();
 
+  /**
+   *
+   * @return name of dataset executor for the given dataset. If not specified the default one will be used.
+   *
+   * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
+   */
+  String executorName() default DataSetExecutor.DEFAULT_EXECUTOR_NAME;
+
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
   /**

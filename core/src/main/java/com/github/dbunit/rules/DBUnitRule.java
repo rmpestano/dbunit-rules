@@ -48,6 +48,9 @@ public class DBUnitRule implements MethodRule {
     currentMethod = frameworkMethod.getName();
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     final DataSetModel model = new DataSetModel().from(dataSet);
+    if(model.getExecutorName() != null && model.getExecutorName() != DataSetExecutor.DEFAULT_EXECUTOR_NAME){
+      executor = DataSetExecutor.getExecutorByName(model.getExecutorName());
+    }
      executor.execute(model);
      return new Statement() {
 
