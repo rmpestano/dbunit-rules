@@ -152,6 +152,9 @@
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/*ConnectionHolderIt.java</exclude>
+                    </excludes>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>
                             src/test/resources/logging.properties
