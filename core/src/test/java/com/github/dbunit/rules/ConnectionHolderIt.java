@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(JUnit4.class)
-@Ignore
 public class ConnectionHolderIt {
 
     @Rule
