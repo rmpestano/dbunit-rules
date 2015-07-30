@@ -26,7 +26,6 @@ public class EntityManagerProvider implements TestRule {
     private EntityManager em;
     private EntityTransaction tx;
     private Connection conn;
-    private Map<String,Object> emfProps;
     private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private static EntityManagerProvider instance;

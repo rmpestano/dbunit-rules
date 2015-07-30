@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class ConnectionHolderIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("conn-it");
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolder() {

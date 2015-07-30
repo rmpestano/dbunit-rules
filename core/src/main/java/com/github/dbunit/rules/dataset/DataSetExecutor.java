@@ -6,6 +6,7 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
+import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
@@ -22,6 +23,9 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
@@ -29,23 +33,38 @@ import java.sql.SQLException;
  */
 public class DataSetExecutor {
 
-    private ConnectionHolder connectionHolder;
+
+    private static Map<String,DataSetExecutor> executors = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
 
+    private ConnectionHolder connectionHolder;
+
     private Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
 
-    private static DataSetExecutor instance;
+
 
     public static DataSetExecutor instance(ConnectionHolder connectionHolder) {
-        if(instance == null){
-            instance = new DataSetExecutor(connectionHolder);
+
+        if(connectionHolder == null){
+            throw new RuntimeException("Invalid connection");
         }
+        DataSetExecutor instance =  new DataSetExecutor(connectionHolder);
+            executors.put(UUID.randomUUID().toString(),instance);
         return instance;
     }
 
-    public static DataSetExecutor currentInstance(){
-         return instance;
+    public static DataSetExecutor instance(String instanceName, ConnectionHolder connectionHolder) {
+
+        if(connectionHolder == null){
+            throw new RuntimeException("Invalid connection");
+        }
+        DataSetExecutor instance = executors.get(instanceName);
+        if(instance == null){
+            instance = new DataSetExecutor(connectionHolder);
+            executors.put(instanceName,instance);
+        }
+        return instance;
     }
 
     private DataSetExecutor(ConnectionHolder connectionHolder) {
@@ -183,8 +202,35 @@ public class DataSetExecutor {
         this.connectionHolder = connectionHolder;
     }
 
-    public Connection getCurrentConnection(){
+    public Connection getConnection(){
         return connectionHolder.getConnection();
     }
 
+    public static Map<String, DataSetExecutor> getExecutors() {
+        return executors;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(other instanceof DataSetExecutor == false){
+            return false;
+        }
+        DataSetExecutor otherExecutor = (DataSetExecutor) other;
+        if(databaseConnection == null || otherExecutor.databaseConnection == null){
+            return false;
+        }
+        try {
+            if(databaseConnection.getConnection() == null || otherExecutor.databaseConnection.getConnection() == null){
+                return false;
+            }
+
+            if(!databaseConnection.getConnection().getMetaData().getURL().equals(otherExecutor.databaseConnection.getConnection().getMetaData().getURL())){
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 }
