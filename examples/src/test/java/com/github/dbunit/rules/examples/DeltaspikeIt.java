@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.sql.Connection;
@@ -28,6 +29,10 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(CdiTestRunner.class)
 public class DeltaspikeIt {
+
+    static {
+        System.setProperty("db","customerDB");
+    }
 
     @Inject
     EntityManager entityManager;

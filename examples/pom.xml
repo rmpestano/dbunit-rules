@@ -74,6 +74,14 @@
         </dependency>
 
         <dependency>
+            <!-- see DeltaspikeUsingInterceptorIt -->
+            <groupId>com.github.dbunit-rules</groupId>
+            <artifactId>jpa</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-api</artifactId>
             <version>1.4.2</version>
@@ -147,13 +155,28 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <forkCount>0</forkCount>
+                    <threadCount>0</threadCount>
+                    <reuseForks>false</reuseForks>
+                    <includes>
+                        <include>**/*It.java</include>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <java.util.logging.config.file>
+                            src/test/resources/logging.properties
+                        </java.util.logging.config.file>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>

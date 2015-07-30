@@ -25,6 +25,10 @@ import static org.junit.Assert.assertNotNull;
 @DataSetInterceptor
 public class DeltaspikeUsingInterceptorIt {
 
+    static {
+        System.setProperty("db","interceptorDB");
+    }
+
     @Inject
     EntityManager entityManager;
 

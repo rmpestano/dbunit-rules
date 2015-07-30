@@ -14,6 +14,6 @@ public class CdiConfig {
 
     @Produces
     @Dependent
-    @PersistenceContext(unitName = "customerdb")
+    @PersistenceContext(unitName = "customerDB")
     private EntityManager entityManager;
 }
