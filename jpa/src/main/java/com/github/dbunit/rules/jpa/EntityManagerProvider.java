@@ -18,15 +18,22 @@ import javax.persistence.Persistence;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.*;
 
 public class EntityManagerProvider implements TestRule {
 
-    private EntityManagerFactory emf;
-    private EntityManager em;
-    private EntityTransaction tx;
-    private Connection conn;
-    private Map<String,Object> emfProps;
+    private Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();//one emf per unit
+
+    private EntityManager       em;
+
+    private EntityTransaction   tx;
+
+    private Connection          conn;
+
+    private Map<String, Object> emfProps;
+
     private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private static EntityManagerProvider instance;
@@ -34,14 +41,14 @@ public class EntityManagerProvider implements TestRule {
     private EntityManagerProvider() {
     }
 
-    public static EntityManagerProvider instance(String unitName){
-        if(instance == null){
+    public static EntityManagerProvider instance(String unitName) {
+        if (instance == null) {
             instance = new EntityManagerProvider();
         }
 
         try {
             instance.init(unitName);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Could not initialize persistence unit " + unitName, e);
         }
 
@@ -49,20 +56,23 @@ public class EntityManagerProvider implements TestRule {
     }
 
     private void init(String unitName) {
-        if(emf == null){
+        EntityManagerFactory emf = emfs.get(unitName);
+        if (emf == null) {
+            log.debug("creating emf for unit "+unitName);
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
             this.tx = this.em.getTransaction();
-            if(em.getDelegate() instanceof Session){
+            if (em.getDelegate() instanceof Session) {
                 conn = ((SessionImpl) em.unwrap(Session.class)).connection();
             } else{
                 /**
                  * see here:http://wiki.eclipse.org/EclipseLink/Examples/JPA/EMAPI#Getting_a_JDBC_Connection_from_an_EntityManager
                  */
                 tx.begin();
-                conn = em.unwrap(java.sql.Connection.class);
+                conn = em.unwrap(Connection.class);
                 tx.commit();
             }
+            emfs.put(unitName,emf);
 
         }
         emf.getCache().evictAll();

@@ -28,19 +28,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
+ * 
  * Created by pestano on 26/07/15.
  */
 public class DataSetExecutor {
 
 
+    public static final String DEFAULT_EXECUTOR_NAME = "default";
     private static Map<String,DataSetExecutor> executors = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
 
     private ConnectionHolder connectionHolder;
 
-    private Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
+    private static final Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
 
 
 
@@ -49,9 +50,8 @@ public class DataSetExecutor {
         if(connectionHolder == null){
             throw new RuntimeException("Invalid connection");
         }
-        DataSetExecutor instance =  new DataSetExecutor(connectionHolder);
-            executors.put(UUID.randomUUID().toString(),instance);
-        return instance;
+        //if no executor name is provided use default
+        return instance(DEFAULT_EXECUTOR_NAME,connectionHolder);
     }
 
     public static DataSetExecutor instance(String instanceName, ConnectionHolder connectionHolder) {
@@ -62,6 +62,7 @@ public class DataSetExecutor {
         DataSetExecutor instance = executors.get(instanceName);
         if(instance == null){
             instance = new DataSetExecutor(connectionHolder);
+            log.debug("creating executor instance "+instanceName);
             executors.put(instanceName,instance);
         }
         return instance;
@@ -232,5 +233,9 @@ public class DataSetExecutor {
         }
 
         return true;
+    }
+
+    public static DataSetExecutor getExecutorByName(String name) {
+        return executors.get(name);
     }
 }

@@ -40,6 +40,8 @@ public class DBUnitRule implements MethodRule {
 
   private static DBUnitRule instance;
 
+  private ConnectionHolder connectionHolder;
+
   private DBUnitRule() {
   }
 
@@ -47,7 +49,7 @@ public class DBUnitRule implements MethodRule {
     if(instance == null){
       instance = new DBUnitRule();
     }
-    instance.executor = DataSetExecutor.instance(new ConnectionHolderImpl(connection));
+    instance.connectionHolder = new ConnectionHolderImpl(connection);
     return instance;
   }
 
@@ -56,20 +58,15 @@ public class DBUnitRule implements MethodRule {
     if(instance == null){
       instance = new DBUnitRule();
     }
-    instance.executor = DataSetExecutor.instance(connectionHolder);
+    instance.connectionHolder = connectionHolder;
     return instance;
   }
 
-  public static DBUnitRule currentInstance(){
-    if(instance.executor == null){
-      throw new RuntimeException("There is no instance to retrieve.");
-    }
-    return instance;
-  }
 
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
+    final DataSetExecutor executor = getExecutor(frameworkMethod.getMethod().getDeclaringClass().getSimpleName());//one executor per testCase
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     final DataSetModel model = new DataSetModel().from(dataSet);
      executor.execute(model);
@@ -91,6 +88,16 @@ public class DBUnitRule implements MethodRule {
       }
 
     };
+  }
+
+  private DataSetExecutor getExecutor(String name) {
+
+    DataSetExecutor instance = DataSetExecutor.getExecutorByName(name);
+    if(instance == null){
+      instance = DataSetExecutor.instance(connectionHolder);
+      DataSetExecutor.getExecutors().put(name,instance);
+    }
+    return instance;
   }
 
   public DataSetExecutor getExecutor() {

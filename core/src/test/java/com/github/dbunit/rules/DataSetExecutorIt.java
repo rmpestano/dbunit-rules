@@ -1,5 +1,6 @@
 package com.github.dbunit.rules;
 
+import static com.github.dbunit.rules.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -28,18 +29,19 @@ import com.github.dbunit.rules.model.User;
 public class DataSetExecutorIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("executor-it");
+    public EntityManagerProvider emProvider = instance("executor-it");
+
     private static DataSetExecutor executor;
 
     @BeforeClass
-    public static void setup(){
-        executor = DataSetExecutor.instance(new ConnectionHolderImpl(EntityManagerProvider.instance("executor-it").getConnection()));//executor is a singleton and 'currentInstance()' should be available in all tests
+    public static void setup() {
+        executor = DataSetExecutor.instance("executor-name", new ConnectionHolderImpl(instance("executor-it").getConnection()));//executor is a singleton and 'currentInstance()' should be available in all tests
     }
 
     @AfterClass
     public static void tearDown() throws SQLException {
         Connection connection = executor.getConnection();
-        if(connection != null && !connection.isClosed()){
+        if (connection != null && !connection.isClosed()) {
             connection.close();
         }
 

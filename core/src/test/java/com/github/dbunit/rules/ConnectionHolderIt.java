@@ -4,6 +4,7 @@ import com.github.dbunit.rules.connection.ConnectionHolder;
 import com.github.dbunit.rules.dataset.DataSet;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 @RunWith(JUnit4.class)
+@Ignore
 public class ConnectionHolderIt {
 
     @Rule

@@ -1,8 +1,7 @@
 package com.github.dbunit.rules;
 
 /**
- * from https://github.com/AdamBien/rulz/tree/master/em/
- * only difference is is that we need jdbc connection to create dataset
+ * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
  */
 
 import org.hibernate.Session;
@@ -19,28 +18,35 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.sql.Connection;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityManagerProvider implements TestRule {
 
-    private EntityManagerFactory emf;
-    private EntityManager em;
-    private EntityTransaction tx;
-    private Connection conn;
-    private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
+    private static Map<String, EntityManagerProvider> providers = new ConcurrentHashMap<>();//one emf per unit
 
-    private static EntityManagerProvider instance;
+    private EntityManagerFactory emf;
+
+    private EntityManager em;
+
+    private EntityTransaction tx;
+
+    private Connection conn;
+
+    private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private EntityManagerProvider() {
     }
 
-    public static EntityManagerProvider instance(String unitName){
-        if(instance == null){
+    public static EntityManagerProvider instance(String unitName) {
+        EntityManagerProvider instance = providers.get(unitName);
+        if (instance == null) {
             instance = new EntityManagerProvider();
+            providers.put(unitName,instance);
         }
 
         try {
             instance.init(unitName);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Could not initialize persistence unit " + unitName, e);
         }
 
@@ -48,11 +54,12 @@ public class EntityManagerProvider implements TestRule {
     }
 
     private void init(String unitName) {
-        if(emf == null){
+        if (emf == null) {
+            log.debug("creating emf for unit "+unitName);
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
             this.tx = this.em.getTransaction();
-            if(em.getDelegate() instanceof Session){
+            if (em.getDelegate() instanceof Session) {
                 conn = ((SessionImpl) em.unwrap(Session.class)).connection();
             } else{
                 /**
@@ -69,16 +76,16 @@ public class EntityManagerProvider implements TestRule {
     }
 
 
-    public static Connection getConnection() {
-        return instance.conn;
+    public Connection getConnection() {
+        return conn;
     }
 
-    public static EntityManager em() {
-        return instance.em;
+    public EntityManager em() {
+        return em;
     }
 
-    public static EntityTransaction tx() {
-        return instance.tx;
+    public EntityTransaction tx() {
+        return tx;
     }
 
     @Override

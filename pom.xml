@@ -152,6 +152,11 @@
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <java.util.logging.config.file>
+                            src/test/resources/logging.properties
+                        </java.util.logging.config.file>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -169,23 +174,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-assertions-generator-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate-assertions</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packages>
-                        <param>com.github.dbunit.rules.model</param>
-                    </packages>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <profiles>

@@ -5,11 +5,10 @@ image:https://coveralls.io/repos/rmpestano/dbunit-rules/badge.png[Coverage, link
 image:https://api.bintray.com/packages/rmpestano/dbunit-rules/dbunit-rules/images/download.svg[link="https://bintray.com/rmpestano/dbunit-rules/dbunit-rules/_latestVersion"]
 
 
-https://github.com/junit-team/junit/wiki/Rules[JUnit rules] based on http://dbunit.sourceforge.net/[DBUnit] for your *integration tests*.
+Aims for bringing http://dbunit.sourceforge.net/[DBUnit] closer to your JUnit tests.
 
 
-Most of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable solution, I'd suggest arquillian persistence.
-
+A lot of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable (tests closer to production) solution, I'd suggest arquillian persistence.
 
 
 == Example
