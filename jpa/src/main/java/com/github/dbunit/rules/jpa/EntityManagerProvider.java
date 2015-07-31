@@ -32,8 +32,6 @@ public class EntityManagerProvider implements TestRule {
 
     private Connection          conn;
 
-    private Map<String, Object> emfProps;
-
     private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private static EntityManagerProvider instance;
@@ -41,7 +39,7 @@ public class EntityManagerProvider implements TestRule {
     private EntityManagerProvider() {
     }
 
-    public static EntityManagerProvider instance(String unitName) {
+    public static synchronized EntityManagerProvider instance(String unitName) {
         if (instance == null) {
             instance = new EntityManagerProvider();
         }

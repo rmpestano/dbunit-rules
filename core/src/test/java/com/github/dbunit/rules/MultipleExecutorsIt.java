@@ -50,7 +50,7 @@ public class MultipleExecutorsIt {
 
     }
 
-   /* @Test
+    @Test
     public void shouldSeedDataSetDisablingContraints() {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").disableConstraints(true);
@@ -130,7 +130,7 @@ public class MultipleExecutorsIt {
             assertThat(user.getFollowers()).contains(expectedFollower);
         }
 
-    }*/
+    }
 
     @Test
     public void shouldLoadUsersFromJsonDataset() {
