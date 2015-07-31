@@ -11,7 +11,6 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -55,7 +54,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").disableConstraints(true);
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -67,7 +66,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -82,7 +81,7 @@ public class MultipleExecutorsIt {
                 useSequenceFiltering(false).
                 executeStatementsAfter(new String[] { "DELETE FROM User" });//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
             executor.execute(dataSetModel);
-            List<User> users =  EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u").getResultList();
+            List<User> users =  EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u").getResultList();
             assertThat(users).isEmpty();
         }
 
@@ -96,7 +95,7 @@ public class MultipleExecutorsIt {
                 executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
                 useSequenceFiltering(false);
             executor.execute(dataSetModel);
-            List<User> users =  EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u").getResultList();
+            List<User> users =  EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u").getResultList();
             assertThat(users).hasSize(2);
         }
 
@@ -108,7 +107,7 @@ public class MultipleExecutorsIt {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
                 useSequenceFiltering(true);
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -120,7 +119,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -137,7 +136,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/json/users.json");
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -154,7 +153,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutor executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/xml/users.xml");
             executor.execute(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getExecutorName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getName() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);

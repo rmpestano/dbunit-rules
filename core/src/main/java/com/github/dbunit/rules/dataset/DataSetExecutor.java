@@ -6,7 +6,6 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
@@ -24,7 +23,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,50 +31,48 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DataSetExecutor {
 
+    public static final String                       DEFAULT_EXECUTOR_NAME = "default";
 
-    public static final String DEFAULT_EXECUTOR_NAME = "default";
-    private static Map<String,DataSetExecutor> executors = new ConcurrentHashMap<>();
+    private static      Map<String, DataSetExecutor> executors             = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
 
     private ConnectionHolder connectionHolder;
 
-    private String executorName;
+    private String name;
 
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
 
-
-
     public static DataSetExecutor instance(ConnectionHolder connectionHolder) {
 
-        if(connectionHolder == null){
+        if (connectionHolder == null) {
             throw new RuntimeException("Invalid connection");
         }
         //if no executor name is provided use default
-        return instance(DEFAULT_EXECUTOR_NAME,connectionHolder);
+        return instance(DEFAULT_EXECUTOR_NAME, connectionHolder);
     }
 
     public static DataSetExecutor instance(String instanceName, ConnectionHolder connectionHolder) {
 
-        if(connectionHolder == null){
+        if (connectionHolder == null) {
             throw new RuntimeException("Invalid connection");
         }
         DataSetExecutor instance = executors.get(instanceName);
-        if(instance == null){
-            instance = new DataSetExecutor(instanceName,connectionHolder);
-            log.debug("creating executor instance "+instanceName);
-            executors.put(instanceName,instance);
+        if (instance == null) {
+            instance = new DataSetExecutor(instanceName, connectionHolder);
+            log.debug("creating executor instance " + instanceName);
+            executors.put(instanceName, instance);
         }
         return instance;
     }
 
-    private DataSetExecutor(String executorName,ConnectionHolder connectionHolder) {
+    private DataSetExecutor(String executorName, ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
-        this.executorName = executorName;
+        this.name = executorName;
     }
 
     public void execute(DataSetModel dataSetModel) {
-        if(dataSetModel != null && dataSetModel.getName() != null){
+        if (dataSetModel != null && dataSetModel.getName() != null){
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
             String dataSetName = dataSetModel.getName();
             IDataSet target = null;
@@ -214,6 +210,7 @@ public class DataSetExecutor {
         return executors;
     }
 
+
     @Override
     public boolean equals(Object other) {
         if(other instanceof DataSetExecutor == false){
@@ -238,11 +235,18 @@ public class DataSetExecutor {
         return true;
     }
 
-    public String getExecutorName() {
-        return executorName;
+    public String getName() {
+        return name;
     }
 
     public static DataSetExecutor getExecutorByName(String name) {
-        return executors.get(name);
+        DataSetExecutor executor = executors.get(name);
+        if(executor == null){
+            LoggerFactory.getLogger(DataSetExecutor.class.getName()).warn("No executor found with name "+name+". Falling back to default executor");
+            executor = executors.get(DataSetExecutor.DEFAULT_EXECUTOR_NAME);
+        }
+        return executor;
     }
+
+
 }

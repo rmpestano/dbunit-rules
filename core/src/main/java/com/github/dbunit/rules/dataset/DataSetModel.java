@@ -65,7 +65,7 @@ public class DataSetModel {
      * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
      * @return datasetModel with executor name configured
      */
-    public DataSetModel executorName(String dataSetExecutorName) {
+    public DataSetModel executorName(String executorName) {
         this.executorName = executorName;
         return this;
     }
