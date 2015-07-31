@@ -48,15 +48,20 @@ public class DBUnitRule implements MethodRule {
     currentMethod = frameworkMethod.getName();
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     final DataSetModel model = new DataSetModel().from(dataSet);
-    if(!executor.getName().equals(model.getExecutorName())){
+    String datasetExecutorName = model.getExecutorName();
+    boolean executorNameIsProvided = datasetExecutorName != null && !"".equals(datasetExecutorName.trim());
+    if(executorNameIsProvided && !executor.getName().equals(datasetExecutorName)){
       return new Statement() {
         @Override
         public void evaluate() throws Throwable {
           //intentional
         }
       };
+    } else if(executorNameIsProvided){
+      executor = DataSetExecutor.getExecutorByName(datasetExecutorName);
     }
-     executor = DataSetExecutor.getExecutorByName(model.getExecutorName());
+    executor.execute(model);
+
      return new Statement() {
 
       @Override

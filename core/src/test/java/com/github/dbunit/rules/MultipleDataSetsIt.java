@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import com.github.dbunit.rules.dataset.DataSetExecutor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,16 +32,19 @@ public class MultipleDataSetsIt {
     public EntityManagerProvider emProvider2 = EntityManagerProvider.instance("dataset2-pu");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("executor1",emProvider1.getConnection());
+    public DBUnitRule exec1Rule = DBUnitRule.instance("exec1",emProvider1.getConnection());
 
     @Rule
-    public DBUnitRule defaultExecutorRuke = DBUnitRule.instance(emProvider.getConnection());
+    public DBUnitRule exec2Rule = DBUnitRule.instance("exec2",emProvider2.getConnection());
+
+    @Rule
+    public DBUnitRule defaultExecutorRule = DBUnitRule.instance(emProvider.getConnection());
 
 
 
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorName = "executor1")
+    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorName = "exec1")
     public void shouldSeedDataSetDisablingContraints() {
         User user = (User) emProvider1.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -48,7 +52,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorName = "executor2")
+    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorName = "exec2")
     public void shouldSeedDataSetDisablingContraints2() {
         User user = (User) emProvider2.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -56,7 +60,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;", executorName = "executor1")
+    @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;", executorName = "exec1")
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
         User user = (User) emProvider1.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -64,11 +68,25 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;", executorName = "executor2")
+    @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;", executorName = "exec2")
     public void shouldSeedDataSetDisablingContraintsViaStatement2() {
         User user = (User) emProvider2.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
+    }
+
+
+
+
+    @Test
+    @DataSet(value = "datasets/yml/users.yml",
+            useSequenceFiltering = false,
+            executorName = "exec1",
+            executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
+    )
+    public void shouldNotSeedDataSetWithoutSequenceFilter() {
+        List<User> users =  emProvider1.em().createQuery("select u from User u").getResultList();
+        assertThat(users).isEmpty();
     }
 
 
@@ -84,19 +102,8 @@ public class MultipleDataSetsIt {
 
     @Test
     @DataSet(value = "datasets/yml/users.yml",
-            useSequenceFiltering = false,
-            executorName = "executor1",
-            executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-    )
-    public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        List<User> users =  emProvider1.em().createQuery("select u from User u").getResultList();
-        assertThat(users).isEmpty();
-    }
-
-    @Test
-    @DataSet(value = "datasets/yml/users.yml",
         useSequenceFiltering = false,
-        executorName = "executor2",
+        executorName = "exec2",
         executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
     )
     public void shouldNotSeedDataSetWithoutSequenceFilter2() {
@@ -107,7 +114,7 @@ public class MultipleDataSetsIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",
         useSequenceFiltering = false,
-        executorName = "executor1",
+        executorName = "exec1",
         tableOrdering = {"USER","TWEET","FOLLOWER"},
         executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
      )
@@ -119,7 +126,7 @@ public class MultipleDataSetsIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",
         useSequenceFiltering = false,
-        executorName = "executor2",
+        executorName = "exec2",
         tableOrdering = {"USER","TWEET","FOLLOWER"},
         executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
     )
@@ -129,7 +136,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true,executorName = "executor1")
+    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true,executorName = "exec1")
     public void shouldSeedUserDataSet() {
         User user = (User) emProvider1.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -137,7 +144,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true,executorName = "executor2")
+    @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true,executorName = "exec2")
     public void shouldSeedUserDataSet2() {
         User user = (User) emProvider2.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -158,7 +165,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml",executorName = "executor1")
+    @DataSet(value = "datasets/yml/users.yml",executorName = "exec1")
     public void shouldLoadUserFollowers() {
         User user = (User) emProvider1.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -171,7 +178,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml",executorName = "executor2")
+    @DataSet(value = "datasets/yml/users.yml",executorName = "exec2")
     public void shouldLoadUserFollowers2() {
         User user = (User) emProvider2.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -185,9 +192,8 @@ public class MultipleDataSetsIt {
 
 
 
-
     @Test
-    @DataSet(value = "datasets/json/users.json",executorName = "executor1")
+    @DataSet(value = "datasets/json/users.json",executorName = "exec1")
     public void shouldLoadUsersFromJsonDataset() {
         User user = (User) emProvider1.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -200,7 +206,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/json/users.json",executorName = "executor2")
+    @DataSet(value = "datasets/json/users.json",executorName = "exec2")
     public void shouldLoadUsersFromJsonDataset2() {
         User user = (User) emProvider2.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -213,7 +219,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/xml/users.xml",executorName = "executor1")
+    @DataSet(value = "datasets/xml/users.xml",executorName = "exec1")
     public void shouldLoadUsersFromXmlDataset() {
         User user = (User) emProvider1.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -226,7 +232,7 @@ public class MultipleDataSetsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/xml/users.xml",executorName = "executor2")
+    @DataSet(value = "datasets/xml/users.xml",executorName = "exec2")
     public void shouldLoadUsersFromXmlDataset2() {
         User user = (User) emProvider2.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
