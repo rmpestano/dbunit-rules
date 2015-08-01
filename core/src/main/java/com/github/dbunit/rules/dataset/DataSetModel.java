@@ -8,7 +8,7 @@ import com.github.dbunit.rules.type.SeedStrategy;
 public class DataSetModel {
 
     private String name;
-    private String executorName = DataSetExecutor.DEFAULT_EXECUTOR_NAME;
+    private String executorName = DataSetExecutor.DEFAULT_EXECUTOR_ID;
     private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;

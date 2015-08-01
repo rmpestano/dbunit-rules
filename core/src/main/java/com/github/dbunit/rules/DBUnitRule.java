@@ -32,7 +32,7 @@ public class DBUnitRule implements MethodRule {
   }
 
   public final synchronized static DBUnitRule instance(ConnectionHolder connectionHolder) {
-    return instance(DataSetExecutor.DEFAULT_EXECUTOR_NAME,connectionHolder);
+    return instance(DataSetExecutor.DEFAULT_EXECUTOR_ID,connectionHolder);
   }
 
   public final synchronized static DBUnitRule instance(String executorName, ConnectionHolder connectionHolder) {
@@ -50,7 +50,7 @@ public class DBUnitRule implements MethodRule {
     final DataSetModel model = new DataSetModel().from(dataSet);
     String datasetExecutorName = model.getExecutorName();
     boolean executorNameIsProvided = datasetExecutorName != null && !"".equals(datasetExecutorName.trim());
-    if(executorNameIsProvided && !executor.getName().equals(datasetExecutorName)){
+    if(executorNameIsProvided && !executor.getId().equals(datasetExecutorName)){
       return new Statement() {
         @Override
         public void evaluate() throws Throwable {
@@ -58,7 +58,7 @@ public class DBUnitRule implements MethodRule {
         }
       };
     } else if(executorNameIsProvided){
-      executor = DataSetExecutor.getExecutorByName(datasetExecutorName);
+      executor = DataSetExecutor.getExecutorById(datasetExecutorName);
     }
     executor.execute(model);
 
@@ -84,7 +84,7 @@ public class DBUnitRule implements MethodRule {
 
   private void init(String name, ConnectionHolder connectionHolder) {
 
-    DataSetExecutor instance = DataSetExecutor.getExecutorByName(name);
+    DataSetExecutor instance = DataSetExecutor.getExecutorById(name);
     if(instance == null){
       instance = DataSetExecutor.instance(name,connectionHolder);
       DataSetExecutor.getExecutors().put(name,instance);

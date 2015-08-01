@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.EntityManager;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pestano on 28/07/15.
@@ -18,18 +20,26 @@ import java.sql.SQLException;
 public class JPADataSetExecutor {
 
     private EntityManager entityManager;
-    private DataSetExecutor executor;
-    private static JPADataSetExecutor instance;
+    private static Map<String,JPADataSetExecutor> executors = new HashMap<>();
     private ConnectionHolder connection;
+    private DataSetExecutor executor;
+
 
     public static JPADataSetExecutor instance(EntityManager entityManager){
+        return instance(null,entityManager);
+    }
+    public static JPADataSetExecutor instance(String executorId,EntityManager entityManager){
+        if(executorId == null){
+            executorId = DataSetExecutor.DEFAULT_EXECUTOR_ID;
+        }
+        JPADataSetExecutor instance = executors.get(executorId);
         if(instance == null){
             instance = new JPADataSetExecutor();
         }
         instance.setEntityManager(entityManager);
         if(instance.executor == null){
             try {
-                instance.executor = DataSetExecutor.instance(instance.getConnectionHolder());
+                instance.executor = DataSetExecutor.instance(executorId,instance.getConnectionHolder());
             } catch (SQLException e) {
                 LoggerFactory.getLogger(JPADataSetExecutor.class).error("Could not create JPA connection", e);
             }

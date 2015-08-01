@@ -26,20 +26,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 
  * Created by pestano on 26/07/15.
  */
 public class DataSetExecutor {
 
-    public static final String                       DEFAULT_EXECUTOR_NAME = "default";
+    public static final String DEFAULT_EXECUTOR_ID = "default";
 
-    private static      Map<String, DataSetExecutor> executors             = new ConcurrentHashMap<>();
+    private static Map<String, DataSetExecutor> executors = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
 
     private ConnectionHolder connectionHolder;
 
-    private String name;
+    private String id;
 
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
 
@@ -49,43 +48,43 @@ public class DataSetExecutor {
             throw new RuntimeException("Invalid connection");
         }
         //if no executor name is provided use default
-        return instance(DEFAULT_EXECUTOR_NAME, connectionHolder);
+        return instance(DEFAULT_EXECUTOR_ID, connectionHolder);
     }
 
-    public static DataSetExecutor instance(String instanceName, ConnectionHolder connectionHolder) {
+    public static DataSetExecutor instance(String executorId, ConnectionHolder connectionHolder) {
 
         if (connectionHolder == null) {
             throw new RuntimeException("Invalid connection");
         }
-        DataSetExecutor instance = executors.get(instanceName);
+        DataSetExecutor instance = executors.get(executorId);
         if (instance == null) {
-            instance = new DataSetExecutor(instanceName, connectionHolder);
-            log.debug("creating executor instance " + instanceName);
-            executors.put(instanceName, instance);
+            instance = new DataSetExecutor(executorId, connectionHolder);
+            log.debug("creating executor instance " + executorId);
+            executors.put(executorId, instance);
         }
         return instance;
     }
 
-    private DataSetExecutor(String executorName, ConnectionHolder connectionHolder) {
+    private DataSetExecutor(String executorId, ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
-        this.name = executorName;
+        this.id = executorId;
     }
 
     public void execute(DataSetModel dataSetModel) {
-        if (dataSetModel != null && dataSetModel.getName() != null){
+        if (dataSetModel != null && dataSetModel.getName() != null) {
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
             String dataSetName = dataSetModel.getName();
             IDataSet target = null;
             try {
                 initDatabaseConnection();
-                if(dataSetModel.isDisableConstraints()){
+                if (dataSetModel.isDisableConstraints()) {
                     disableConstraints();
                 }
-                if(dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0){
+                if (dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0) {
                     executeStatements(dataSetModel.getExecuteStatementsBefore());
                 }
-                String extension = dataSetName.substring(dataSetName.lastIndexOf('.')+1).toLowerCase();
-                switch (extension){
+                String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
+                switch (extension) {
                     case "yml": {
                         target = new YamlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
                         break;
@@ -110,7 +109,7 @@ public class DataSetExecutor {
                         log.error("Unsupported dataset extension" + extension);
                 }
 
-                if(target != null) {
+                if (target != null) {
                     target = performSequenceFiltering(dataSetModel, target);
 
                     target = performTableOrdering(dataSetModel, target);
@@ -118,7 +117,7 @@ public class DataSetExecutor {
                     target = performReplacements(target);
 
                     operation.execute(databaseConnection, target);
-                } else{
+                } else {
                     log.warn("DataSet not created" + dataSetName);
                 }
 
@@ -127,41 +126,41 @@ public class DataSetExecutor {
                 log.error("Could not create dataSet " + dataSetName, e);
             }
 
-        } else{
+        } else {
             log.error("No dataset name was provided");
         }
     }
 
     private IDataSet performTableOrdering(DataSetModel dataSet, IDataSet target) throws AmbiguousTableNameException {
-        if(dataSet.getTableOrdering().length > 0){
+        if (dataSet.getTableOrdering().length > 0) {
             target = new FilteredDataSet(new SequenceTableFilter(dataSet.getTableOrdering()), target);
         }
         return target;
     }
 
     private IDataSet performSequenceFiltering(DataSetModel dataSet, IDataSet target) throws DataSetException, SQLException {
-        if(dataSet.isUseSequenceFiltering()){
+        if (dataSet.isUseSequenceFiltering()) {
             ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
-            target = new FilteredDataSet(filteredTable,target);
+            target = new FilteredDataSet(filteredTable, target);
         }
         return target;
     }
 
-    private void disableConstraints() throws SQLException{
+    private void disableConstraints() throws SQLException {
 
         String driverName = connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
         boolean isH2 = driverName.contains("hsql");
-        if(isH2){
+        if (isH2) {
             connectionHolder.getConnection().createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
         }
 
         boolean isMysql = driverName.contains("mysql");
-        if(isMysql){
+        if (isMysql) {
             connectionHolder.getConnection().createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
         }
 
         boolean isPostgres = driverName.contains("postgre");
-        if(isPostgres){
+        if (isPostgres) {
             connectionHolder.getConnection().createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
         }
 
@@ -191,8 +190,6 @@ public class DataSetExecutor {
     }
 
 
-
-
     private void initDatabaseConnection() throws DatabaseUnitException {
         databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
     }
@@ -202,7 +199,7 @@ public class DataSetExecutor {
         this.connectionHolder = connectionHolder;
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connectionHolder.getConnection();
     }
 
@@ -213,19 +210,19 @@ public class DataSetExecutor {
 
     @Override
     public boolean equals(Object other) {
-        if(other instanceof DataSetExecutor == false){
+        if (other instanceof DataSetExecutor == false) {
             return false;
         }
         DataSetExecutor otherExecutor = (DataSetExecutor) other;
-        if(databaseConnection == null || otherExecutor.databaseConnection == null){
+        if (databaseConnection == null || otherExecutor.databaseConnection == null) {
             return false;
         }
         try {
-            if(databaseConnection.getConnection() == null || otherExecutor.databaseConnection.getConnection() == null){
+            if (databaseConnection.getConnection() == null || otherExecutor.databaseConnection.getConnection() == null) {
                 return false;
             }
 
-            if(!databaseConnection.getConnection().getMetaData().getURL().equals(otherExecutor.databaseConnection.getConnection().getMetaData().getURL())){
+            if (!databaseConnection.getConnection().getMetaData().getURL().equals(otherExecutor.databaseConnection.getConnection().getMetaData().getURL())) {
                 return false;
             }
         } catch (Exception e) {
@@ -235,15 +232,15 @@ public class DataSetExecutor {
         return true;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public static DataSetExecutor getExecutorByName(String name) {
-        DataSetExecutor executor = executors.get(name);
-        if(executor == null){
-            LoggerFactory.getLogger(DataSetExecutor.class.getName()).warn("No executor found with name "+name+". Falling back to default executor");
-            executor = executors.get(DataSetExecutor.DEFAULT_EXECUTOR_NAME);
+    public static DataSetExecutor getExecutorById(String id) {
+        DataSetExecutor executor = executors.get(id);
+        if (executor == null) {
+            LoggerFactory.getLogger(DataSetExecutor.class.getName()).warn("No executor found with id " + id + ". Falling back to default executor");
+            executor = executors.get(DataSetExecutor.DEFAULT_EXECUTOR_ID);
         }
         return executor;
     }

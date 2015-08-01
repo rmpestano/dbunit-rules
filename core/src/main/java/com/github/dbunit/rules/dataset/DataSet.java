@@ -24,7 +24,7 @@ public @interface DataSet {
    *
    * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
    */
-  String executorName() default DataSetExecutor.DEFAULT_EXECUTOR_NAME;
+  String executorName() default DataSetExecutor.DEFAULT_EXECUTOR_ID;
 
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
