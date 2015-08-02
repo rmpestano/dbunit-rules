@@ -25,7 +25,6 @@ import com.github.dbunit.rules.model.User;
 @RunWith(JUnit4.class)
 public class DataSetExecutorIt {
 
-    @Rule
     public EntityManagerProvider emProvider = instance("executor-it");
 
     private static DataSetExecutorImpl executor;

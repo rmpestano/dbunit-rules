@@ -8,7 +8,7 @@ image:https://api.bintray.com/packages/rmpestano/dbunit-rules/dbunit-rules/image
 Aims for bringing http://dbunit.sourceforge.net/[DBUnit] closer to your JUnit tests.
 
 
-A lot of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable (tests closer to production) solution, I'd suggest arquillian persistence.
+A lot of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable solution (tests closer to production), I'd suggest arquillian persistence.
 
 
 == Example
@@ -122,7 +122,15 @@ public class UserIt {
 
 NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
 
-The connection can be provided at declaration level (as above) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
+
+== Core module
+
+This module is the basis for subsequent modules. It contains a JUnit rule (shown above) to configure its main component, the *DataSet executor*.
+
+=== DataSet executor
+A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[textual files like csv, xml, yaml, json^] etc...
+
+The dataset executor needs a JDBC connection to be instantiated. The connection can be provided at declaration level (as above) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
 
 [source, java]
 ----
@@ -148,8 +156,175 @@ public class ConnectionHolderIt {
 }
 ----
 
+You can use DataSet executor without JUnit rules:
 
-== Adding it to your project
+[source,java]
+----
+@RunWith(JUnit4.class)
+public class DataSetExecutorIt {
+
+    public EntityManagerProvider emProvider = instance("executor-it");
+
+    private static DataSetExecutorImpl executor;
+
+    @BeforeClass
+    public static void setup() {
+        executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(EntityManagerProvider.instance("unitName").getConnection()));//executor is a singleton and 'currentInstance()' should be available in all tests
+    }
+
+    @Test
+    public void shouldSeedUserDataSet() {
+         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");<1>
+         executor.createDataSet(dataSetModel);<2>
+         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+         assertThat(user).isNotNull();
+         assertThat(user.getId()).isEqualTo(1);
+      }
+}
+----
+<1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetModel* so executor can create the dataset.
+<2> this is done implicitly by *@Rule DBUnitRule* in other tests we saw till now.
+
+
+
+=== Multiple Databases
+Each executor has a JDBC connection so multiple databases can be handled by using multiple dataset executors:
+
+[source, java]
+----
+@RunWith(JUnit4.class)
+public class MultipleExecutorsIt {
+
+
+    private static List<DataSetExecutorImpl> executors = new ArrayList<>(3);
+
+    @BeforeClass
+    public static void setup() { <1>
+        executors.add(DataSetExecutorImpl.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").getConnection())));
+    }
+
+    @Test
+    public void shouldSeedUserDataSet() {
+         for (DataSetExecutorImpl executor : executors) {
+             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
+             executor.createDataSet(dataSetModel);
+                User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+                assertThat(user).isNotNull();
+                assertThat(user.getId()).isEqualTo(1);
+            }
+        }
+
+}
+
+----
+<1> As you can see each executor is responsiple for a database, in case a JPA persistence unit
+
+here is persistence.xml for the example above:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="executor1-pu" transaction-type="RESOURCE_LOCAL">
+
+        <class>com.github.dbunit.rules.model.User</class>
+        <class>com.github.dbunit.rules.model.Tweet</class>
+        <class>com.github.dbunit.rules.model.Follower</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:exec1;DB_CLOSE_DELAY=-1"/>
+            <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="false"/>
+        </properties>
+
+    </persistence-unit>
+
+    <persistence-unit name="executor2-pu" transaction-type="RESOURCE_LOCAL">
+
+        <class>com.github.dbunit.rules.model.User</class>
+        <class>com.github.dbunit.rules.model.Tweet</class>
+        <class>com.github.dbunit.rules.model.Follower</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:exec2;DB_CLOSE_DELAY=-1"/>
+            <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="false"/>
+        </properties>
+
+    </persistence-unit>
+
+    <persistence-unit name="executor3-pu" transaction-type="RESOURCE_LOCAL">
+
+        <class>com.github.dbunit.rules.model.User</class>
+        <class>com.github.dbunit.rules.model.Tweet</class>
+        <class>com.github.dbunit.rules.model.Follower</class>
+
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:exec3;DB_CLOSE_DELAY=-1"/>
+            <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="eclipselink.logging.level" value="INFO"/>
+            <property name="eclipselink.logging.level.sql" value="FINE"/>
+            <property name="eclipselink.logging.parameters" value="false"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>
+----
+
+Note that each PU has a different in-memory database url.
+
+Also note that the same can be done using @Rule but pay attention that you must provide executor id in *@DataSet annotation*.
+
+[source, java]
+----
+    @Rule
+    public EntityManagerProvider emProvider1 = EntityManagerProvider.instance("dataset1-pu");
+
+    @Rule
+    public EntityManagerProvider emProvider2 = EntityManagerProvider.instance("dataset2-pu");
+
+    @Rule
+    public DBUnitRule exec1Rule = DBUnitRule.instance("exec1",emProvider1.getConnection());<1>
+
+    @Rule
+    public DBUnitRule exec2Rule = DBUnitRule.instance("exec2",emProvider2.getConnection());
+
+    @Test
+    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorId = "exec1") <2>
+    public void shouldSeedDataSetDisablingContraints() {
+        User user = (User) emProvider1.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+     }
+
+    @Test
+    @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorId = "exec2")
+    public void shouldSeedDataSetDisablingContraints2() {
+        User user = (User) emProvider2.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+     }
+----
+
+<1> *exec1* is the id of executor reponsible for dataset1-pu
+<2> executorId must match id provided in @Rule annotation
+
+=== Adding core module to your project
 
 
 [source, xml]
@@ -164,7 +339,7 @@ public class ConnectionHolderIt {
 
 [NOTE]
 ====
-DBunit rules will brings the dependencies below to your project:
+DBunit rules will bring the following dependencies to your project:
 
 [source,xml]
 ----
@@ -183,46 +358,7 @@ DBunit rules will brings the dependencies below to your project:
 ----
 ====
 
-If you use CDI in your tests then you should have a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
-
-[source,xml]
-----
-<dependency>
-    <groupId>com.github.dbunit-rules</groupId>
-    <artifactId>cdi</artifactId>
-    <version>0.1</version>
-    <scope>test</scope>
-</dependency>
-----
-
-you will need to enable dbunit interceptor in you test beans.xml:
-
-.src/test/resources/META-INF/beans.xml
-[source,xml]
-----
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://java.sun.com/xml/ns/javaee"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
-
-       <interceptors>
-              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
-       </interceptors>
-</beans>
-
-----
-
-and then annotate your test with dataset interceptor:
-
-[source,java]
-----
-@RunWith(CdiTestRunner.class) //Deltapike test control module
-@DataSetInterceptor
-public class DeltaspikeUsingInterceptorIt {
-
-...
-}
-----
+== JPA module
 
 As stated before, DBunit needs a jdbc connection, a way to create one is using JPA entity manager. You can use https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] for that:
 
@@ -321,3 +457,73 @@ public class JPADatasetExecutorIt {
 
 }
 ----
+
+== CDI module
+
+If you use CDI in your tests then you should have a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.github.dbunit-rules</groupId>
+    <artifactId>cdi</artifactId>
+    <version>0.1</version>
+    <scope>test</scope>
+</dependency>
+----
+
+=== JPA  DataSet executor Injection
+
+With this module you can Inject a JPADataSet executor(LINK):
+
+[source,java]
+----
+@RunWith(CdiTestRunner.class) <1>
+public class CDIDatasetExecutorIt {
+
+    @Inject
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
+    JPADataSetExecutor dataSetExecutor;
+
+     @Test
+     public void shouldQueryAllCompaniesUsingInjectedExecutor() {
+        dataSetExecutor.createDataSet();
+        assertNotNull(contactService);
+        assertThat(contactService.findCompanies()).hasSize(4);
+     }
+----
+<1> You will need a runner that enables CDI during test execution.
+
+=== DBUnit Interceptor
+
+CDI module also brings a CDI interceptor to help configure you dataset. To enable DBUnit interceptor you'll need
+configure it in you test beans.xml:
+
+.src/test/resources/META-INF/beans.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+       <interceptors>
+              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
+       </interceptors>
+</beans>
+
+----
+
+and then annotate your test with dataset interceptor:
+
+[source,java]
+----
+@RunWith(CdiTestRunner.class) //Deltapike test control module
+@DataSetInterceptor
+public class DeltaspikeUsingInterceptorIt {
+
+...
+}
+----
+
+
