@@ -130,7 +130,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 === DataSet executor
 A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[textual files like csv, xml, yaml, json^] etc...
 
-The dataset executor needs a JDBC connection to be instantiated. The connection can be provided at declaration level (as above) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
+The dataset executor needs a JDBC connection to be instantiated. The connection can be provided at declaration level (as in example before) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
 
 [source, java]
 ----
@@ -156,7 +156,7 @@ public class ConnectionHolderIt {
 }
 ----
 
-You can use DataSet executor without JUnit rules:
+Until now you didn't needed DataSet executor object because *@Rule annotation* hides its logic but You can use it without JUnit rules:
 
 [source,java]
 ----
@@ -169,7 +169,7 @@ public class DataSetExecutorIt {
 
     @BeforeClass
     public static void setup() {
-        executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(EntityManagerProvider.instance("unitName").getConnection()));//executor is a singleton and 'currentInstance()' should be available in all tests
+        executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(EntityManagerProvider.instance("unitName").getConnection()));
     }
 
     @Test

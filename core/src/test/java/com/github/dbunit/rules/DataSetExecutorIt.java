@@ -31,7 +31,7 @@ public class DataSetExecutorIt {
 
     @BeforeClass
     public static void setup() {
-        executor = DataSetExecutorImpl.instance("executor-name", new ConnectionHolderImpl(instance("executor-it").getConnection()));//executor is a singleton and 'currentInstance()' should be available in all tests
+        executor = DataSetExecutorImpl.instance("executor-name", new ConnectionHolderImpl(instance("executor-it").getConnection()));
     }
 
     @AfterClass
