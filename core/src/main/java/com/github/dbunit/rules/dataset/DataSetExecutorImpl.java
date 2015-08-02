@@ -1,6 +1,10 @@
 package com.github.dbunit.rules.dataset;
 
-import com.github.dbunit.rules.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.JSONDataSet;
+import com.github.dbunit.rules.api.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
@@ -28,11 +32,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by pestano on 26/07/15.
  */
-public class DataSetExecutor {
+public class DataSetExecutorImpl implements DataSetExecutor {
 
     public static final String DEFAULT_EXECUTOR_ID = "default";
 
-    private static Map<String, DataSetExecutor> executors = new ConcurrentHashMap<>();
+    private static Map<String, DataSetExecutorImpl> executors = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
 
@@ -40,9 +44,11 @@ public class DataSetExecutor {
 
     private String id;
 
-    private static final Logger log = LoggerFactory.getLogger(DataSetExecutor.class);
+    private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
 
-    public static DataSetExecutor instance(ConnectionHolder connectionHolder) {
+    private DataSetModel dataSetModel;
+
+    public static DataSetExecutorImpl instance(ConnectionHolder connectionHolder) {
 
         if (connectionHolder == null) {
             throw new RuntimeException("Invalid connection");
@@ -51,26 +57,32 @@ public class DataSetExecutor {
         return instance(DEFAULT_EXECUTOR_ID, connectionHolder);
     }
 
-    public static DataSetExecutor instance(String executorId, ConnectionHolder connectionHolder) {
+    public static DataSetExecutorImpl instance(String executorId, ConnectionHolder connectionHolder) {
 
         if (connectionHolder == null) {
             throw new RuntimeException("Invalid connection");
         }
-        DataSetExecutor instance = executors.get(executorId);
+        DataSetExecutorImpl instance = executors.get(executorId);
         if (instance == null) {
-            instance = new DataSetExecutor(executorId, connectionHolder);
+            instance = new DataSetExecutorImpl(executorId, connectionHolder);
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
         }
         return instance;
     }
 
-    private DataSetExecutor(String executorId, ConnectionHolder connectionHolder) {
+    private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
         this.id = executorId;
     }
 
-    public void execute(DataSetModel dataSetModel) {
+    @Override
+    public void createDataSet(){
+        this.createDataSet(dataSetModel);
+    }
+
+    @Override
+    public void createDataSet(DataSetModel dataSetModel) {
         if (dataSetModel != null && dataSetModel.getName() != null) {
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
             String dataSetName = dataSetModel.getName();
@@ -131,6 +143,11 @@ public class DataSetExecutor {
         }
     }
 
+    @Override
+    public ConnectionHolder getConnectionHolder() {
+        return connectionHolder;
+    }
+
     private IDataSet performTableOrdering(DataSetModel dataSet, IDataSet target) throws AmbiguousTableNameException {
         if (dataSet.getTableOrdering().length > 0) {
             target = new FilteredDataSet(new SequenceTableFilter(dataSet.getTableOrdering()), target);
@@ -180,7 +197,7 @@ public class DataSetExecutor {
             connectionHolder.getConnection().commit();
             connectionHolder.getConnection().setAutoCommit(autoCommit);
         } catch (Exception e) {
-            log.error("Could not execute statements:" + e.getMessage(), e);
+            log.error("Could not createDataSet statements:" + e.getMessage(), e);
         }
 
     }
@@ -203,17 +220,17 @@ public class DataSetExecutor {
         return connectionHolder.getConnection();
     }
 
-    public static Map<String, DataSetExecutor> getExecutors() {
+    public static Map<String, DataSetExecutorImpl> getExecutors() {
         return executors;
     }
 
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof DataSetExecutor == false) {
+        if (other instanceof DataSetExecutorImpl == false) {
             return false;
         }
-        DataSetExecutor otherExecutor = (DataSetExecutor) other;
+        DataSetExecutorImpl otherExecutor = (DataSetExecutorImpl) other;
         if (databaseConnection == null || otherExecutor.databaseConnection == null) {
             return false;
         }
@@ -236,14 +253,22 @@ public class DataSetExecutor {
         return id;
     }
 
-    public static DataSetExecutor getExecutorById(String id) {
-        DataSetExecutor executor = executors.get(id);
+    public static DataSetExecutorImpl getExecutorById(String id) {
+        DataSetExecutorImpl executor = executors.get(id);
         if (executor == null) {
-            LoggerFactory.getLogger(DataSetExecutor.class.getName()).warn("No executor found with id " + id + ". Falling back to default executor");
-            executor = executors.get(DataSetExecutor.DEFAULT_EXECUTOR_ID);
+            LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("No executor found with id " + id + ". Falling back to default executor");
+            executor = executors.get(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID);
         }
         return executor;
     }
 
+    @Override
+    public void setDataSetModel(DataSetModel dataSetModel) {
+        this.dataSetModel = dataSetModel;
+    }
 
+    @Override
+    public DataSetModel getDataSetModel() {
+        return dataSetModel;
+    }
 }

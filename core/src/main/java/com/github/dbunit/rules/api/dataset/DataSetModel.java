@@ -1,6 +1,6 @@
-package com.github.dbunit.rules.dataset;
+package com.github.dbunit.rules.api.dataset;
 
-import com.github.dbunit.rules.type.SeedStrategy;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 
 /**
  * Created by pestano on 26/07/15.
@@ -8,7 +8,7 @@ import com.github.dbunit.rules.type.SeedStrategy;
 public class DataSetModel {
 
     private String name;
-    private String executorName = DataSetExecutor.DEFAULT_EXECUTOR_ID;
+    private String executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
     private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;
@@ -65,20 +65,25 @@ public class DataSetModel {
      * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
      * @return datasetModel with executor name configured
      */
-    public DataSetModel executorName(String executorName) {
-        this.executorName = executorName;
+    public DataSetModel executorId(String executorId) {
+        this.executorId = executorId;
         return this;
     }
 
 
     public DataSetModel from(DataSet dataSet) {
-        return name(dataSet.value()).seedStrategy(dataSet.strategy()).
-                useSequenceFiltering(dataSet.useSequenceFiltering()).
-                tableOrdering(dataSet.tableOrdering()).
-                disableConstraints(dataSet.disableConstraints()).
-                executorName(dataSet.executorName()).
-                executeStatementsBefore(dataSet.executeStatementsBefore()).
-                executeStatementsAfter(dataSet.executeStatementsAfter());
+        if(dataSet != null){
+            return name(dataSet.value()).seedStrategy(dataSet.strategy()).
+                    useSequenceFiltering(dataSet.useSequenceFiltering()).
+                    tableOrdering(dataSet.tableOrdering()).
+                    disableConstraints(dataSet.disableConstraints()).
+                    executorId(dataSet.executorId()).
+                    executeStatementsBefore(dataSet.executeStatementsBefore()).
+                    executeStatementsAfter(dataSet.executeStatementsAfter());
+        } else{
+            throw new RuntimeException("Cannot create DataSetModel from Null DataSet");
+        }
+
     }
 
 
@@ -112,7 +117,7 @@ public class DataSetModel {
         return executeStatementsAfter;
     }
 
-    public String getExecutorName() {
-        return executorName;
+    public String getExecutorId() {
+        return executorId;
     }
 }

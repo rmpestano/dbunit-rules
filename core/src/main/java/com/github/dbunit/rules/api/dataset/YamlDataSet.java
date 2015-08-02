@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.dataset;
+package com.github.dbunit.rules.api.dataset;
 
 /**
  * Created by rafael-pestano on 22/07/2015.

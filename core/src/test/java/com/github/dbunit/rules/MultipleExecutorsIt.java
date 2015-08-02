@@ -11,14 +11,13 @@ import java.util.List;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.dataset.DataSetExecutor;
-import com.github.dbunit.rules.dataset.DataSetModel;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 
@@ -30,18 +29,18 @@ import com.github.dbunit.rules.model.User;
 public class MultipleExecutorsIt {
 
 
-    private static List<DataSetExecutor> executors = new ArrayList<>(3);
+    private static List<DataSetExecutorImpl> executors = new ArrayList<>(3);
 
     @BeforeClass
     public static void setup() {
-        executors.add(DataSetExecutor.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").getConnection())));
-        executors.add(DataSetExecutor.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").getConnection())));
-        executors.add(DataSetExecutor.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").getConnection())));
     }
 
     @AfterClass
     public static void tearDown() throws SQLException {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             Connection connection = executor.getConnection();
             if (connection != null && !connection.isClosed()) {
                 connection.close();
@@ -52,9 +51,9 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldSeedDataSetDisablingContraints() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").disableConstraints(true);
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
@@ -64,9 +63,9 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
@@ -77,11 +76,11 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
                 useSequenceFiltering(false).
                 executeStatementsAfter(new String[] { "DELETE FROM User" });//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             List<User> users =  EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u").getResultList();
             assertThat(users).isEmpty();
         }
@@ -90,12 +89,12 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldSeedDataSetUsingTableCreationOrder() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
                 tableOrdering(new String[]{"USER","TWEET","FOLLOWER"}).
                 executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
                 useSequenceFiltering(false);
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             List<User> users =  EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u").getResultList();
             assertThat(users).hasSize(2);
         }
@@ -104,10 +103,10 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldSeedUserDataSet() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
                 useSequenceFiltering(true);
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
@@ -117,9 +116,9 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldLoadUserFollowers() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
@@ -134,9 +133,9 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldLoadUsersFromJsonDataset() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/json/users.json");
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
@@ -151,9 +150,9 @@ public class MultipleExecutorsIt {
 
     @Test
     public void shouldLoadUsersFromXmlDataset() {
-        for (DataSetExecutor executor : executors) {
+        for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/xml/users.xml");
-            executor.execute(dataSetModel);
+            executor.createDataSet(dataSetModel);
             User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);

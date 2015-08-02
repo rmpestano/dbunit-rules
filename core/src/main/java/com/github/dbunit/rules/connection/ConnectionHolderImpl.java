@@ -1,5 +1,7 @@
 package com.github.dbunit.rules.connection;
 
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+
 import java.sql.Connection;
 
 /**

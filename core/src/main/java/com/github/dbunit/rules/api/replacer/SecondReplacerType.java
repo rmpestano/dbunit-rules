@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.replacer.type;
+package com.github.dbunit.rules.api.replacer;
 
 /**
  * Created by pestano on 22/07/15.

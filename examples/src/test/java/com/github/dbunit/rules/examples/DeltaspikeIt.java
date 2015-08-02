@@ -1,8 +1,10 @@
 package com.github.dbunit.rules.examples;
 
 import com.github.dbunit.rules.DBUnitRule;
-import com.github.dbunit.rules.connection.ConnectionHolder;
-import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.JPADataSet;
+import com.github.dbunit.rules.jpa.JPADataSetExecutor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.example.jpadomain.Company;
 import org.example.jpadomain.Contact;
@@ -14,7 +16,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.sql.Connection;
@@ -42,6 +43,14 @@ public class DeltaspikeIt {
 
     @Inject
     CompanyRepository companyRepository;
+
+    @Inject
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
+    JPADataSetExecutor dataSetExecutor;
+
+    @Inject
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
+    JPADataSetExecutor dataSetExecutor2;
 
 
     @Rule
@@ -72,6 +81,20 @@ public class DeltaspikeIt {
     }
 
     @Test
+    public void shouldQueryAllCompaniesUsingInjectedExecutor() {
+        dataSetExecutor.createDataSet();
+        assertNotNull(contactService);
+        assertThat(contactService.findCompanies()).hasSize(4);
+    }
+
+    @Test
+    public void shouldQueryAllCompaniesUsingInjectedExecutor2() {
+        dataSetExecutor2.createDataSet();
+        assertNotNull(contactService);
+        assertThat(contactService.findCompanies()).hasSize(4);
+    }
+
+    @Test
     @DataSet("datasets/contacts.json")
     public void shouldQueryAllContactsUsingJsonDataSet() {
         assertThat(companyRepository.count()).isEqualTo(4);
@@ -90,6 +113,21 @@ public class DeltaspikeIt {
             }
         }).contains(expectedCompany);
     }
+
+    @Test
+    public void shouldFindCompanyByNameUsingInjectedExecutor() {
+        dataSetExecutor.createDataSet();
+        Company expectedCompany = new Company("Google");
+        assertNotNull(companyRepository);
+        assertThat(companyRepository.findByName("Google")).
+                isNotNull().usingElementComparator(new Comparator<Company>() {
+            @Override
+            public int compare(Company o1, Company o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        }).contains(expectedCompany);
+    }
+
 
     @Test
     @DataSet(value = "datasets/contacts.yml")

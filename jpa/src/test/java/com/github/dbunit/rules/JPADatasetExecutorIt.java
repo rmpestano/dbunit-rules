@@ -1,17 +1,13 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.dataset.DataSet;
-import com.github.dbunit.rules.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import com.github.dbunit.rules.jpa.JPADataSetExecutor;
-import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -28,9 +24,18 @@ public class JPADatasetExecutorIt {
 
 
     @Test
-    public void shouldSeedUserDataSetUsing() {
+    public void shouldSeedUserDataSetUsingJpaExecutor() {
         DataSetModel dataModel = new DataSetModel("datasets/yml/users.yml");
-        JPADataSetExecutor.instance(emProvider.em()).execute(dataModel);
+        JPADataSetExecutor.instance(emProvider.em()).createDataSet(dataModel);
+        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+
+    @Test
+    public void shouldSeedUserDataSetUsingJpaExecutorWithId() {
+        DataSetModel dataModel = new DataSetModel("datasets/yml/users.yml");
+        JPADataSetExecutor.instance("executorId",emProvider.em()).createDataSet(dataModel);
         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);

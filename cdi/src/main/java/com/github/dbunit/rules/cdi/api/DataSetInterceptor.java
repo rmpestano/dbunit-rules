@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.cdi;
+package com.github.dbunit.rules.cdi.api;
 
 import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.*;

@@ -1,6 +1,6 @@
-package com.github.dbunit.rules.dataset;
+package com.github.dbunit.rules.api.dataset;
 
-import com.github.dbunit.rules.type.SeedStrategy;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 
 import java.lang.annotation.*;
 
@@ -24,7 +24,7 @@ public @interface DataSet {
    *
    * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
    */
-  String executorName() default DataSetExecutor.DEFAULT_EXECUTOR_ID;
+  String executorId() default DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
 
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
@@ -43,13 +43,13 @@ public @interface DataSet {
   boolean disableConstraints() default false;
 
   /**
-   * @return a list of jdbc statements to execute before test
+   * @return a list of jdbc statements to createDataSet before test
    *
    */
   String[] executeStatementsBefore() default {};
 
   /**
-   * @return a list of jdbc statements to execute after test
+   * @return a list of jdbc statements to createDataSet after test
    */
   String[] executeStatementsAfter() default {};
 

@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.dataset;
+package com.github.dbunit.rules.api.dataset;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.dbunit.dataset.*;

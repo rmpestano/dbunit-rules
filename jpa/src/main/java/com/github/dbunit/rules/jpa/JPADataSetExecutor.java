@@ -1,9 +1,10 @@
 package com.github.dbunit.rules.jpa;
 
-import com.github.dbunit.rules.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.dataset.DataSetExecutor;
-import com.github.dbunit.rules.dataset.DataSetModel;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 import org.slf4j.LoggerFactory;
@@ -17,32 +18,32 @@ import java.util.Map;
 /**
  * Created by pestano on 28/07/15.
  */
-public class JPADataSetExecutor {
+public class JPADataSetExecutor implements DataSetExecutor {
 
     private EntityManager entityManager;
-    private static Map<String,JPADataSetExecutor> executors = new HashMap<>();
+    private static Map<String, JPADataSetExecutor> executors = new HashMap<>();
     private ConnectionHolder connection;
-    private DataSetExecutor executor;
+    private DataSetExecutorImpl executor;
+    private DataSetModel dataSetModel;
 
 
-    public static JPADataSetExecutor instance(EntityManager entityManager){
-        return instance(null,entityManager);
+    public static JPADataSetExecutor instance(EntityManager entityManager) {
+        return instance(null, entityManager);
     }
-    public static JPADataSetExecutor instance(String executorId,EntityManager entityManager){
-        if(executorId == null){
-            executorId = DataSetExecutor.DEFAULT_EXECUTOR_ID;
+
+    public static JPADataSetExecutor instance(String executorId, EntityManager entityManager) {
+        if (executorId == null) {
+            executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
         }
         JPADataSetExecutor instance = executors.get(executorId);
-        if(instance == null){
+        if (instance == null) {
             instance = new JPADataSetExecutor();
+            executors.put(executorId, instance);
         }
         instance.setEntityManager(entityManager);
-        if(instance.executor == null){
-            try {
-                instance.executor = DataSetExecutor.instance(executorId,instance.getConnectionHolder());
-            } catch (SQLException e) {
-                LoggerFactory.getLogger(JPADataSetExecutor.class).error("Could not create JPA connection", e);
-            }
+        if (instance.executor == null) {
+            instance.executor = DataSetExecutorImpl.instance(executorId, instance.getConnectionHolder());
+
         }
         return instance;
     }
@@ -55,20 +56,24 @@ public class JPADataSetExecutor {
         return entityManager;
     }
 
-    public ConnectionHolder getConnectionHolder() throws SQLException {
-        if(entityManager == null || !entityManager.isOpen()){
+    public ConnectionHolder getConnectionHolder() {
+        if (entityManager == null || !entityManager.isOpen()) {
             throw new RuntimeException("Could not get jdbc connection. Entity manager is null or is closed");
         }
-        if(connection == null || connection.getConnection().isClosed()){
-            connection = new ConnectionHolderImpl(this.getJdbcConnection());
+        try {
+            if (connection == null || connection.getConnection().isClosed()) {
+                connection = new ConnectionHolderImpl(this.getJdbcConnection());
+            }
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(JPADataSetExecutor.class).error("Could not create JPA connection", e);
         }
         return connection;
     }
 
     public Connection getJdbcConnection() {
-        if (entityManager.getDelegate() instanceof Session){
-            return ((SessionImpl)entityManager.getDelegate()).connection();
-        }else{
+        if (entityManager.getDelegate() instanceof Session) {
+            return ((SessionImpl) entityManager.getDelegate()).connection();
+        } else {
             entityManager.getTransaction().begin();
             Connection connection = entityManager.unwrap(Connection.class);
             entityManager.getTransaction().commit();
@@ -76,7 +81,22 @@ public class JPADataSetExecutor {
         }
     }
 
-    public void execute(DataSetModel model){
-        executor.execute(model);
+    public void createDataSet(DataSetModel model) {
+        executor.createDataSet(model);
+    }
+
+    public void createDataSet() {
+        executor.createDataSet(dataSetModel);
+    }
+
+
+    @Override
+    public DataSetModel getDataSetModel() {
+        return dataSetModel;
+    }
+
+    @Override
+    public void setDataSetModel(DataSetModel dataSetModel) {
+        this.dataSetModel = dataSetModel;
     }
 }

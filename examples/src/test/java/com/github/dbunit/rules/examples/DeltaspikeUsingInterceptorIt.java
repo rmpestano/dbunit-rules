@@ -1,7 +1,9 @@
 package com.github.dbunit.rules.examples;
 
-import com.github.dbunit.rules.cdi.DataSetInterceptor;
-import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DataSetInterceptor;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.JPADataSet;
+import com.github.dbunit.rules.jpa.JPADataSetExecutor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.example.jpadomain.Company;
 import org.example.jpadomain.Contact;
@@ -38,6 +40,10 @@ public class DeltaspikeUsingInterceptorIt {
     @Inject
     CompanyRepository companyRepository;
 
+    @Inject
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
+    JPADataSetExecutor dataSetExecutor;
+
 
     @Test
     @DataSet("datasets/contacts.yml")
@@ -69,6 +75,18 @@ public class DeltaspikeUsingInterceptorIt {
     @Test
     @DataSet(value = "datasets/contacts.yml")
     public void shouldCreateCompany() {
+        assertThat(companyRepository.count()).isEqualTo(4);
+        Company company = new Company("test company");
+        beginTx();
+        Company companyCreated = companyRepository.save(company);
+        assertThat(companyCreated.id).isNotNull();
+        commitTx();
+        assertThat(companyRepository.count()).isEqualTo(5);
+    }
+
+    @Test
+    public void shouldCreateCompanyUsingInjectedDataSetExecutor() {
+        dataSetExecutor.createDataSet();
         assertThat(companyRepository.count()).isEqualTo(4);
         Company company = new Company("test company");
         beginTx();

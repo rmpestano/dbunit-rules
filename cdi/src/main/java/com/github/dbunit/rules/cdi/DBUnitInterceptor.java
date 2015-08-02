@@ -1,10 +1,11 @@
 package com.github.dbunit.rules.cdi;
 
-import com.github.dbunit.rules.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.cdi.api.DataSetInterceptor;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.dataset.DataSet;
-import com.github.dbunit.rules.dataset.DataSetExecutor;
-import com.github.dbunit.rules.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 
@@ -54,7 +55,7 @@ public class DBUnitInterceptor implements Serializable {
                 ConnectionHolder connectionHolder = new ConnectionHolderImpl(connection);
                 DataSetModel dataSetModel = new DataSetModel().from(dataSet);
                 //one executor per class
-                DataSetExecutor.instance(invocationContext.getMethod().getDeclaringClass().getSimpleName(),connectionHolder).execute(dataSetModel);
+                DataSetExecutorImpl.instance(invocationContext.getMethod().getDeclaringClass().getSimpleName(), connectionHolder).createDataSet(dataSetModel);
             }
         }
 

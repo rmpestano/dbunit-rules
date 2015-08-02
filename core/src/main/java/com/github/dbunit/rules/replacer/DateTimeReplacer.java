@@ -1,6 +1,6 @@
 package com.github.dbunit.rules.replacer;
 
-import com.github.dbunit.rules.replacer.type.*;
+import com.github.dbunit.rules.api.replacer.*;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 

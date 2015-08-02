@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.connection;
+package com.github.dbunit.rules.api.connection;
 
 import java.io.Serializable;
 import java.sql.Connection;

@@ -1,10 +1,9 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.connection.ConnectionHolder;
-import com.github.dbunit.rules.dataset.DataSet;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
