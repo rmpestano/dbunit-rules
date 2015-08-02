@@ -202,16 +202,7 @@
                     <plugin>
                         <groupId>org.eluder.coveralls</groupId>
                         <artifactId>coveralls-maven-plugin</artifactId>
-                        <version>2.2.0</version>
-                        <executions>
-                            <execution>
-                                <id>coveralls-jacoco</id>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>jacoco</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <version>3.1.0</version>
                         <configuration>
                             <repoToken>FyLUCzLpMxNyRwV6c3iyYGLnKb68PLAYW</repoToken>
                         </configuration>
