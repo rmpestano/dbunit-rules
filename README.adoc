@@ -1,26 +1,27 @@
-toc::[]
-= DBUnit rules
-:toc: macro
 :page-layout: base
 :source-language: java
 :icons: font
 :linkattrs:
 :sectanchors:
 :sectlink:
+:numbered:
+:doctype: book
+:toc: right
 
+= DBUnit rules
 
 image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
 image:https://coveralls.io/repos/rmpestano/dbunit-rules/badge.png[Coverage, link=https://coveralls.io/r/rmpestano/dbunit-rules]
 image:https://api.bintray.com/packages/rmpestano/dbunit-rules/dbunit-rules/images/download.svg[link="https://bintray.com/rmpestano/dbunit-rules/dbunit-rules/_latestVersion"]
 
 
-Aims for bringing http://dbunit.sourceforge.net/[DBUnit] closer to your JUnit tests.
+This project aims for bringing http://dbunit.sourceforge.net/[DBUnit] closer to your JUnit tests.
 
 
 A lot of this work is based on https://github.com/arquillian/arquillian-extension-persistence/[Arquillian persistence extension] and focus on simplicity (one dep). If you need a more robust and reliable solution (tests closer to production), I'd suggest arquillian persistence.
 
 
-== Example
+== Introduction
 
 Consider the following (jpa) entities:
 
@@ -348,7 +349,7 @@ Also note that the same can be done using @Rule but pay attention that you must 
 
 [NOTE]
 ====
-DBunit rules will bring the following dependencies to your project:
+It will bring the following (transitive) dependencies to your project:
 
 [source,xml]
 ----
@@ -369,7 +370,7 @@ DBunit rules will bring the following dependencies to your project:
 
 == JPA module
 
-As stated before, DBunit needs a jdbc connection, a way to create one is using JPA entity manager. You can use https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] for that:
+As stated before DBunit needs a jdbc connection, a way to create one is using JPA entity manager. https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] can help on that:
 
 [source,xml]
 ----
