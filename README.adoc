@@ -138,7 +138,7 @@ NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/co
 This module is the basis for subsequent modules. It contains a JUnit rule (shown above) to configure its main component, the *DataSet executor*.
 
 === DataSet executor
-A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[textual files like csv, xml, yaml, json^] etc...
+A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[textual files like csv\, xml\, yaml\, json^] etc...
 
 The dataset executor needs a JDBC connection to be instantiated. The connection can be provided at declaration level (as in example before) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
 
@@ -495,7 +495,7 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 
 === JPA  DataSet executor Injection
 
-With this module you can Inject a <<JPA DataSet Executor>>:
+With this module you can Inject a https://github.com/rmpestano/dbunit-rules#jpa-dataset-executor[JPA DataSet Executor]:
 
 [source,java]
 ----
