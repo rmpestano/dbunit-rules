@@ -1,4 +1,13 @@
+toc::[]
 = DBUnit rules
+:toc: macro
+:page-layout: base
+:source-language: java
+:icons: font
+:linkattrs:
+:sectanchors:
+:sectlink:
+
 
 image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
 image:https://coveralls.io/repos/rmpestano/dbunit-rules/badge.png[Coverage, link=https://coveralls.io/r/rmpestano/dbunit-rules]
@@ -156,7 +165,7 @@ public class ConnectionHolderIt {
 }
 ----
 
-Until now you didn't needed DataSet executor object because *@Rule annotation* hides its logic but You can use it without JUnit rules:
+Until now you didn't needed DataSet executor object because *@Rule annotation* hides its logic but you can use it without JUnit rules:
 
 [source,java]
 ----
@@ -372,7 +381,9 @@ As stated before, DBunit needs a jdbc connection, a way to create one is using J
 </dependency>
 ----
 
-and then activate the EntityManagerProvider rule in your test:
+=== EntityManagerProvider
+
+It is a component which holds JPA entity managers for your tests. To activate the EntityManagerProvider rule in your test:
 
 [source,java]
 ----
@@ -380,12 +391,15 @@ and then activate the EntityManagerProvider rule in your test:
 public class DBUnitRulesIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("PU-NAME");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("PU-NAME");<1>
 
 }
 ----
+<1> It will retrieve the entity manager based on a test persistence.xml and store in into EntityManagerProvider which can hold multiple entity managers.
 
-Then you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
+NOTE: You can use @BeforeClass instead of junit rule to instantiate the provider.
+
+Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 
 *PU-NAME* refers to test persistence.xml persistence unit name:
 
@@ -416,8 +430,9 @@ Then you can use emProvider.getConnection() to retrieve jdbc connection and emPr
 
 </persistence>
 ----
+NOTE: It will only work with *transaction-type="RESOURCE_LOCAL"* because internally it uses Persistence.createEntityManagerFactory(unitName) to get em instance.
 
-this JPA configuration depends on hsqldb (an in memory database) and eclipse link (JPA provider):
+Above JPA configuration depends on hsqldb (an in memory database) and eclipse link (JPA provider):
 
 [source,xml]
 ----
@@ -434,6 +449,8 @@ this JPA configuration depends on hsqldb (an in memory database) and eclipse lin
     <scope>test</scope>
 </dependency>
 ----
+
+=== JPA DataSet Executor
 
 JPA module also provides a dataset executor based on JPA Entity Manager:
 
@@ -458,6 +475,9 @@ public class JPADatasetExecutorIt {
 }
 ----
 
+IMPORTANT:
+EntityManagerProvider will only retrieve JPA entity manager from persistence units with *transaction-type="RESOURCE_LOCAL"*.
+
 == CDI module
 
 If you use CDI in your tests then you should have a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
@@ -474,7 +494,7 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 
 === JPA  DataSet executor Injection
 
-With this module you can Inject a JPADataSet executor(LINK):
+With this module you can Inject a <<JPA DataSet Executor>>:
 
 [source,java]
 ----
@@ -522,8 +542,24 @@ and then annotate your test with dataset interceptor:
 @DataSetInterceptor
 public class DeltaspikeUsingInterceptorIt {
 
-...
+
 }
 ----
 
+and then the interceptor will read @JPADataSet annotation to configure the database before the test runs:
+
+[source,java]
+----
+    @Test
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
+    public void shouldCreateCompany() {
+        assertThat(companyRepository.count()).isEqualTo(4);
+        Company company = new Company("test company");
+        beginTx();
+        Company companyCreated = companyRepository.save(company);
+        assertThat(companyCreated.id).isNotNull();
+        commitTx();
+        assertThat(companyRepository.count()).isEqualTo(5);
+    }
+----
 

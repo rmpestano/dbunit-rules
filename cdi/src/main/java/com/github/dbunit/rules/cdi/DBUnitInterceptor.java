@@ -2,10 +2,11 @@ package com.github.dbunit.rules.cdi;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.cdi.api.DataSetInterceptor;
+import com.github.dbunit.rules.cdi.api.JPADataSet;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.jpa.EntityManagerProvider;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 
@@ -24,20 +25,19 @@ import java.sql.Connection;
 @DataSetInterceptor
 public class DBUnitInterceptor implements Serializable {
 
-    @Inject
-    EntityManager entityManager;
 
     @AroundInvoke
     public Object intercept(InvocationContext invocationContext)
             throws Exception {
 
-        if (invocationContext.getMethod().getAnnotation(DataSet.class) != null) {
-            DataSet dataSet = invocationContext.getMethod().getAnnotation(DataSet.class);
+        if (invocationContext.getMethod().getAnnotation(JPADataSet.class) != null) {
+            JPADataSet dataSet = invocationContext.getMethod().getAnnotation(JPADataSet.class);
             if (dataSet != null) {
-                if (entityManager == null) {
-                    throw new RuntimeException("Provide entityManager instance via CDI @Producer in order to use DBUnitInterceptor");
+                if (dataSet.unitName() == null || "".equals(dataSet.unitName())) {
+                    throw new RuntimeException("Provide JPA unit unit name in order to use DBUnitInterceptor");
                 }
                 Connection connection = null;
+                EntityManager entityManager = EntityManagerProvider.instance(dataSet.unitName()).em();
                 if (entityManager.getDelegate() instanceof Session) {
                     connection = ((SessionImpl) entityManager.unwrap(Session.class)).connection();
                 } else {
@@ -50,10 +50,13 @@ public class DBUnitInterceptor implements Serializable {
                 }
 
                 if (connection == null) {
-                    throw new RuntimeException("Could not get jdbc connection from provided entityManager");
+                    throw new RuntimeException("Could not get jdbc connection from provided unit name "+dataSet.unitName());
                 }
                 ConnectionHolder connectionHolder = new ConnectionHolderImpl(connection);
-                DataSetModel dataSetModel = new DataSetModel().from(dataSet);
+                DataSetModel dataSetModel = new DataSetModel(dataSet.value()).disableConstraints(dataSet.disableConstraints()).
+                        executeStatementsAfter(dataSet.executeStatementsAfter()).executeStatementsBefore(dataSet.executeStatementsBefore()).
+                        seedStrategy(dataSet.strategy()).tableOrdering(dataSet.tableOrdering()).
+                        useSequenceFiltering(dataSet.useSequenceFiltering());
                 //one executor per class
                 DataSetExecutorImpl.instance(invocationContext.getMethod().getDeclaringClass().getSimpleName(), connectionHolder).createDataSet(dataSetModel);
             }

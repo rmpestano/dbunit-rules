@@ -46,20 +46,20 @@ public class DeltaspikeUsingInterceptorIt {
 
 
     @Test
-    @DataSet("datasets/contacts.yml")
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
     }
 
     @Test
-    @DataSet("datasets/contacts.json")
+    @JPADataSet(value = "datasets/contacts.json",unitName = "interceptorDB")
     public void shouldQueryAllContactsUsingJsonDataSet() {
         assertThat(companyRepository.count()).isEqualTo(4);
     }
 
     @Test
-    @DataSet("datasets/contacts.yml")
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
     public void shouldFindCompanyByName() {
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);
@@ -73,7 +73,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @DataSet(value = "datasets/contacts.yml")
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
     public void shouldCreateCompany() {
         assertThat(companyRepository.count()).isEqualTo(4);
         Company company = new Company("test company");
@@ -97,7 +97,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @DataSet(value = "datasets/contacts.yml")
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
     public void shouldCreateContact() {
         Company google = companyRepository.findByName("Google").get(0);
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(0);
@@ -110,7 +110,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @DataSet(value = "datasets/contacts.yml")
+    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
     public void shouldDeleteContact() {
         Company pivotal = companyRepository.findByName("Pivotal").get(0);
         assertThat(contactService.countByCompanyAndName(pivotal, "Spring")).
