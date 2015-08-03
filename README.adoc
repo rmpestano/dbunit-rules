@@ -384,7 +384,7 @@ As stated before DBunit needs a jdbc connection, a way to create one is using JP
 
 === EntityManagerProvider
 
-It is a component which holds JPA entity managers for your tests. To activate the EntityManagerProvider rule in your test:
+It is a component which holds JPA entity managers for your tests. To activate the EntityManagerProvider rule in your test use:
 
 [source,java]
 ----
@@ -547,7 +547,7 @@ public class DeltaspikeUsingInterceptorIt {
 }
 ----
 
-and then the interceptor will read @JPADataSet annotation to configure the database before the test runs:
+finally the interceptor will read @JPADataSet annotation to configure the database before the test runs:
 
 [source,java]
 ----
