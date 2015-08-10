@@ -36,9 +36,13 @@ public class JPADatasetExecutorIt {
     public void shouldSeedUserDataSetUsingJpaExecutorWithId() {
         DataSetModel dataModel = new DataSetModel("datasets/yml/users.yml");
         JPADataSetExecutor.instance("executorId",emProvider.em()).createDataSet(dataModel);
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertThat(user.getFollowers()).hasSize(1);
     }
+
+
 
 }

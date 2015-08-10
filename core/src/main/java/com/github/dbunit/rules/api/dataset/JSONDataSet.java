@@ -14,51 +14,7 @@ import java.util.*;
  * DBUnit DataSet format for JSON based datasets. It is similar to the flat XML
  * layout, but has some improvements (columns are calculated by parsing the
  * entire dataset, not just the first row). It uses Jackson, a fast JSON
- * processor. <br/>
- * <br/>
- * The format looks like this: <br/>
- *
- * <pre>
- * {
- *    "&lt;table_name&gt;": [
- *        {
- *             "&lt;column&gt;":&lt;value&gt;,
- *             ...
- *        },
- *        ...
- *    ],
- *    ...
- * }
- * </pre>
- *
- * <br/>
- * I.e.: <br/>
- *
- * <pre>
- * {
- *    "test_table": [
- *        {
- *             "id":1,
- *             "code":"JSON dataset",
- *        },
- *        {
- *             "id":2,
- *             "code":"Another row",
- *        }
- *    ],
- *    "another_table": [
- *        {
- *             "id":1,
- *             "description":"Foo",
- *        },
- *        {
- *             "id":2,
- *             "description":"Bar",
- *        }
- *    ],
- *    ...
- * }
- * </pre>
+ * processor.
  *
  * @author Lieven DOCLO
  */
