@@ -29,7 +29,7 @@ public class DBUnitRulesSteps {
 	/*@Rule not supported https://github.com/cucumber/cucumber-jvm/issues/393
 	public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());*/
 
-	DataSetExecutor executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.getConnection()));
+	DataSetExecutor executor = DataSetExecutorImpl.instance("bdd-executor", new ConnectionHolderImpl(emProvider.getConnection()));
 
 	private List<User> users;
 
@@ -37,7 +37,7 @@ public class DBUnitRulesSteps {
 	@Given("^The database is seeded with users$")
 	//@DataSet(value = "datasets/yml/users.yml")
 	public void The_database_is_seeded_with_users() {
-		executor.createDataSet(new DataSetModel("datasets/yml/users.yml"));
+		executor.createDataSet(new DataSetModel("yml/users.yml"));
 	}
 
 	@When("^I list users$")

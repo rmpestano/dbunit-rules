@@ -40,8 +40,6 @@ public class MultipleDataSetsIt {
     public DBUnitRule defaultExecutorRule = DBUnitRule.instance(emProvider.getConnection());
 
 
-
-
     @Test
     @DataSet(value = "datasets/yml/users.yml",disableConstraints = true, executorId = "exec1")
     public void shouldSeedDataSetDisablingContraints() {

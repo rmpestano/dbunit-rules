@@ -40,7 +40,6 @@ public class DataSetExecutorIt {
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }
-
     }
 
     @Test
