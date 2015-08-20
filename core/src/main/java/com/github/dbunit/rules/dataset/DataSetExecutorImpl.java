@@ -100,7 +100,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     executeStatements(dataSetModel.getExecuteStatementsBefore());
                 }
                 for (String dataSet : dataSets) {
-                    dataSetName = dataSet;
+                    dataSetName = dataSet.trim();
                     String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
                     switch (extension) {
                         case "yml": {
