@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -85,8 +86,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     public void createDataSet(DataSetModel dataSetModel) {
         if (dataSetModel != null && dataSetModel.getName() != null) {
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
-            String dataSetName = dataSetModel.getName();
+
+            String[] dataSets = dataSetModel.getName().trim().split(",");
+
             IDataSet target = null;
+            String dataSetName = null;
             try {
                 initDatabaseConnection();
                 if (dataSetModel.isDisableConstraints()) {
@@ -95,42 +99,46 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 if (dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0) {
                     executeStatements(dataSetModel.getExecuteStatementsBefore());
                 }
-                String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
-                switch (extension) {
-                    case "yml": {
-                        target = new YamlDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
-                        break;
+                for (String dataSet : dataSets) {
+                    dataSetName = dataSet;
+                    String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
+                    switch (extension) {
+                        case "yml": {
+                            target = new YamlDataSet(loadDataSet(dataSetName));
+                            break;
+                        }
+                        case "xml": {
+                            target = new FlatXmlDataSetBuilder().build(loadDataSet(dataSetName));
+                            break;
+                        }
+                        case "csv": {
+                            target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
+                            break;
+                        }
+                        case "xls": {
+                            target = new XlsDataSet(loadDataSet(dataSetName));
+                            break;
+                        }
+                        case "json": {
+                            target = new JSONDataSet(loadDataSet(dataSetName));
+                            break;
+                        }
+                        default:
+                            log.error("Unsupported dataset extension" + extension);
                     }
-                    case "xml": {
-                        target = new FlatXmlDataSetBuilder().build(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
-                        break;
-                    }
-                    case "csv": {
-                        target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
-                        break;
-                    }
-                    case "xls": {
-                        target = new XlsDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
-                        break;
-                    }
-                    case "json": {
-                        target = new JSONDataSet(Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSetName));
-                        break;
-                    }
-                    default:
-                        log.error("Unsupported dataset extension" + extension);
-                }
 
-                if (target != null) {
-                    target = performSequenceFiltering(dataSetModel, target);
+                    if (target != null) {
+                        target = performSequenceFiltering(dataSetModel, target);
 
-                    target = performTableOrdering(dataSetModel, target);
+                        target = performTableOrdering(dataSetModel, target);
 
-                    target = performReplacements(target);
+                        target = performReplacements(target);
 
-                    operation.execute(databaseConnection, target);
-                } else {
-                    log.warn("DataSet not created" + dataSetName);
+                        operation.execute(databaseConnection, target);
+                    } else {
+                        log.warn("DataSet not created" + dataSetName);
+                    }
+
                 }
 
 
@@ -260,6 +268,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             executor = executors.get(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID);
         }
         return executor;
+    }
+
+    private InputStream loadDataSet(String dataSet) {
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet);
+        if(is == null){//if not found try to get from datasets folder
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream("datasets/" + dataSet);
+        }
+        return is;
     }
 
     @Override
