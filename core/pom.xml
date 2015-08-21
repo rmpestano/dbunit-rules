@@ -60,7 +60,7 @@
                 <configuration>
                     <parallel>classes</parallel>
                     <useUnlimitedThreads>true</useUnlimitedThreads>
-                    <reuseForks>true</reuseForks>
+                    <reuseForks>false</reuseForks>
                     <includes>
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>

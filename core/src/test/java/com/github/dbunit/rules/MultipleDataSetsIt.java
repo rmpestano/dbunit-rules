@@ -3,8 +3,11 @@ package com.github.dbunit.rules;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,9 +38,6 @@ public class MultipleDataSetsIt {
 
     @Rule
     public DBUnitRule exec2Rule = DBUnitRule.instance("exec2",emProvider2.getConnection());
-
-    @Rule
-    public DBUnitRule defaultExecutorRule = DBUnitRule.instance(emProvider.getConnection());
 
 
     @Test
@@ -148,18 +148,6 @@ public class MultipleDataSetsIt {
         assertThat(user.getId()).isEqualTo(1);
     }
 
-    @Test
-    @DataSet(value = "datasets/yml/users.yml")
-    public void shouldLoadUserFollowersWithDefaultExecutor() {
-        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
-        assertThat(user).isNotNull();
-        assertThat(user.getId()).isEqualTo(1);
-        assertThat(user.getTweets()).hasSize(1);
-        assertEquals(user.getTweets().get(0).getContent(), "dbunit rules!");
-        assertThat(user.getFollowers()).isNotNull().hasSize(1);
-        Follower expectedFollower = new Follower(2,1);
-        assertThat(user.getFollowers()).contains(expectedFollower);
-    }
 
     @Test
     @DataSet(value = "datasets/yml/users.yml", executorId = "exec1")
@@ -239,6 +227,13 @@ public class MultipleDataSetsIt {
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+
+
+    @AfterClass//optional
+    public static void close() throws SQLException {
+        DataSetExecutorImpl.getExecutorById("exec1").getConnection().close();
+        DataSetExecutorImpl.getExecutorById("exec2").getConnection().close();
     }
 
 }

@@ -27,19 +27,19 @@ public class DBUnitRule implements MethodRule {
   private DBUnitRule() {
   }
 
-  public final synchronized static DBUnitRule instance(Connection connection) {
+  public final static DBUnitRule instance(Connection connection) {
     return instance(new ConnectionHolderImpl(connection));
   }
 
-  public final synchronized static DBUnitRule instance(String executorName, Connection connection) {
+  public final static DBUnitRule instance(String executorName, Connection connection) {
     return instance(executorName,new ConnectionHolderImpl(connection));
   }
 
-  public final synchronized static DBUnitRule instance(ConnectionHolder connectionHolder) {
+  public final static DBUnitRule instance(ConnectionHolder connectionHolder) {
     return instance(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID,connectionHolder);
   }
 
-  public final synchronized static DBUnitRule instance(String executorName, ConnectionHolder connectionHolder) {
+  public final static DBUnitRule instance(String executorName, ConnectionHolder connectionHolder) {
 
     DBUnitRule instance = new DBUnitRule();
     instance.init(executorName, connectionHolder);

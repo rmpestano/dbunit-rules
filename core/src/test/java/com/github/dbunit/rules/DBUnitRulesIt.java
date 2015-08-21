@@ -2,13 +2,17 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,6 +129,11 @@ public class DBUnitRulesIt {
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+
+    @AfterClass//optional
+    public static void close() throws SQLException {
+        DataSetExecutorImpl.getExecutorById(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID).getConnection().close();
     }
 
 }
