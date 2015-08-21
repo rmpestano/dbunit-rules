@@ -1,17 +1,18 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.model.Follower;
-import com.github.dbunit.rules.model.User;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.model.Follower;
+import com.github.dbunit.rules.model.User;
 
 /**
  * Created by pestano on 23/07/15.
@@ -108,6 +109,19 @@ public class DBUnitRulesIt {
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
         assertEquals("dbunit rules flat xml example",user.getTweets().get(0).getContent());
+        assertThat(user.getFollowers()).isNotNull().hasSize(1);
+        Follower expectedFollower = new Follower(2,1);
+        assertThat(user.getFollowers()).contains(expectedFollower);
+    }
+
+    @Test
+    @DataSet(value = "yml/user.yml, yml/tweet.yml, yml/follower.yml", executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"})
+    public void shouldLoadDataFromMultipleDataSets(){
+        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+        assertEquals("dbunit rules again",user.getTweets().get(0).getContent());
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
