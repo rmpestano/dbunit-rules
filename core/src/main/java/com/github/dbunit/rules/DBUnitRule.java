@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 
+import static org.junit.Assert.fail;
+
 /**
  * Created by rafael-pestano on 22/07/2015.
  */
@@ -51,17 +53,18 @@ public class DBUnitRule implements MethodRule {
     final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     if(dataSet != null) {
       final DataSetModel model = new DataSetModel().from(dataSet);
-      String datasetExecutorName = model.getExecutorId();
-      boolean executorNameIsProvided = datasetExecutorName != null && !"".equals(datasetExecutorName.trim());
-      if (executorNameIsProvided && !executor.getId().equals(datasetExecutorName)) {
+      final String datasetExecutorId = model.getExecutorId();
+      boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
+      if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
         return new Statement() {
           @Override
           public void evaluate() throws Throwable {
-            //intentional
+            //intentional cause we can have multiple @Rule so multiple executors on top of same dataset
+            LoggerFactory.getLogger(getClass().getName()).warn("Dataset executor: '" + datasetExecutorId + "' for method " + currentMethod + "() - does not match current executor id -> '" + executor.getId() + "'.\nIgnore this warn if you are using multiple executors");
           }
         };
       } else if (executorNameIsProvided) {
-        executor = DataSetExecutorImpl.getExecutorById(datasetExecutorName);
+        executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
       }
       executor.createDataSet(model);
 

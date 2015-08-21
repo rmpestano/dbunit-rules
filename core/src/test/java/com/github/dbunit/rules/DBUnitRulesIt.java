@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 import org.junit.Rule;
@@ -24,7 +25,7 @@ public class DBUnitRulesIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("rules",emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
 
     @Test
@@ -62,7 +63,7 @@ public class DBUnitRulesIt {
             executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
     )
     public void shouldSeedDataSetUsingTableCreationOrder() {
-        List<User> users =  emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers").getResultList();
+        List<User> users =  emProvider.em().createQuery("select u from User u left join fetch u.tweets left join fetch u.followers").getResultList();
         assertThat(users).hasSize(2);
     }
 
@@ -114,13 +115,13 @@ public class DBUnitRulesIt {
     }
 
     @Test
-    @DataSet(value = "yml/user.yml, yml/tweet.yml, yml/follower.yml", executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"})
+    @DataSet(strategy = SeedStrategy.INSERT, value = "yml/user.yml, yml/tweet.yml, yml/follower.yml",  executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"})
     public void shouldLoadDataFromMultipleDataSets(){
         User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
-        assertEquals("dbunit rules again",user.getTweets().get(0).getContent());
+        assertEquals("dbunit rules again!",user.getTweets().get(0).getContent());
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
