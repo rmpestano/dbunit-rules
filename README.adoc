@@ -451,6 +451,8 @@ Above JPA configuration depends on hsqldb (an in memory database) and eclipse li
 </dependency>
 ----
 
+NOTE: A hibernate entity manager config sample can be https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/resources/META-INF/persistence.xml[found here^].
+
 === JPA DataSet Executor
 
 JPA module also provides a dataset executor based on JPA Entity Manager:
