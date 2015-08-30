@@ -515,7 +515,7 @@ public class CDIDatasetExecutorIt {
         assertThat(contactService.findCompanies()).hasSize(4);
      }
 ----
-<1> You will need a runner that enables CDI during test execution.
+<1> You will need a runner that enables CDI during test execution, in case https://deltaspike.apache.org/documentation/test-control.html[DeltaSpike test control^].
 
 === DBUnit Interceptor
 
