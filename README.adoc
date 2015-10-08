@@ -497,7 +497,7 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 
 === DBUnit Interceptor
 
-CDI module also brings a CDI interceptor to help configure you dataset. To enable DBUnit interceptor you'll need
+CDI module main component is a CDI interceptor which configures datasets before your tests. To enable DBUnit interceptor you'll need
 configure it in you test beans.xml:
 
 .src/test/resources/META-INF/beans.xml

@@ -1,5 +1,5 @@
 {
-  "user": [
+  "USER": [
     {
       "id": 1,
       "name": "@realpestano"
@@ -9,14 +9,14 @@
       "name": "@dbunit"
     }
   ],
-  "tweet": [
+  "TWEET": [
     {
       "id": "abcdef12345",
       "content": "dbunit rules json example",
       "user_id": 1
     }
   ],
-  "follower": [
+  "FOLLOWER": [
     {
       "id": 1,
       "user_id": 1,
