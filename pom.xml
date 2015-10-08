@@ -5,7 +5,7 @@
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
 
     <modules>
         <module>core</module>
@@ -40,7 +40,8 @@
         <connection>scm:git:https://github.com/rmpestano/dbunit-rules.git</connection>
         <developerConnection>scm:git:git@github.com:rmpestano/dbunit-rules.git</developerConnection>
         <url>https://github.com/rmpestano/dbunit-rules.git</url>
-    </scm>
+      <tag>v0.4</tag>
+  </scm>
 
     <ciManagement>
         <system>tranvis-ci.org</system>
