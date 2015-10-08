@@ -495,28 +495,6 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 </dependency>
 ----
 
-=== JPA  DataSet executor Injection
-
-With this module you can Inject a https://github.com/rmpestano/dbunit-rules#jpa-dataset-executor[JPA DataSet Executor]:
-
-[source,java]
-----
-@RunWith(CdiTestRunner.class) <1>
-public class CDIDatasetExecutorIt {
-
-    @Inject
-    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
-    JPADataSetExecutor dataSetExecutor;
-
-     @Test
-     public void shouldQueryAllCompaniesUsingInjectedExecutor() {
-        dataSetExecutor.createDataSet();
-        assertNotNull(contactService);
-        assertThat(contactService.findCompanies()).hasSize(4);
-     }
-----
-<1> You will need a runner that enables CDI during test execution, in case https://deltaspike.apache.org/documentation/test-control.html[DeltaSpike test control^].
-
 === DBUnit Interceptor
 
 CDI module also brings a CDI interceptor to help configure you dataset. To enable DBUnit interceptor you'll need
@@ -537,32 +515,25 @@ configure it in you test beans.xml:
 
 ----
 
-and then annotate your test with dataset interceptor:
+and then enable it in your tests by using *@UsingDataSet* annotation:
 
 [source,java]
 ----
-@RunWith(CdiTestRunner.class) //Deltapike test control module
-@DataSetInterceptor
+@RunWith(CdiTestRunner.class)
 public class DeltaspikeUsingInterceptorIt {
 
+    @Inject
+    DeltaSpikeContactService contactService;
 
+
+    @Test
+    @UsingDataSet("datasets/contacts.yml")
+    public void shouldQueryAllCompanies() {
+        assertNotNull(contactService);
+        assertThat(contactService.findCompanies()).hasSize(4);
+    }
 }
 ----
 
-finally the interceptor will read @JPADataSet annotation to configure the database before the test runs:
 
-[source,java]
-----
-    @Test
-    @JPADataSet(value = "datasets/contacts.yml",unitName = "interceptorDB")
-    public void shouldCreateCompany() {
-        assertThat(companyRepository.count()).isEqualTo(4);
-        Company company = new Company("test company");
-        beginTx();
-        Company companyCreated = companyRepository.save(company);
-        assertThat(companyCreated.id).isNotNull();
-        commitTx();
-        assertThat(companyRepository.count()).isEqualTo(5);
-    }
-----
 
