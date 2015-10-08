@@ -3,7 +3,7 @@ package com.github.dbunit.rules.examples;
 import com.github.dbunit.rules.DBUnitRule;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.api.JPADataSet;
+import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.jpa.JPADataSetExecutor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.example.jpadomain.Company;
@@ -31,10 +31,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(CdiTestRunner.class)
 public class DeltaspikeIt {
 
-    static {
-        System.setProperty("db","customerDB");
-    }
-
     @Inject
     EntityManager entityManager;
 
@@ -43,15 +39,6 @@ public class DeltaspikeIt {
 
     @Inject
     CompanyRepository companyRepository;
-
-    @Inject
-    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
-    JPADataSetExecutor dataSetExecutor;
-
-    @Inject
-    @JPADataSet(value = "datasets/contacts.yml",unitName = "customerDB")
-    JPADataSetExecutor dataSetExecutor2;
-
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolder() {
@@ -72,7 +59,6 @@ public class DeltaspikeIt {
 
     }
 
-
     @Test
     @DataSet("datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
@@ -81,15 +67,15 @@ public class DeltaspikeIt {
     }
 
     @Test
+    @UsingDataSet("datasets/contacts.yml")
     public void shouldQueryAllCompaniesUsingInjectedExecutor() {
-        dataSetExecutor.createDataSet();
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
     }
 
     @Test
+    @UsingDataSet("datasets/contacts.yml")
     public void shouldQueryAllCompaniesUsingInjectedExecutor2() {
-        dataSetExecutor2.createDataSet();
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
     }
@@ -115,8 +101,8 @@ public class DeltaspikeIt {
     }
 
     @Test
+    @UsingDataSet("contacts.yml")
     public void shouldFindCompanyByNameUsingInjectedExecutor() {
-        dataSetExecutor.createDataSet();
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);
         assertThat(companyRepository.findByName("Google")).

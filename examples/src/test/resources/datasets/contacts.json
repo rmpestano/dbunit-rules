@@ -1,5 +1,5 @@
 {
-  "contact": [
+  "CONTACT": [
     {
       "id": 1,
       "name": "deltaspike",
@@ -19,7 +19,7 @@
       "company_id": 3
     }
   ],
-  "company": [
+  "COMPANY": [
     {
       "id": 1,
       "name": "Apache"

@@ -34,7 +34,7 @@ public class CdiTestConfig extends CdiConfig {
     @Produces
     public EntityManager produce(){
       synchronized (this){
-        return EntityManagerProvider.instance(System.getProperty("db")).em();
+        return EntityManagerProvider.instance("customerDB").em();
       }
     }
 

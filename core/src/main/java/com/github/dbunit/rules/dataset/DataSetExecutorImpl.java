@@ -1,11 +1,13 @@
 package com.github.dbunit.rules.dataset;
 
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
-import com.github.dbunit.rules.api.dataset.JSONDataSet;
-import com.github.dbunit.rules.api.dataset.YamlDataSet;
-import com.github.dbunit.rules.replacer.DateTimeReplacer;
+import java.io.File;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -22,13 +24,12 @@ import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.JSONDataSet;
+import com.github.dbunit.rules.api.dataset.YamlDataSet;
+import com.github.dbunit.rules.replacer.DateTimeReplacer;
 
 /**
  * Created by pestano on 26/07/15.
@@ -165,7 +166,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private IDataSet performSequenceFiltering(DataSetModel dataSet, IDataSet target) throws DataSetException, SQLException {
         if (dataSet.isUseSequenceFiltering()) {
-            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection);
+            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection,target.getTableNames());
             target = new FilteredDataSet(filteredTable, target);
         }
         return target;

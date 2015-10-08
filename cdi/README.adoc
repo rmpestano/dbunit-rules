@@ -7,22 +7,29 @@ A CDI interceptor to configure DBUnit datasets in your tests.
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.3</version>
+    <version>0.4</version>
     <scope>test</scope>
 </dependency>
 ----
 
-== Example
+IMPORTANT: Note that since version 0.4 this module was refactored and  now it is an independent module (does not depend on *core* neither *jpa* module anymore).
+This is due to CDI programing model (scopes, events, interceptors etc..) and also it was simplified and now does not support *multiple databases* which brings too much complexity to the project.
 
-First make sure you have CDI enabled in your tests. If you're using Deltaspike test control just enable the following
+== Pre requisites
+
+. CDI must be enabled in your tests;
++
+[NOTE]
+====
+If you're using Deltaspike test control just enable the following
 property in test/resources/META-INF/apache-deltaspike.properties:
-
 ----
-deltaspike.testcontrol.use_test_class_as_cdi_bean=true
+   deltaspike.testcontrol.use_test_class_as_cdi_bean=true
 ----
-
-Then enable dbunit interceptor in test beans.xml:
-
+====
+. A jpa entity manager produced via CDI, see https://deltaspike.apache.org/documentation/jpa.html[this example^];
+. Enable the following interceptor in your test beans.xml:
++
 [source,xml]
 ----
 <beans xmlns="http://java.sun.com/xml/ns/javaee"
@@ -35,8 +42,7 @@ Then enable dbunit interceptor in test beans.xml:
 </beans>
 ----
 
-
-Now you're ready to use DBUnit in your tests:
+== Example
 
 [source,java]
 ----
@@ -49,7 +55,7 @@ public class ContactServiceIt {
 
 
     @Test
-    @DataSet(value = "datasets/contacts.yml", unitName="costumerDB")
+    @UsingDataSet(value = "datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
