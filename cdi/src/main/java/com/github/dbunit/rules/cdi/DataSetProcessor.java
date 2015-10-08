@@ -20,6 +20,7 @@ import javax.persistence.EntityTransaction;
 
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.database.IDatabaseConnection;
@@ -29,6 +30,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.filter.ITableFilter;
+import org.dbunit.dataset.filter.SequenceTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
@@ -134,6 +136,8 @@ public class DataSetProcessor {
           if (target != null) {
             performReplacements(target);
 
+            performTableOrdering(target,usingDataSet.tableOrdering());
+
             if(usingDataSet.useSequenceFiltering()){
               target = performSequenceFiltering(target);
             }
@@ -156,6 +160,12 @@ public class DataSetProcessor {
 
   }
 
+  private IDataSet performTableOrdering(IDataSet target, String[] tableOrdering) throws AmbiguousTableNameException {
+    if (tableOrdering.length > 0 && !"".equals(tableOrdering[0])) {
+      target = new FilteredDataSet(new SequenceTableFilter(tableOrdering), target);
+    }
+    return target;
+  }
 
   private IDataSet performSequenceFiltering(IDataSet target) throws DataSetException, SQLException {
     ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection,target.getTableNames());

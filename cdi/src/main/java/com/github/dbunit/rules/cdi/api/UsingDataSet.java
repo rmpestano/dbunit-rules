@@ -39,6 +39,13 @@ public @interface UsingDataSet {
   boolean cleanBefore() default false;
 
   /**
+   * @return a list of table names used to reorder DELETE operations to prevent failures due to circular dependencies
+   *
+   */
+  @Nonbinding
+  String[] tableOrdering() default {};
+
+  /**
    *
    * @return list of sql commands to execute before dataset creation
    */

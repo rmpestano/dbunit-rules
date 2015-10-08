@@ -49,7 +49,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @UsingDataSet(value = "datasets/contacts.yml",tableOrdering = {"company","contact"})
     public void shouldFindCompanyByName() {
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);
