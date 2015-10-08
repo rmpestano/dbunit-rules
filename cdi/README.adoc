@@ -110,7 +110,7 @@ public class CdiTestConfig extends CdiConfig { <1>
 }
 
 ----
-<1> CdiConfig produces "real" entityManager
+<1> CdiTestConfig extends CdiConfig which produces "real" entityManager
 
 JPA persistence unit config:
 
@@ -140,3 +140,4 @@ JPA persistence unit config:
 </persistence>
 ----
 
+See full https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/DeltaspikeUsingInterceptorIt.java#L25[example here].
