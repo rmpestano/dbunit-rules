@@ -20,10 +20,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Matti Tahvonen
- */
+
 @Specializes
 @ApplicationScoped
 public class CdiTestConfig extends CdiConfig {

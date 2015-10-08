@@ -47,7 +47,6 @@ property in test/resources/META-INF/apache-deltaspike.properties:
 [source,java]
 ----
 @RunWith(CdiTestRunner.class)
-@DataSetInterceptor
 public class ContactServiceIt {
 
     @Inject
@@ -55,7 +54,7 @@ public class ContactServiceIt {
 
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @UsingDataSet("datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
@@ -88,8 +87,30 @@ company:
     name: "Pivotal"
   - id: 4
     name: "Google"
+----
+
+Entity manager producer:
+
+[source,java]
+----
+@Specializes
+@ApplicationScoped
+public class CdiTestConfig extends CdiConfig { <1>
+
+   private EntityManager em;
+
+
+    @Produces
+    public EntityManager produce(){
+      synchronized (this){
+        return EntityManagerProvider.instance("customerDB").em();
+      }
+    }
+
+}
 
 ----
+<1> CdiConfig produces "real" entityManager
 
 JPA persistence unit config:
 
@@ -118,3 +139,4 @@ JPA persistence unit config:
     </persistence-unit>
 </persistence>
 ----
+
