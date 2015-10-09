@@ -140,4 +140,4 @@ JPA persistence unit config:
 </persistence>
 ----
 
-See full https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/DeltaspikeUsingInterceptorIt.java#L25[example here].
+For more examples see full https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/DeltaspikeUsingInterceptorIt.java#L25[sample here] and https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules[cdi module tests^].
