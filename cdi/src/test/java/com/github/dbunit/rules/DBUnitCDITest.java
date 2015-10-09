@@ -89,7 +89,7 @@ public class DBUnitCDITest {
     }
 
     @Test
-    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT,
+    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT, cleanBefore = true,
             executeCommandsBefore = "INSERT INTO USER VALUES (3,'user3')"
     )
     public void shouldExecuteCommandBefore() {
@@ -101,7 +101,6 @@ public class DBUnitCDITest {
 
     //TODO replacer test
     //TODO execute scripts after test
-    //TODO cleanBefore test
     //TODO disable constraints
 
 }
