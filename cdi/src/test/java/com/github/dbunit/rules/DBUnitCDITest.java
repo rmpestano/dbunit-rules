@@ -5,9 +5,12 @@ import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,6 +23,31 @@ public class DBUnitCDITest {
 
     @Inject
     EntityManager em;
+
+
+    @Test(expected = RuntimeException.class)
+    @UsingDataSet
+    public void shouldFailToSeedEmptyDataSet() {
+
+    }
+
+    @Test(expected = YAMLException.class)
+    @UsingDataSet("ymlzzz/users.yml")
+    public void shouldFailToSeedInexistentYMLDataSet() {
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    @UsingDataSet("jsonzzz/users.json")
+    public void shouldFailToSeedInexistentJSONDataSet() {
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    @UsingDataSet("zzz/users.xml")
+    public void shouldFailToSeedInexistentXMLDataSet() {
+
+    }
 
     @Test
     @UsingDataSet("yml/users.yml")
@@ -52,5 +80,6 @@ public class DBUnitCDITest {
     //TODO replacer test
     //TODO execute scripts after/before test
     //TODO cleanBefore test
+    //TODO disable constraints
 
 }
