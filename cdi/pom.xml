@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
-        <version>0.4</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -43,6 +43,41 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- test dependencies-->
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-test-control-module-api</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.core</groupId>
+            <artifactId>deltaspike-core-impl</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.deltaspike.modules</groupId>
+            <artifactId>deltaspike-test-control-module-impl</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.deltaspike.cdictrl</groupId>
+            <artifactId>deltaspike-cdictrl-owb</artifactId>
+            <version>1.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.openwebbeans</groupId>
+            <artifactId>openwebbeans-impl</artifactId>
+            <version>1.6.2</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 
