@@ -152,10 +152,6 @@ public class DataSetProcessor {
         throw new RuntimeException("Could not initialize dataset:" + e.getMessage(), e);
       } catch (IOException e) {
         throw new RuntimeException("Could not initialize dataset:" + e.getMessage(), e);
-      } finally {
-        if(!"".equals(usingDataSet.executeCommandsAfter())){
-          executeCommands(usingDataSet.executeCommandsAfter());
-        }
       }
 
   }

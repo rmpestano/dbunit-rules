@@ -17,7 +17,7 @@ import javax.interceptor.InvocationContext;
 public class DBUnitInterceptor implements Serializable {
 
   @Inject
-  DataSetProcessor dbUnitProcessor;
+  DataSetProcessor dataSetProcessor;
 
   @AroundInvoke
   public Object intercept(InvocationContext invocationContext)
@@ -26,10 +26,10 @@ public class DBUnitInterceptor implements Serializable {
     Object proceed = null;
     UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
     if (usingDataSet != null) {
-      dbUnitProcessor.process(usingDataSet);
+      dataSetProcessor.process(usingDataSet);
       proceed = invocationContext.proceed();
-      if(!"".equals(usingDataSet.executeCommandsAfter())){
-             dbUnitProcessor.executeCommands(usingDataSet.executeCommandsAfter());
+      if (!"".equals(usingDataSet.executeCommandsAfter())){
+             dataSetProcessor.executeCommands(usingDataSet.executeCommandsAfter());
            }
         }
 
