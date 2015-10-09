@@ -131,7 +131,7 @@ public class DataSetProcessor {
               break;
             }
             default:
-              log.log(Level.SEVERE, "Unsupported dataset extension" + extension);
+              throw new RuntimeException("Unsupported dataset extension");
           }
           if (target != null) {
             performReplacements(target);

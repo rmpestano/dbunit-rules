@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import static com.github.dbunit.rules.cdi.api.UsingDataSet.*;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
@@ -9,8 +10,6 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
-import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,6 +48,18 @@ public class DBUnitCDITest {
 
     }
 
+    @Test(expected = RuntimeException.class)
+    @UsingDataSet("users")
+    public void shouldFailToSeedDataSetWithoutExtension() {
+
+    }
+
+    @Test(expected = RuntimeException.class)
+    @UsingDataSet("users.doc")
+    public void shouldFailToSeedUnknownDataSetFormat() {
+
+    }
+
     @Test
     @UsingDataSet("yml/users.yml")
     public void shouldSeedUserDataSetUsingCdiInterceptor() {
@@ -77,8 +88,19 @@ public class DBUnitCDITest {
         assertThat(user.getFollowers()).hasSize(1);
     }
 
+    @Test
+    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT,
+            executeCommandsBefore = "INSERT INTO USER VALUES (3,'user3')"
+    )
+    public void shouldExecuteCommandBefore() {
+        User user = (User) em.createQuery("select u from User u where u.id = 3").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(3);
+        assertThat(user.getName()).isEqualTo("user3");
+    }
+
     //TODO replacer test
-    //TODO execute scripts after/before test
+    //TODO execute scripts after test
     //TODO cleanBefore test
     //TODO disable constraints
 
