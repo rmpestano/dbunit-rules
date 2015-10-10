@@ -60,19 +60,7 @@ public class CdiCucumberTestRunner extends Cucumber
 
     private static final Logger LOGGER = Logger.getLogger(CdiCucumberTestRunner.class.getName());
 
-    private static final boolean USE_TEST_CLASS_AS_CDI_BEAN;
-
-    private static ThreadLocal<Boolean> automaticScopeHandlingActive = new ThreadLocal<Boolean>();
-
-    private static ThreadLocal<CdiCucumberTestRunner> currentTestRunner = new ThreadLocal<CdiCucumberTestRunner>();
-
     private boolean containerStarted = false;
-
-    static
-    {
-        USE_TEST_CLASS_AS_CDI_BEAN = TestBaseConfig.ContainerIntegration.USE_TEST_CLASS_AS_CDI_BEAN;
-    }
-
 
 
     private ContainerAwareTestContext testContext;
@@ -117,7 +105,6 @@ public class CdiCucumberTestRunner extends Cucumber
     @Override
     protected void runChild(FeatureRunner featureRunner, RunNotifier notifier)
     {
-        currentTestRunner.set(this);
 
         TestControl testControl = getTestClass().getJavaClass().getAnnotation(TestControl.class);
 
@@ -136,8 +123,7 @@ public class CdiCucumberTestRunner extends Cucumber
     }
 
 
-    private static class ContainerAwareTestContext
-    {
+    private static class ContainerAwareTestContext {
         private ContainerAwareTestContext parent;
 
         private final ProjectStage projectStage;
@@ -151,25 +137,18 @@ public class CdiCucumberTestRunner extends Cucumber
 
         private List<ExternalContainer> externalContainers;
 
-        ContainerAwareTestContext(TestControl testControl, ContainerAwareTestContext parent)
-        {
+        ContainerAwareTestContext(TestControl testControl, ContainerAwareTestContext parent) {
             this.parent = parent;
 
             Class<? extends ProjectStage> foundProjectStageClass;
-            if (testControl == null)
-            {
+            if (testControl == null) {
                 this.testControl = new TestControlLiteral();
-                if (parent != null)
-                {
+                if (parent != null) {
                     foundProjectStageClass = parent.testControl.projectStage();
-                }
-                else
-                {
+                } else {
                     foundProjectStageClass = this.testControl.projectStage();
                 }
-            }
-            else
-            {
+            } else {
                 this.testControl = testControl;
                 foundProjectStageClass = this.testControl.projectStage();
             }
@@ -178,22 +157,18 @@ public class CdiCucumberTestRunner extends Cucumber
             ProjectStageProducer.setProjectStage(this.projectStage);
         }
 
-        boolean isContainerStarted()
-        {
+        boolean isContainerStarted() {
             return this.containerStarted || (this.parent != null && this.parent.isContainerStarted());
         }
 
-        Class<? extends Handler> getLogHandlerClass()
-        {
+        Class<? extends Handler> getLogHandlerClass() {
             return this.testControl.logHandler();
         }
 
-        void applyBeforeFeatureConfig(Class testClass)
-        {
+        void applyBeforeFeatureConfig(Class testClass) {
             CdiContainer container = CdiContainerLoader.getCdiContainer();
 
-            if (!isContainerStarted())
-            {
+            if (!isContainerStarted()) {
                 container.boot(CdiTestSuiteRunner.getTestContainerConfig());
                 containerStarted = true;
                 bootExternalContainers(testClass);
@@ -205,8 +180,7 @@ public class CdiCucumberTestRunner extends Cucumber
             restrictedScopes.add(ApplicationScoped.class);
             restrictedScopes.add(Singleton.class);
 
-            if (this.parent == null && this.testControl.getClass().equals(TestControlLiteral.class))
-            {
+            if (this.parent == null && this.testControl.getClass().equals(TestControlLiteral.class)) {
                 //skip scope-handling if @TestControl isn't used explicitly on the test-class -> TODO re-visit it
                 restrictedScopes.add(RequestScoped.class);
                 restrictedScopes.add(SessionScoped.class);
@@ -218,22 +192,17 @@ public class CdiCucumberTestRunner extends Cucumber
             startScopes(container, testClass, null, restrictedScopes.toArray(new Class[restrictedScopes.size()]));
         }
 
-        private void bootExternalContainers(Class testClass)
-        {
-            if (!this.testControl.startExternalContainers())
-            {
+        private void bootExternalContainers(Class testClass) {
+            if (!this.testControl.startExternalContainers()) {
                 return;
             }
 
-            if (this.externalContainers == null)
-            {
+            if (this.externalContainers == null) {
                 List<ExternalContainer> configuredExternalContainers =
                         ServiceUtils.loadServiceImplementations(ExternalContainer.class);
-                Collections.sort(configuredExternalContainers, new Comparator<ExternalContainer>()
-                {
+                Collections.sort(configuredExternalContainers, new Comparator<ExternalContainer>() {
                     @Override
-                    public int compare(ExternalContainer ec1, ExternalContainer ec2)
-                    {
+                    public int compare(ExternalContainer ec1, ExternalContainer ec2) {
                         return ec1.getOrdinal() > ec2.getOrdinal() ? 1 : -1;
                     }
                 });
@@ -241,33 +210,24 @@ public class CdiCucumberTestRunner extends Cucumber
                 this.externalContainers = new ArrayList<ExternalContainer>(configuredExternalContainers.size());
 
                 ExternalContainer externalContainerBean;
-                for (ExternalContainer externalContainer : configuredExternalContainers)
-                {
+                for (ExternalContainer externalContainer : configuredExternalContainers) {
                     //needed to use cdi-observers in the container optionally
                     externalContainerBean = BeanProvider.getContextualReference(externalContainer.getClass(), true);
 
-                    if (externalContainerBean != null)
-                    {
+                    if (externalContainerBean != null) {
                         this.externalContainers.add(externalContainerBean);
-                    }
-                    else
-                    {
+                    } else {
                         this.externalContainers.add(externalContainer);
                     }
                 }
 
-                for (ExternalContainer externalContainer : this.externalContainers)
-                {
-                    try
-                    {
-                        if (externalContainer instanceof TestAware)
-                        {
-                            ((TestAware)externalContainer).setTestClass(testClass);
+                for (ExternalContainer externalContainer : this.externalContainers) {
+                    try {
+                        if (externalContainer instanceof TestAware) {
+                            ((TestAware) externalContainer).setTestClass(testClass);
                         }
                         externalContainer.boot();
-                    }
-                    catch (RuntimeException e)
-                    {
+                    } catch (RuntimeException e) {
                         Logger.getLogger(CdiCucumberTestRunner.class.getName()).log(Level.WARNING,
                                 "booting " + externalContainer.getClass().getName() + " failed", e);
                     }
@@ -275,8 +235,7 @@ public class CdiCucumberTestRunner extends Cucumber
             }
         }
 
-        void applyAfterFeatureConfig()
-        {
+        void applyAfterFeatureConfig() {
             ProjectStageProducer.setProjectStage(previousProjectStage);
             previousProjectStage = null;
 
@@ -284,10 +243,8 @@ public class CdiCucumberTestRunner extends Cucumber
 
             stopStartedScopes(container);
 
-            if (this.containerStarted)
-            {
-                if (isStopContainerAllowed())
-                {
+            if (this.containerStarted) {
+                if (isStopContainerAllowed()) {
                     shutdownExternalContainers();
 
                     container.shutdown(); //stop the container on the same level which started it
@@ -296,26 +253,19 @@ public class CdiCucumberTestRunner extends Cucumber
             }
         }
 
-        private boolean isStopContainerAllowed()
-        {
+        private boolean isStopContainerAllowed() {
             return true;
         }
 
-        private void shutdownExternalContainers()
-        {
-            if (this.externalContainers == null)
-            {
+        private void shutdownExternalContainers() {
+            if (this.externalContainers == null) {
                 return;
             }
 
-            for (ExternalContainer externalContainer : this.externalContainers)
-            {
-                try
-                {
+            for (ExternalContainer externalContainer : this.externalContainers) {
+                try {
                     externalContainer.shutdown();
-                }
-                catch (RuntimeException e)
-                {
+                } catch (RuntimeException e) {
                     Logger.getLogger(CdiCucumberTestRunner.class.getName()).log(Level.WARNING,
                             "shutting down " + externalContainer.getClass().getName() + " failed", e);
                 }
@@ -323,200 +273,137 @@ public class CdiCucumberTestRunner extends Cucumber
         }
 
 
-
-
-
-
         private void startScopes(CdiContainer container,
                                  Class testClass,
                                  Method testMethod,
-                                 Class<? extends Annotation>... restrictedScopes)
-        {
-            try
-            {
-                automaticScopeHandlingActive.set(Boolean.TRUE);
+                                 Class<? extends Annotation>... restrictedScopes) {
 
-                ContextControl contextControl = container.getContextControl();
+            ContextControl contextControl = container.getContextControl();
 
-                List<Class<? extends Annotation>> scopeClasses = new ArrayList<Class<? extends Annotation>>();
+            List<Class<? extends Annotation>> scopeClasses = new ArrayList<Class<? extends Annotation>>();
 
-                Collections.addAll(scopeClasses, this.testControl.startScopes());
+            Collections.addAll(scopeClasses, this.testControl.startScopes());
 
-                if (scopeClasses.isEmpty())
-                {
-                    addScopesForDefaultBehavior(scopeClasses);
-                }
-                else
-                {
-                    List<TestControlValidator> testControlValidatorList =
-                            ServiceUtils.loadServiceImplementations(TestControlValidator.class);
+            if (scopeClasses.isEmpty()) {
+                addScopesForDefaultBehavior(scopeClasses);
+            } else {
+                List<TestControlValidator> testControlValidatorList =
+                        ServiceUtils.loadServiceImplementations(TestControlValidator.class);
 
-                    for (TestControlValidator testControlValidator : testControlValidatorList)
-                    {
-                        if (testControlValidator instanceof TestAware)
-                        {
-                            if (testMethod != null)
-                            {
-                                ((TestAware)testControlValidator).setTestMethod(testMethod);
-                            }
-                            ((TestAware)testControlValidator).setTestClass(testClass);
+                for (TestControlValidator testControlValidator : testControlValidatorList) {
+                    if (testControlValidator instanceof TestAware) {
+                        if (testMethod != null) {
+                            ((TestAware) testControlValidator).setTestMethod(testMethod);
                         }
-                        try
-                        {
-                            testControlValidator.validate(this.testControl);
+                        ((TestAware) testControlValidator).setTestClass(testClass);
+                    }
+                    try {
+                        testControlValidator.validate(this.testControl);
+                    } finally {
+                        if (testControlValidator instanceof TestAware) {
+                            ((TestAware) testControlValidator).setTestClass(null);
+                            ((TestAware) testControlValidator).setTestMethod(null);
                         }
-                        finally
-                        {
-                            if (testControlValidator instanceof TestAware)
-                            {
-                                ((TestAware)testControlValidator).setTestClass(null);
-                                ((TestAware)testControlValidator).setTestMethod(null);
-                            }
-                        }
-                    }
-                }
-
-                for (Class<? extends Annotation> scopeAnnotation : scopeClasses)
-                {
-                    if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation))
-                    {
-                        continue;
-                    }
-
-                    if (isRestrictedScope(scopeAnnotation, restrictedScopes))
-                    {
-                        continue;
-                    }
-
-                    try
-                    {
-                        //force a clean context - TODO discuss onScopeStopped call
-                        contextControl.stopContext(scopeAnnotation);
-
-                        contextControl.startContext(scopeAnnotation);
-                        this.startedScopes.add(scopeAnnotation);
-
-                        onScopeStarted(scopeAnnotation);
-                    }
-                    catch (RuntimeException e)
-                    {
-                        Logger logger = Logger.getLogger(CdiCucumberTestRunner.class.getName());
-                        logger.setLevel(Level.SEVERE);
-                        logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
                     }
                 }
             }
-            finally
-            {
-                automaticScopeHandlingActive.remove();
-                automaticScopeHandlingActive.set(null);
+
+            for (Class<? extends Annotation> scopeAnnotation : scopeClasses) {
+                if (this.parent != null && this.parent.isScopeStarted(scopeAnnotation)) {
+                    continue;
+                }
+
+                if (isRestrictedScope(scopeAnnotation, restrictedScopes)) {
+                    continue;
+                }
+
+                try {
+                    //force a clean context - TODO discuss onScopeStopped call
+                    contextControl.stopContext(scopeAnnotation);
+
+                    contextControl.startContext(scopeAnnotation);
+                    this.startedScopes.add(scopeAnnotation);
+
+                    onScopeStarted(scopeAnnotation);
+                } catch (RuntimeException e) {
+                    Logger logger = Logger.getLogger(CdiCucumberTestRunner.class.getName());
+                    logger.setLevel(Level.SEVERE);
+                    logger.log(Level.SEVERE, "failed to start scope @" + scopeAnnotation.getName(), e);
+                }
             }
+
         }
 
-        private void addScopesForDefaultBehavior(List<Class<? extends Annotation>> scopeClasses)
-        {
-            if (this.parent != null && !this.parent.isScopeStarted(RequestScoped.class))
-            {
-                if (!scopeClasses.contains(RequestScoped.class))
-                {
+        private void addScopesForDefaultBehavior(List<Class<? extends Annotation>> scopeClasses) {
+            if (this.parent != null && !this.parent.isScopeStarted(RequestScoped.class)) {
+                if (!scopeClasses.contains(RequestScoped.class)) {
                     scopeClasses.add(RequestScoped.class);
                 }
             }
-            if (this.parent != null && !this.parent.isScopeStarted(SessionScoped.class))
-            {
-                if (!scopeClasses.contains(SessionScoped.class))
-                {
+            if (this.parent != null && !this.parent.isScopeStarted(SessionScoped.class)) {
+                if (!scopeClasses.contains(SessionScoped.class)) {
                     scopeClasses.add(SessionScoped.class);
                 }
             }
         }
 
         private boolean isRestrictedScope(Class<? extends Annotation> scopeAnnotation,
-                                          Class<? extends Annotation>[] restrictedScopes)
-        {
-            for (Class<? extends Annotation> restrictedScope : restrictedScopes)
-            {
-                if (scopeAnnotation.equals(restrictedScope))
-                {
+                                          Class<? extends Annotation>[] restrictedScopes) {
+            for (Class<? extends Annotation> restrictedScope : restrictedScopes) {
+                if (scopeAnnotation.equals(restrictedScope)) {
                     return true;
                 }
             }
             return false;
         }
 
-        private boolean isScopeStarted(Class<? extends Annotation> scopeAnnotation)
-        {
+        private boolean isScopeStarted(Class<? extends Annotation> scopeAnnotation) {
             return this.startedScopes.contains(scopeAnnotation);
         }
 
-        private void stopStartedScopes(CdiContainer container)
-        {
-            try
-            {
-                automaticScopeHandlingActive.set(Boolean.TRUE);
-
-                while (!this.startedScopes.empty())
-                {
-                    Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
-                    //TODO check if context was started by parent
-                    try
-                    {
-                        container.getContextControl().stopContext(scopeAnnotation);
-                        onScopeStopped(scopeAnnotation);
-                    }
-                    catch (RuntimeException e)
-                    {
-                        Logger logger = Logger.getLogger(CdiCucumberTestRunner.class.getName());
-                        logger.setLevel(Level.SEVERE);
-                        logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
-                    }
+        private void stopStartedScopes(CdiContainer container) {
+            while (!this.startedScopes.empty()) {
+                Class<? extends Annotation> scopeAnnotation = this.startedScopes.pop();
+                //TODO check if context was started by parent
+                try {
+                    container.getContextControl().stopContext(scopeAnnotation);
+                    onScopeStopped(scopeAnnotation);
+                } catch (RuntimeException e) {
+                    Logger logger = Logger.getLogger(CdiCucumberTestRunner.class.getName());
+                    logger.setLevel(Level.SEVERE);
+                    logger.log(Level.SEVERE, "failed to stop scope @" + scopeAnnotation.getName(), e);
                 }
-            }
-            finally
-            {
-                automaticScopeHandlingActive.remove();
-                automaticScopeHandlingActive.set(null);
             }
         }
 
-        private void onScopeStarted(Class<? extends Annotation> scopeClass)
-        {
+        private void onScopeStarted(Class<? extends Annotation> scopeClass) {
             List<ExternalContainer> externalContainerList = collectExternalContainers(this);
 
-            for (ExternalContainer externalContainer : externalContainerList)
-            {
+            for (ExternalContainer externalContainer : externalContainerList) {
                 externalContainer.startScope(scopeClass);
             }
         }
 
-        private void onScopeStopped(Class<? extends Annotation> scopeClass)
-        {
+        private void onScopeStopped(Class<? extends Annotation> scopeClass) {
             List<ExternalContainer> externalContainerList = collectExternalContainers(this);
 
-            for (ExternalContainer externalContainer : externalContainerList)
-            {
+            for (ExternalContainer externalContainer : externalContainerList) {
                 externalContainer.stopScope(scopeClass);
             }
         }
 
-        private static List<ExternalContainer> collectExternalContainers(ContainerAwareTestContext testContext)
-        {
+        private static List<ExternalContainer> collectExternalContainers(ContainerAwareTestContext testContext) {
             List<ExternalContainer> result = new ArrayList<ExternalContainer>();
 
-            if (testContext.externalContainers != null)
-            {
+            if (testContext.externalContainers != null) {
                 result.addAll(testContext.externalContainers);
             }
 
-            if (testContext.parent != null)
-            {
+            if (testContext.parent != null) {
                 result.addAll(collectExternalContainers(testContext.parent));
             }
             return result;
         }
-
-
-
 
     }
 
