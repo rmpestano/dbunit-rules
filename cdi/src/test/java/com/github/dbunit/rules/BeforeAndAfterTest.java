@@ -36,12 +36,13 @@ public class BeforeAndAfterTest {
     }
 
     @Test
-     @UsingDataSet(value = "yml/users.yml", seedStrategy = UsingDataSet.SeedStrategy.INSERT, cleanBefore = true, cleanAfter = true
+     @UsingDataSet(value = "yml/users.yml", seedStrategy = UsingDataSet.SeedStrategy.INSERT,
+             cleanBefore = true, cleanAfter = true
     )
     public void shouldClearDatabaseBeforeAndAfter() {
         try {
             assertNull(getUser(6));
-            fail();//shuld not get here
+            fail();//should not get here
         }catch (NoResultException nre){
             //no op
         }
