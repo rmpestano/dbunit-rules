@@ -21,7 +21,7 @@ This is due to CDI programing model (scopes, events, interceptors etc..) and als
 +
 [NOTE]
 ====
-If you're using Deltaspike test control just enable the following
+Make sure the test class itself is a CDI bean, if you're using https://deltaspike.apache.org/documentation/test-control.html[Deltaspike test control^] just enable the following
 property in test/resources/META-INF/apache-deltaspike.properties:
 ----
    deltaspike.testcontrol.use_test_class_as_cdi_bean=true
