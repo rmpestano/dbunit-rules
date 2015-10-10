@@ -342,7 +342,7 @@ Also note that the same can be done using @Rule but pay attention that you must 
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.4</version>
+      <version>0.4.1</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -377,7 +377,7 @@ As stated before DBunit needs a jdbc connection, a way to create one is using JP
 <dependency>
 	<groupId>com.github.dbunit-rules</groupId>
 	<artifactId>jpa</artifactId>
-	<version>0.4</version>
+	<version>0.4.1</version>
 	<scope>test</scope>
 </dependency>
 ----
@@ -490,7 +490,7 @@ If you use CDI in your tests then you should have a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.4</version>
+    <version>0.4.1</version>
     <scope>test</scope>
 </dependency>
 ----
