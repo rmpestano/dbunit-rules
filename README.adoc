@@ -483,7 +483,7 @@ EntityManagerProvider will only retrieve JPA entity manager from persistence uni
 
 == CDI module
 
-If you use CDI in your tests then you should have a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
+If you use CDI in your tests then you should give a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
 
 [source,xml]
 ----
