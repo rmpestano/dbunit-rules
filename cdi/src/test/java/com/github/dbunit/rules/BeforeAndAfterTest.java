@@ -24,7 +24,6 @@ public class BeforeAndAfterTest {
 
     @Inject
     EntityManager em;
-    private Object user;
 
     @Before
     public void init() {
