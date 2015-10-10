@@ -97,7 +97,7 @@ public class DataSetProcessor {
           disableConstraints();
         }
         if (usingDataSet.cleanBefore()) {
-          clearDatabase();
+          clearDatabase(usingDataSet);
         }
         if(usingDataSet.executeCommandsBefore().length > 0){
           executeCommands(usingDataSet.executeCommandsBefore());
@@ -210,14 +210,19 @@ public class DataSetProcessor {
   /**
    * @throws SQLException
    */
-  private void clearDatabase() throws SQLException {
+  public void clearDatabase(UsingDataSet usingDataSet) throws SQLException {
     if(isHSqlDB()){
       connection.createStatement().execute("TRUNCATE SCHEMA public AND COMMIT;");
-    } else{
-      //brute force approach
-      ResultSet result = null;
-      List<String> tables = getTableNames(connection);
+    } else {
 
+      if(usingDataSet.tableOrdering() != null && usingDataSet.tableOrdering().length > 0){
+        for (String table : usingDataSet.tableOrdering()) {
+          connection.createStatement().executeUpdate("DELETE FROM " + table + " where 1=1");
+          connection.commit();
+        }
+      }
+      //clear remaining tables in any order(if there are any, also no problem clearing again)
+      List<String> tables = getTableNames(connection);
       for (String tableName : tables) {
         connection.createStatement().executeUpdate("DELETE FROM " + tableName + " where 1=1");
         connection.commit();

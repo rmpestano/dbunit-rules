@@ -32,7 +32,14 @@ public @interface UsingDataSet {
   boolean disableConstraints() default false;
 
   /**
-   * clean all database before dataset creation
+   * clear database before dataset creation
+   * @return
+   */
+  @Nonbinding
+  boolean cleanAfter() default false;
+
+  /**
+   * clear database after test execution
    * @return
    */
   @Nonbinding

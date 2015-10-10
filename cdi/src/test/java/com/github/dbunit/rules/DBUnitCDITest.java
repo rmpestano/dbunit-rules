@@ -99,6 +99,7 @@ public class DBUnitCDITest {
         assertThat(user.getName()).isEqualTo("user3");
     }
 
+
     //TODO replacer test
     //TODO execute scripts after test
     //TODO disable constraints
