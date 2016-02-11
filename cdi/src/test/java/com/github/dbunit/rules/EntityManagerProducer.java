@@ -1,5 +1,7 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;

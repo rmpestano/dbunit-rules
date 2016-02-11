@@ -1,4 +1,4 @@
-package com.github.dbunit.rules;
+package com.github.dbunit.rules.cdi.util;
 
 /**
  * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
