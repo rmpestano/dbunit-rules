@@ -10,17 +10,16 @@ import org.hibernate.internal.SessionImpl;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.*;
 
 public class EntityManagerProvider implements TestRule {
 
@@ -60,7 +59,7 @@ public class EntityManagerProvider implements TestRule {
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
             this.tx = this.em.getTransaction();
-            if (em.getDelegate() instanceof Session) {
+            if (isHibernatePresentOnClasspath() && em.getDelegate() instanceof Session) {
                 conn = ((SessionImpl) em.unwrap(Session.class)).connection();
             } else{
                 /**
@@ -101,6 +100,15 @@ public class EntityManagerProvider implements TestRule {
             }
 
         };
+    }
+
+    private boolean isHibernatePresentOnClasspath(){
+        try {
+            Class.forName( "org.hibernate.Session" );
+            return true;
+        } catch( ClassNotFoundException e ) {
+            return false;
+        }
     }
 
 }
