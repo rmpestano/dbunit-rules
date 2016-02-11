@@ -66,7 +66,7 @@ public class DataSetProcessor {
   private Connection createConnection() {
     try {
       EntityTransaction tx = this.em.getTransaction();
-      if (em.getDelegate() instanceof Session) {
+      if (isHibernatePresentOnClasspath() && em.getDelegate() instanceof Session) {
         connection = ((SessionImpl) em.unwrap(Session.class)).connection();
       } else {
         /**
@@ -273,6 +273,15 @@ public class DataSetProcessor {
 
   public boolean isHSqlDB() throws SQLException {
     return connection != null && connection.getMetaData().getDriverName().toLowerCase().contains("hsql");
+  }
+
+  private boolean isHibernatePresentOnClasspath(){
+    try {
+      Class.forName( "org.hibernate.Session" );
+      return true;
+    } catch( ClassNotFoundException e ) {
+      return false;
+    }
   }
 
 }
