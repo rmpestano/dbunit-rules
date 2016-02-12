@@ -12,7 +12,7 @@
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.4.2</version>
+    <version>0.4.3-SNAPSHOT</version>
 
     <modules>
         <module>core</module>
