@@ -67,7 +67,7 @@ public class DeltaspikeUsingInterceptorIt {
     public void shouldCreateCompany() {
         assertThat(companyRepository.count()).isEqualTo(4);
         Company company = new Company("test company");
-        beginTx();
+        beginTx();//repository doesnt manage transactions
         Company companyCreated = companyRepository.save(company);
         assertThat(companyCreated.id).isNotNull();
         commitTx();
@@ -81,9 +81,7 @@ public class DeltaspikeUsingInterceptorIt {
         Company google = companyRepository.findByName("Google").get(0);
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(0);
         Contact rmpestano = new Contact("rmpestano", null, "rmpestano@gmail.com", google);
-        beginTx();//for now deltaspike @Transactional isn't helping
         contactService.save(rmpestano);
-        commitTx();
         assertThat(rmpestano.id).isNotNull();
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(1);
     }

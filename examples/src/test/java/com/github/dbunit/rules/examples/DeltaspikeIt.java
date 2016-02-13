@@ -133,9 +133,7 @@ public class DeltaspikeIt {
         Company google = companyRepository.findByName("Google").get(0);
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(0);
         Contact rmpestano = new Contact("rmpestano", null, "rmpestano@gmail.com", google);
-        beginTx();//for now deltaspike @Transactional isn't helping
         contactService.save(rmpestano);
-        commitTx();
         assertThat(rmpestano.id).isNotNull();
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(1);
     }
@@ -147,9 +145,7 @@ public class DeltaspikeIt {
         assertThat(contactService.countByCompanyAndName(pivotal, "Spring")).
                 isEqualTo(1);
         Contact spring = contactService.findByCompanyAndName(pivotal, "Spring").get(0);
-        beginTx();//for now deltaspike @Transactional isn't helping
         contactService.delete(spring);
-        commitTx();
         assertThat(contactService.countByCompanyAndName(pivotal, "Spring")).
                 isEqualTo(0);
     }
