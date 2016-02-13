@@ -342,7 +342,7 @@ Also note that the same can be done using @Rule but pay attention that you must 
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.4.2</version>
+      <version>0.5.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -377,7 +377,7 @@ As stated before DBunit needs a jdbc connection, a way to create one is using JP
 <dependency>
 	<groupId>com.github.dbunit-rules</groupId>
 	<artifactId>jpa</artifactId>
-	<version>0.4.2</version>
+	<version>0.5.0</version>
 	<scope>test</scope>
 </dependency>
 ----
@@ -490,7 +490,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.4.2</version>
+    <version>0.5.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -534,6 +534,50 @@ public class DeltaspikeUsingInterceptorIt {
     }
 }
 ----
+
+== Cucumber module
+
+this module brings a Cucumber runner which is CDI aware. 
+
+NOTE: If you don't use CDI just use cucumber 'official' runner and you should be ok.
+
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.github.dbunit-rules</groupId>
+    <artifactId>cucumber</artifactId>
+    <version>0.5.0</version>
+    <scope>test</scope>
+</dependency>
+----
+
+Now you just need to use *CdiCucumberTestRunner*.
+
+=== Examples
+
+.feature file (src/test/resources/features/contacts.feature)
+----
+include::examples/src/test/resources//features/contacts.feature[]
+----
+
+.Cucumber cdi runner
+[source,java]
+----
+include::examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
+----
+
+<1> You can use glues so step definitions and the runner can be in different packages for reuse between features.
+
+.Step definitions
+[source,java]
+----
+include::examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
+----
+
+<1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
+<2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
+
 
 
 

@@ -5,7 +5,7 @@ Feature: Contacts test
 
 
   Scenario Outline: search contacts
-    Given we have contacts in the database
+    Given we have a list of constacts
     When we search contacts by name "<name>"
     Then we should find <result> contacts
 
@@ -19,6 +19,6 @@ Feature: Contacts test
 
   Scenario: delete a contact
 
-    Given we have contacts in the database
+    Given we have a list of contacts
     When we delete contact by id 1
-    Then we should not find contacts 1 in database
+    Then we should not find contact 1
