@@ -558,13 +558,49 @@ Now you just need to use *CdiCucumberTestRunner*.
 
 .feature file (src/test/resources/features/contacts.feature)
 ----
-include::examples/src/test/resources//features/contacts.feature[]
-----
+Feature: Contacts test
+  As a user of contacts repository
+  I want to crud contacts
+  So that I can expose contacts service
+
+
+  Scenario Outline: search contacts
+    Given we have a list of constacts
+    When we search contacts by name "<name>"
+    Then we should find <result> contacts
+
+  Examples: examples1
+  | name     | result |
+  | delta    | 1      |
+  | sp       | 2      |
+  | querydsl | 1      |
+  | abcd     | 0      |
+
+
+  Scenario: delete a contact
+
+    Given we have a list of contacts
+    When we delete contact by id 1
+    Then we should not find contact 1----
 
 .Cucumber cdi runner
 [source,java]
 ----
-include::https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
+package com.github.dbunit.rules.examples.cucumber;
+
+import com.github.dbunit.rules.cucumber.CdiCucumberTestRunner;
+import cucumber.api.CucumberOptions;
+import org.junit.runner.RunWith;
+
+
+@RunWith(CdiCucumberTestRunner.class)
+@CucumberOptions(
+        features = {"src/test/resources/features/contacts.feature"},
+        plugin = {"json:target/cucumber.json"}
+        //glue = "com.github.dbunit.rules.examples.glues" <1>
+)
+public class ContactFeature {
+}
 ----
 
 <1> You can use glues so step definitions and the runner can be in different packages for reuse between features.
@@ -572,7 +608,57 @@ include::https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test
 .Step definitions
 [source,java]
 ----
-include::blob/master/examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
+package com.github.dbunit.rules.examples.cucumber; //<1>
+
+import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import org.example.jpadomain.Contact;
+import org.example.jpadomain.Contact_;
+import org.example.service.deltaspike.ContactRepository;
+
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class ContactSteps {
+
+    @Inject
+    ContactRepository contactRepository;
+
+    Long count;
+
+    @When("^^we search contacts by name \"([^\"]*)\"$")
+    public void we_search_contacts_by_name_(String name) throws Throwable {
+        Contact contact = new Contact();
+        contact.setName(name);
+        count = contactRepository.countLike(contact, Contact_.name);
+    }
+
+
+    @Then("^we should find (\\d+) contacts$")
+    public void we_should_find_result_contacts(Long result) throws Throwable {
+        assertEquals(result,count);
+    }
+
+    @Given("^we have a list of contacts")
+    @UsingDataSet("datasets/contacts.yml") //<2>
+    public void given() {
+        assertEquals(contactRepository.count(), new Long(3));
+    }
+
+    @When("^we delete contact by id (\\d+)$")
+    public void we_delete_contact_by_id(long id) throws Throwable {
+        contactRepository.remove(contactRepository.findBy(id));
+    }
+
+    @Then("^we should not find contact (\\d+)$")
+    public void we_should_not_find_contacts_in_database(long id) throws Throwable {
+        assertNull(contactRepository.findBy(id));
+    }
+}
 ----
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
