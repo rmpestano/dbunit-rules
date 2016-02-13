@@ -564,7 +564,7 @@ include::examples/src/test/resources//features/contacts.feature[]
 .Cucumber cdi runner
 [source,java]
 ----
-include::examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
+include::https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
 ----
 
 <1> You can use glues so step definitions and the runner can be in different packages for reuse between features.
@@ -572,7 +572,7 @@ include::examples/src/test/java/com/github/dbunit/rules/examples/cucumber/Contac
 .Step definitions
 [source,java]
 ----
-include::examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
+include::blob/master/examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
 ----
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
