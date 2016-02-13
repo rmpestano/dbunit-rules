@@ -12,13 +12,14 @@
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.4.3-SNAPSHOT</version>
+    <version>0.5.0-SNAPSHOT</version>
 
     <modules>
         <module>core</module>
         <module>jpa</module>
         <module>examples</module>
         <module>cdi</module>
+        <module>cucumber</module>
     </modules>
 
     <name>dbunit-rules</name>
@@ -153,7 +154,7 @@
                     <includes>
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>
-                        <include>**/*Bdd.java</include>
+                        <include>**/*Feature.java</include>
                     </includes>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>

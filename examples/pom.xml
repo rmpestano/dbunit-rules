@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
-        <version>0.4.3-SNAPSHOT</version>
+        <version>0.5.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -14,26 +14,26 @@
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-data-module-api</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-data-module-impl</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-jpa-module-api</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-jpa-module-impl</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -72,6 +72,14 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.dbunit-rules</groupId>
+            <artifactId>cucumber</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <dependency>
             <!-- see DeltaspikeUsingInterceptorIt -->
             <groupId>com.github.dbunit-rules</groupId>
             <artifactId>jpa</artifactId>
@@ -82,27 +90,27 @@
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-api</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-impl</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.deltaspike.cdictrl</groupId>
             <artifactId>deltaspike-cdictrl-weld</artifactId>
-            <version>1.4.2</version>
+            <version>1.5.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -167,6 +175,7 @@
                     <includes>
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>
+                        <include>**/*Feature.java</include>
                     </includes>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>
@@ -215,6 +224,26 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+                <groupId>com.github.cukedoctor</groupId>
+                <artifactId>cukedoctor-maven-plugin</artifactId>
+                <version>0.6.2</version>
+                <configuration>
+                    <outputFileName>documentation</outputFileName>
+                    <outputDir>docs</outputDir>
+                    <format>all</format><!--pdf and html5 -->
+                    <toc>right</toc>
+                    <numbered>true</numbered>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
     </build>
