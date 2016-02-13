@@ -44,7 +44,6 @@ public class EntityManagerProvider  {
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
         }
-        em.clear();
         emf.getCache().evictAll();
     }
 
