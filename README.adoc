@@ -581,7 +581,8 @@ Feature: Contacts test
 
     Given we have a list of contacts
     When we delete contact by id 1
-    Then we should not find contact 1----
+    Then we should not find contact 1
+----
 
 .Cucumber cdi runner
 [source,java]
