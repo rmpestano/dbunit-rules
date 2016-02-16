@@ -140,4 +140,14 @@ JPA persistence unit config:
 </persistence>
 ----
 
+[TIP]
+====
+If you use different transaction strategies between your application and tests (eg: JTA for application and Non JTA in tests) you can use the following property in *apache-deltaspike.properties*:
+
+----
+ globalAlternatives.org.apache.deltaspike.jpa.spi.transaction.TransactionStrategy =org.apache.deltaspike.jpa.impl.transaction.EnvironmentAwareTransactionStrategy
+----
+
+====
+
 For more examples see full https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/java/com/github/dbunit/rules/examples/DeltaspikeUsingInterceptorIt.java#L25[sample here] and https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules[cdi module tests^].
