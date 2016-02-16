@@ -2,6 +2,7 @@ package com.github.dbunit.rules.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -20,7 +21,7 @@ public class Tweet {
     private Integer likes;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Calendar date;
 
     @ManyToOne
     User user;
@@ -42,11 +43,11 @@ public class Tweet {
     }
 
 
-    public Date getDate() {
+    public Calendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(Calendar date) {
         this.date = date;
     }
 

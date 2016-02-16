@@ -4,6 +4,7 @@ import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
+import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,6 +79,12 @@ public class DBUnitRulesIt {
         User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).isNotNull().hasSize(1);
+        Tweet tweet = user.getTweets().get(0);
+        assertThat(tweet).isNotNull();
+        Calendar date = tweet.getDate();
+        Calendar now = Calendar.getInstance();
+        assertThat(date.get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
