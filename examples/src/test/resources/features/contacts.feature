@@ -5,7 +5,7 @@ Feature: Contacts test
 
 
   Scenario Outline: search contacts
-    Given we have a list of constacts
+    Given we have a list of contacts
     When we search contacts by name "<name>"
     Then we should find <result> contacts
 
