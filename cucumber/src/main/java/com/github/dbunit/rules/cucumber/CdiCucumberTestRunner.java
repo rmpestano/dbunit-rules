@@ -41,7 +41,6 @@ import org.apache.deltaspike.core.util.ProjectStageProducer;
 import org.apache.deltaspike.core.util.ServiceUtils;
 import org.apache.deltaspike.testcontrol.api.TestControl;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestSuiteRunner;
-import org.apache.deltaspike.testcontrol.api.junit.TestBaseConfig;
 import org.apache.deltaspike.testcontrol.api.literal.TestControlLiteral;
 import org.apache.deltaspike.testcontrol.spi.ExternalContainer;
 import org.apache.deltaspike.testcontrol.spi.TestAware;

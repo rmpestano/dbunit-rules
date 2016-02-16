@@ -1,7 +1,7 @@
 package com.github.dbunit.rules.bdd;
 
+import com.github.dbunit.rules.cucumber.CdiCucumberTestRunner;
 import cucumber.api.CucumberOptions;
-import cucumber.runtime.CdiCucumberTestRunner;
 import org.junit.runner.RunWith;
 
 /**
