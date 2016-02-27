@@ -12,7 +12,7 @@
 
 [quote]
 ____
-So now you can rule your database in JUnit tests!
+So now you can rule the database in your JUnit tests!
 ____
 
 
