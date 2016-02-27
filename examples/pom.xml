@@ -208,7 +208,7 @@
             <plugin>
                 <groupId>com.github.cukedoctor</groupId>
                 <artifactId>cukedoctor-maven-plugin</artifactId>
-                <version>0.7.0-SNAPSHOT</version>
+                <version>0.7.0</version>
                 <configuration>
                     <outputFileName>documentation</outputFileName>
                     <outputDir>docs</outputDir>
