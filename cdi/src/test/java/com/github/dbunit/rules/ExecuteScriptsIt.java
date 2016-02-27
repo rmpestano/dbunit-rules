@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -27,6 +28,12 @@ public class ExecuteScriptsIt {
 
     @Before
     public void before() {
+        em.getTransaction().begin();
+        em.createNativeQuery("DELETE from FOLLOWER").executeUpdate();
+        em.createNativeQuery("DELETE from TWEET").executeUpdate();
+        em.createNativeQuery("DELETE from USER").executeUpdate();
+        em.flush();
+        em.getTransaction().commit();
         em.getTransaction().begin();
         em.createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
         em.flush();
