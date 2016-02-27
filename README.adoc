@@ -666,6 +666,20 @@ public class ContactSteps {
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
 <2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
 
+== Snapshots
 
+Snapshots are avaiable in maven central, to use it just add the following snippet in your pom.xml:
+
+[source,xml]
+----
+<repositories>
+    <repository>
+        <snapshots/>
+        <id>snapshots</id>
+        <name>libs-snapshot</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
+</repositories>
+----
 
 
