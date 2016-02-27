@@ -17,6 +17,8 @@ public class DataSetModel {
     private String[] tableOrdering = {};
     private String[] executeStatementsBefore = {};
     private String[] executeStatementsAfter = {};
+    private String[] executeScriptsBefore = {};
+    private String[] executeScriptsAfter = {};
 
 
     public DataSetModel() {
@@ -71,6 +73,16 @@ public class DataSetModel {
         return this;
     }
 
+    public DataSetModel executeScripsBefore(String[] executeScriptsBefore) {
+        this.executeScriptsBefore = executeScriptsBefore;
+        return this;
+    }
+
+    public DataSetModel executeScriptsAfter(String[] executeScriptsAfter) {
+        this.executeScriptsAfter = executeScriptsAfter;
+        return this;
+    }
+
     /**
      *  name of dataset executor for the given dataset. If not specified the default one will be used.
      *
@@ -91,15 +103,16 @@ public class DataSetModel {
                     disableConstraints(dataSet.disableConstraints()).
                     executorId(dataSet.executorId()).
                     executeStatementsBefore(dataSet.executeStatementsBefore()).
+                    executeScripsBefore(dataSet.executeScriptsBefore()).
                     cleanBefore(dataSet.cleanBefore()).
                     cleanAfter(dataSet.cleanAfter()).
-                    executeStatementsAfter(dataSet.executeStatementsAfter());
+                    executeStatementsAfter(dataSet.executeStatementsAfter()).
+                    executeScriptsAfter(dataSet.executeScriptsAfter());
         } else{
             throw new RuntimeException("Cannot create DataSetModel from Null DataSet");
         }
 
     }
-
 
 
 
@@ -129,6 +142,14 @@ public class DataSetModel {
 
     public String[] getExecuteStatementsAfter() {
         return executeStatementsAfter;
+    }
+
+    public String[] getExecuteScriptsBefore() {
+        return executeScriptsBefore;
+    }
+
+    public String[] getExecuteScriptsAfter() {
+        return executeScriptsAfter;
     }
 
     public String getExecutorId() {

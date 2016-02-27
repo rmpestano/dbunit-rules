@@ -43,15 +43,28 @@ public @interface DataSet {
   boolean disableConstraints() default false;
 
   /**
-   * @return a list of jdbc statements to createDataSet before test
+   * @return a list of jdbc statements to execute before test
    *
    */
   String[] executeStatementsBefore() default {};
 
   /**
-   * @return a list of jdbc statements to createDataSet after test
+   * @return a list of jdbc statements to execute after test
    */
   String[] executeStatementsAfter() default {};
+
+  /**
+   * @return a list of sql script files to execute before test.
+   * Note that commands inside sql file must be separated by ';'
+   *
+   */
+  String[] executeScriptsBefore() default {};
+
+  /**
+   * @return a list of sql script files to execute after test.
+   * Note that commands inside sql file must be separated by ';'
+   */
+  String[] executeScriptsAfter() default {};
 
   /**
    * @return if true DBUnit rules will try to delete database before test in a 'smart way'

@@ -1,7 +1,9 @@
 package com.github.dbunit.rules.dataset;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -100,6 +102,12 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 }
                 if (dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0) {
                     executeStatements(dataSetModel.getExecuteStatementsBefore());
+                }
+
+                if (dataSetModel.getExecuteScriptsBefore() != null && dataSetModel.getExecuteScriptsBefore().length > 0) {
+                    for (int i = 0; i < dataSetModel.getExecuteScriptsBefore().length; i++) {
+                        executeScript(dataSetModel.getExecuteScriptsBefore()[i]);
+                    }
                 }
                 for (String dataSet : dataSets) {
                     dataSetName = dataSet.trim();
@@ -324,6 +332,61 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     + "analyse the database.", ex);
             return new ArrayList<String>();
         }
+    }
+
+    public void executeScript(String scriptPath){
+        URL resource = Thread.currentThread().getContextClassLoader().getResource(scriptPath.trim());
+        String absolutePath = "";
+        if(resource != null){
+            absolutePath = resource.getPath();
+        } else{
+            resource = Thread.currentThread().getContextClassLoader().getResource("scripts/"+scriptPath.trim());
+            if(resource != null){
+                absolutePath = resource.getPath();
+            }
+        }
+        if(resource == null){
+            throw new RuntimeException(String.format("Could not find script %s in classpath",scriptPath));
+        }
+
+        File scriptFile  = new File(Paths.get(absolutePath).toUri());
+
+        String[] scriptsStatements = readScriptStatements(scriptFile);
+        if(scriptsStatements != null && scriptsStatements.length > 0){
+            executeStatements(scriptsStatements);
+        }
+    }
+
+    private String[] readScriptStatements(File scriptFile) {
+        RandomAccessFile rad = null;
+        int lineNum = 0;
+        try {
+            rad = new RandomAccessFile(scriptFile,"r");
+            String line;
+            List<String> scripts = new ArrayList<>();
+            while ((line = rad.readLine()) != null) {
+                //a line can have multiple scripts separated by ;
+                String[] lineScripts = line.split(";");
+                for (int i = 0; i < lineScripts.length; i++) {
+                    scripts.add(lineScripts[i]);
+                }
+                lineNum++;
+            }
+            return scripts.toArray(new String[scripts.size()]);
+        } catch (Exception e) {
+            log.warn(String.format("Could not read script file %s. Error in line %d.",scriptFile.getAbsolutePath(),lineNum),e);
+            return null;
+        } finally {
+            if(rad != null){
+                try {
+                    rad.close();
+                } catch (IOException e) {
+                    log.warn("Could not close script file "+scriptFile.getAbsolutePath());
+
+                }
+            }
+        }
+
     }
 
     @Override

@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.Assert.fail;
-
 /**
  * Created by rafael-pestano on 22/07/2015.
  */
@@ -91,9 +89,19 @@ public class DBUnitRule implements MethodRule {
               try {
                 executor.executeStatements(model.getExecuteStatementsAfter());
               } catch (Exception e) {
-                LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not createDataSet statements after:" + e.getMessage(), e);
+                LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
               }
             }//end execute statements
+            if (model != null && model.getExecuteScriptsAfter() != null && model.getExecuteScriptsAfter().length > 0) {
+              try {
+                for (int i = 0; i < model.getExecuteScriptsAfter().length; i++) {
+                  executor.executeScript(model.getExecuteScriptsAfter()[i]);
+                }
+              } catch (Exception e) {
+                LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+              }
+            }//end execute scripts
+
             if(model.isCleanAfter()){
               executor.clearDatabase(model);
             }
