@@ -12,6 +12,8 @@ public class DataSetModel {
     private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;
+    private boolean cleanBefore = false;
+    private boolean cleanAfter = false;
     private String[] tableOrdering = {};
     private String[] executeStatementsBefore = {};
     private String[] executeStatementsAfter = {};
@@ -49,6 +51,16 @@ public class DataSetModel {
         return this;
     }
 
+    public DataSetModel cleanBefore(boolean cleanBefore) {
+        this.cleanBefore = cleanBefore;
+        return this;
+    }
+
+    public DataSetModel cleanAfter(boolean cleanAfter) {
+        this.cleanAfter = cleanAfter;
+        return this;
+    }
+
     public DataSetModel executeStatementsBefore(String[] executeStatementsBefore) {
         this.executeStatementsBefore = executeStatementsBefore;
         return this;
@@ -79,6 +91,8 @@ public class DataSetModel {
                     disableConstraints(dataSet.disableConstraints()).
                     executorId(dataSet.executorId()).
                     executeStatementsBefore(dataSet.executeStatementsBefore()).
+                    cleanBefore(dataSet.cleanBefore()).
+                    cleanAfter(dataSet.cleanAfter()).
                     executeStatementsAfter(dataSet.executeStatementsAfter());
         } else{
             throw new RuntimeException("Cannot create DataSetModel from Null DataSet");
@@ -119,5 +133,13 @@ public class DataSetModel {
 
     public String getExecutorId() {
         return executorId;
+    }
+
+    public boolean isCleanBefore() {
+        return cleanBefore;
+    }
+
+    public boolean isCleanAfter() {
+        return cleanAfter;
     }
 }

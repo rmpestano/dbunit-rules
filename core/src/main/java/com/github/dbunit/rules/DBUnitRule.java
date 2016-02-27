@@ -11,6 +11,7 @@ import org.junit.runners.model.Statement;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import static org.junit.Assert.fail;
 
@@ -50,7 +51,10 @@ public class DBUnitRule implements MethodRule {
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
-    final DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
+    DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
+    if(dataSet == null){
+      dataSet = frameworkMethod.getDeclaringClass().getAnnotation(DataSet.class);
+    }
     if(dataSet != null) {
       final DataSetModel model = new DataSetModel().from(dataSet);
       final String datasetExecutorId = model.getExecutorId();
@@ -66,6 +70,13 @@ public class DBUnitRule implements MethodRule {
       } else if (executorNameIsProvided) {
         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
       }
+      if(model.isCleanBefore()){
+        try {
+          executor.clearDatabase(model);
+        } catch (SQLException e) {
+         LoggerFactory.getLogger(DBUnitRule.class.getName()).warn("Could not clean database before test "+frameworkMethod.getName(),e);
+        }
+      }
       executor.createDataSet(model);
 
       return new Statement() {
@@ -75,12 +86,16 @@ public class DBUnitRule implements MethodRule {
           try {
             statement.evaluate();
           } finally {
+
             if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {
               try {
                 executor.executeStatements(model.getExecuteStatementsAfter());
               } catch (Exception e) {
                 LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not createDataSet statements after:" + e.getMessage(), e);
               }
+            }//end execute statements
+            if(model.isCleanAfter()){
+              executor.clearDatabase(model);
             }
           }
         }

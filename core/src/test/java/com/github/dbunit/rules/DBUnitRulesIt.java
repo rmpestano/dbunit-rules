@@ -73,6 +73,7 @@ public class DBUnitRulesIt {
         assertThat(users).hasSize(2);
     }
 
+
     @Test
     @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true)
     public void shouldSeedUserDataSet() {

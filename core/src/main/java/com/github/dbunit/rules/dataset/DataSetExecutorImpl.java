@@ -3,11 +3,16 @@ package com.github.dbunit.rules.dataset;
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
+import com.github.dbunit.rules.api.dataset.*;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -25,10 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
-import com.github.dbunit.rules.api.dataset.JSONDataSet;
-import com.github.dbunit.rules.api.dataset.YamlDataSet;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 
 /**
@@ -279,6 +280,52 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return is;
     }
 
+    /**
+     * @throws SQLException
+     */
+    public void clearDatabase(DataSetModel dataset) throws SQLException {
+        Connection connection = connectionHolder.getConnection();
+        if(isHSqlDB()){
+            connection.createStatement().execute("TRUNCATE SCHEMA public AND COMMIT;");
+        } else {
+
+            if(dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0){
+                for (String table : dataset.getTableOrdering()) {
+                    connection.createStatement().executeUpdate("DELETE FROM " + table + " where 1=1");
+                    connection.commit();
+                }
+            }
+            //clear remaining tables in any order(if there are any, also no problem clearing again)
+            List<String> tables = getTableNames(connection);
+            for (String tableName : tables) {
+                connection.createStatement().executeUpdate("DELETE FROM " + tableName + " where 1=1");
+                connection.commit();
+            }
+        }
+
+    }
+
+    private List<String> getTableNames(Connection con) {
+
+        List<String> tables = new ArrayList<String>();
+        ResultSet result = null;
+        try {
+            DatabaseMetaData metaData = con.getMetaData();
+
+            result = metaData.getTables(null, null, "%", new String[] { "TABLE" });
+
+            while (result.next()) {
+                tables.add(result.getString("TABLE_NAME"));
+            }
+
+            return tables;
+        } catch (SQLException ex) {
+            log.warn("An exception occured while trying to"
+                    + "analyse the database.", ex);
+            return new ArrayList<String>();
+        }
+    }
+
     @Override
     public void setDataSetModel(DataSetModel dataSetModel) {
         this.dataSetModel = dataSetModel;
@@ -287,5 +334,10 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     @Override
     public DataSetModel getDataSetModel() {
         return dataSetModel;
+    }
+
+    public boolean isHSqlDB() throws SQLException {
+
+        return connectionHolder.getConnection() != null && connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase().contains("hsql");
     }
 }

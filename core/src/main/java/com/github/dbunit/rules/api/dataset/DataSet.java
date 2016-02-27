@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 /**
  * Created by rafael-pestano on 22/07/2015.
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
@@ -52,5 +52,15 @@ public @interface DataSet {
    * @return a list of jdbc statements to createDataSet after test
    */
   String[] executeStatementsAfter() default {};
+
+  /**
+   * @return if true DBUnit rules will try to delete database before test in a 'smart way'
+   */
+  boolean cleanBefore() default false;
+
+  /**
+   * @return if true DBUnit rules will try to delete database after test in a 'smart way'
+   */
+  boolean cleanAfter() default false;
 
 }
