@@ -68,13 +68,7 @@ public class DBUnitRule implements MethodRule {
       } else if (executorNameIsProvided) {
         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
       }
-      if(model.isCleanBefore()){
-        try {
-          executor.clearDatabase(model);
-        } catch (SQLException e) {
-         LoggerFactory.getLogger(DBUnitRule.class.getName()).warn("Could not clean database before test "+frameworkMethod.getName(),e);
-        }
-      }
+
       executor.createDataSet(model);
 
       return new Statement() {

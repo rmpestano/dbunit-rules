@@ -66,6 +66,21 @@ public @interface UsingDataSet {
   @Nonbinding
   String[] executeCommandsAfter() default "";
 
+  /**
+   * @return a list of sql script files to execute before test.
+   * Note that commands inside sql file must be separated by ';'
+   */
+  @Nonbinding
+  String[] executeScriptsBefore() default {};
+
+
+  /**
+   * @return a list of sql script files to execute after test.
+   * Note that commands inside sql file must be separated by ';'
+   */
+  @Nonbinding
+  String[] executeScriptsAfter() default {};
+
 
   enum SeedStrategy {
     CLEAN_INSERT(DatabaseOperation.CLEAN_INSERT), UPDATE(DatabaseOperation.UPDATE), INSERT(DatabaseOperation.INSERT), DELETE(DatabaseOperation.DELETE),

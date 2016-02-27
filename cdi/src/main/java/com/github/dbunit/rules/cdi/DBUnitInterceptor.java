@@ -27,11 +27,19 @@ public class DBUnitInterceptor implements Serializable {
         if (usingDataSet != null) {
             dataSetProcessor.process(usingDataSet);
             proceed = invocationContext.proceed();
+            if(usingDataSet.cleanAfter()){
+                dataSetProcessor.clearDatabase(usingDataSet);
+            }
+
             if (!"".equals(usingDataSet.executeCommandsAfter())) {
                 dataSetProcessor.executeCommands(usingDataSet.executeCommandsAfter());
             }
-            if(usingDataSet.cleanAfter()){
-                dataSetProcessor.clearDatabase(usingDataSet);
+
+            if(usingDataSet.executeScriptsAfter().length > 0){
+                for (int i = 0; i < usingDataSet.executeScriptsAfter().length; i++) {
+                    dataSetProcessor.executeScript(usingDataSet.executeScriptsAfter()[i]);
+
+                }
             }
         }
 

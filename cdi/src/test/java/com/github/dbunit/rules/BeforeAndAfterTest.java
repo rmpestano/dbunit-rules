@@ -35,7 +35,7 @@ public class BeforeAndAfterTest {
     }
 
     @Test
-     @UsingDataSet(value = "yml/users.yml", seedStrategy = UsingDataSet.SeedStrategy.INSERT,
+    @UsingDataSet(value = "yml/users.yml", seedStrategy = UsingDataSet.SeedStrategy.INSERT,
              cleanBefore = true, cleanAfter = true
     )
     public void shouldClearDatabaseBeforeAndAfter() {

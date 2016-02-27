@@ -3,14 +3,15 @@ package com.github.dbunit.rules.cdi;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
@@ -34,6 +35,8 @@ import org.dbunit.dataset.filter.SequenceTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by rafael-pestano on 08/10/2015.
@@ -41,7 +44,7 @@ import org.hibernate.internal.SessionImpl;
 @RequestScoped
 public class DataSetProcessor {
 
-  private static final Logger log = Logger.getLogger(DataSetProcessor.class.getName());
+  private static final Logger log = LoggerFactory.getLogger(DataSetProcessor.class.getName());
 
   @Inject
   private EntityManager em;
@@ -99,9 +102,18 @@ public class DataSetProcessor {
         if (usingDataSet.cleanBefore()) {
           clearDatabase(usingDataSet);
         }
+
         if(usingDataSet.executeCommandsBefore().length > 0){
           executeCommands(usingDataSet.executeCommandsBefore());
         }
+
+        if(usingDataSet.executeScriptsBefore().length > 0){
+          for (int i = 0; i < usingDataSet.executeScriptsBefore().length; i++) {
+            executeScript(usingDataSet.executeScriptsBefore()[i]);
+
+          }
+        }
+
         IDataSet target = null;
         for (String dataSet : dataSets) {
           dataSet = dataSet.trim();
@@ -143,7 +155,7 @@ public class DataSetProcessor {
             }
             usingDataSet.seedStrategy().getValue().execute(databaseConnection, target);
           } else {
-            log.warning("DataSet not created" + dataSet);
+            log.warn("DataSet not created" + dataSet);
           }
         }
       } catch (DatabaseUnitException e) {
@@ -190,7 +202,7 @@ public class DataSetProcessor {
         connection.commit();
         connection.setAutoCommit(autoCommit);
       } catch (Exception e) {
-        log.log(Level.WARNING, "Could not createDataSet statements:" + e.getMessage(), e);
+        log.warn("Could not createDataSet statements:" + e.getMessage(), e);
       }
     }
   }
@@ -246,7 +258,7 @@ public class DataSetProcessor {
 
       return tables;
     } catch (SQLException ex) {
-      log.log(Level.WARNING, "An exception occured while trying to"
+      log.warn("An exception occured while trying to"
           + "analyse the database.", ex);
       return new ArrayList<String>();
     }
@@ -270,6 +282,62 @@ public class DataSetProcessor {
     }
 
   }
+
+  public void executeScript(String scriptPath){
+    URL resource = Thread.currentThread().getContextClassLoader().getResource(scriptPath.trim());
+    String absolutePath = "";
+    if(resource != null){
+      absolutePath = resource.getPath();
+    } else{
+      resource = Thread.currentThread().getContextClassLoader().getResource("scripts/"+scriptPath.trim());
+      if(resource != null){
+        absolutePath = resource.getPath();
+      }
+    }
+    if(resource == null){
+      throw new RuntimeException(String.format("Could not find script %s in classpath",scriptPath));
+    }
+
+    File scriptFile  = new File(Paths.get(absolutePath).toUri());
+
+    String[] scriptsStatements = readScriptStatements(scriptFile);
+    if(scriptsStatements != null && scriptsStatements.length > 0){
+      executeCommands(scriptsStatements);
+    }
+  }
+
+  private String[] readScriptStatements(File scriptFile) {
+    RandomAccessFile rad = null;
+    int lineNum = 0;
+    try {
+      rad = new RandomAccessFile(scriptFile,"r");
+      String line;
+      List<String> scripts = new ArrayList<>();
+      while ((line = rad.readLine()) != null) {
+        //a line can have multiple scripts separated by ;
+        String[] lineScripts = line.split(";");
+        for (int i = 0; i < lineScripts.length; i++) {
+          scripts.add(lineScripts[i]);
+        }
+        lineNum++;
+      }
+      return scripts.toArray(new String[scripts.size()]);
+    } catch (Exception e) {
+      log.warn(String.format("Could not read script file %s. Error in line %d.",scriptFile.getAbsolutePath(),lineNum),e);
+      return null;
+    } finally {
+      if(rad != null){
+        try {
+          rad.close();
+        } catch (IOException e) {
+          log.warn("Could not close script file "+scriptFile.getAbsolutePath());
+
+        }
+      }
+    }
+
+  }
+
 
   public boolean isHSqlDB() throws SQLException {
     return connection != null && connection.getMetaData().getDriverName().toLowerCase().contains("hsql");

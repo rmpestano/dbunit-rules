@@ -100,6 +100,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 if (dataSetModel.isDisableConstraints()) {
                     disableConstraints();
                 }
+                if(dataSetModel.isCleanBefore()){
+                    try {
+                        clearDatabase(dataSetModel);
+                    } catch (SQLException e) {
+                        LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("Could not clean database before test.",e);
+                    }
+                }
+
                 if (dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0) {
                     executeStatements(dataSetModel.getExecuteStatementsBefore());
                 }
