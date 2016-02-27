@@ -10,6 +10,12 @@
 
 = DBUnit rules
 
+[quote]
+____
+So now you can rule your database in JUnit tests!
+____
+
+
 image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
 image:https://coveralls.io/repos/rmpestano/dbunit-rules/badge.png[Coverage, link=https://coveralls.io/r/rmpestano/dbunit-rules]
 image:https://api.bintray.com/packages/rmpestano/dbunit-rules/dbunit-rules/images/download.svg[link="https://bintray.com/rmpestano/dbunit-rules/dbunit-rules/_latestVersion"]
