@@ -43,7 +43,9 @@ public class DateReplacementsIt {
     public void shouldReplaceDateWithYesterdayPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '2'").getSingleResult();
         assertThat(tweet).isNotNull();
-        assertThat(tweet.getDate().get(Calendar.DAY_OF_MONTH)+1).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
+        Calendar date = (Calendar)tweet.getDate().clone();
+        date.add(Calendar.DAY_OF_MONTH, 1);
+        assertThat(date.get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
@@ -51,7 +53,9 @@ public class DateReplacementsIt {
     public void shouldReplaceDateWithTomorrowPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '3'").getSingleResult();
         assertThat(tweet).isNotNull();
-        assertThat(tweet.getDate().get(Calendar.DAY_OF_MONTH)-1).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
+        Calendar date = (Calendar)tweet.getDate().clone();
+        date.add(Calendar.DAY_OF_MONTH, -1);
+        assertThat(date.get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test
@@ -59,7 +63,9 @@ public class DateReplacementsIt {
     public void shouldReplaceDateWithYearAfterPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '4'").getSingleResult();
         assertThat(tweet).isNotNull();
-        assertThat(tweet.getDate().get(Calendar.YEAR)-1).isEqualTo(now.get(Calendar.YEAR));
+        Calendar date = (Calendar)tweet.getDate().clone();
+        date.add(Calendar.YEAR, -1);
+        assertThat(date.get(Calendar.YEAR)).isEqualTo(now.get(Calendar.YEAR));
     }
 
     @Test
@@ -67,7 +73,9 @@ public class DateReplacementsIt {
     public void shouldReplaceDateWithYearBeforePlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '5'").getSingleResult();
         assertThat(tweet).isNotNull();
-        assertThat(tweet.getDate().get(Calendar.YEAR)+1).isEqualTo(now.get(Calendar.YEAR));
+        Calendar date = (Calendar)tweet.getDate().clone();
+        date.add(Calendar.YEAR, 1);
+        assertThat(date.get(Calendar.YEAR)).isEqualTo(now.get(Calendar.YEAR));
     }
 
     @Test
@@ -75,7 +83,8 @@ public class DateReplacementsIt {
     public void shouldReplaceDateWithHourPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '6'").getSingleResult();
         assertThat(tweet).isNotNull();
-        tweet.getDate().add(Calendar.HOUR_OF_DAY,-1);
-        assertThat(tweet.getDate().get(Calendar.HOUR_OF_DAY)).isEqualTo(now.get(Calendar.HOUR_OF_DAY));
+        Calendar date = (Calendar)tweet.getDate().clone();
+        date.add(Calendar.HOUR_OF_DAY, -1);
+        assertThat(date.get(Calendar.HOUR_OF_DAY)).isEqualTo(now.get(Calendar.HOUR_OF_DAY));
     }
 }
