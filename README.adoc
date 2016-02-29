@@ -1,3 +1,4 @@
+= DBUnit rules
 :page-layout: base
 :source-language: java
 :icons: font
@@ -6,9 +7,7 @@
 :sectlink:
 :numbered:
 :doctype: book
-:toc: right
-
-= DBUnit rules
+:toc: preamble
 
 [quote]
 ____
