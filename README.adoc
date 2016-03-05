@@ -17,7 +17,8 @@ ____
 
 image:https://travis-ci.org/rmpestano/dbunit-rules.svg[Build Status (Travis CI), link=https://travis-ci.org/rmpestano/dbunit-rules]
 image:https://coveralls.io/repos/rmpestano/dbunit-rules/badge.png[Coverage, link=https://coveralls.io/r/rmpestano/dbunit-rules]
-image:https://api.bintray.com/packages/rmpestano/dbunit-rules/dbunit-rules/images/download.svg[link="https://bintray.com/rmpestano/dbunit-rules/dbunit-rules/_latestVersion"]
+image:https://maven-badges.herokuapp.com/maven-central/com.github.dbunit-rules/core/badge.svg["Maven Central",link="http://search.maven.org/#search|ga|1|dbunit-rules"]
+
 
 
 This project aims for bringing http://dbunit.sourceforge.net/[DBUnit] closer to your JUnit tests.
