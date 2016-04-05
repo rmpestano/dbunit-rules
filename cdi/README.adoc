@@ -12,8 +12,6 @@ A CDI interceptor to configure DBUnit datasets in your tests.
 </dependency>
 ----
 
-IMPORTANT: Note that since version 0.4 this module was refactored and now it is an independent module (does not depend on *core* neither *jpa* module anymore).
-This is due to CDI programing model (scopes, events, interceptors etc..) and also it was simplified and now does not support *multiple databases* which brings too much complexity to the project.
 
 == Pre requisites
 
