@@ -1,7 +1,7 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
-import static com.github.dbunit.rules.cdi.api.UsingDataSet.*;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
@@ -10,6 +10,8 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,40 +26,46 @@ public class DBUnitCDITest {
     EntityManager em;
 
 
-    @Test(expected = RuntimeException.class)
-    @UsingDataSet
+    @Test
+    @UsingDataSet(value = "",cleanBefore = true)
     public void shouldFailToSeedEmptyDataSet() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test(expected = YAMLException.class)
-    @UsingDataSet("ymlzzz/users.yml")
+    @Test
+    @UsingDataSet(value="ymlzzz/users.yml",cleanBefore = true)
     public void shouldFailToSeedInexistentYMLDataSet() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test(expected = RuntimeException.class)
-    @UsingDataSet("jsonzzz/users.json")
+    @Test
+    @UsingDataSet(value = "jsonzzz/users.json",cleanBefore = true)
     public void shouldFailToSeedInexistentJSONDataSet() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test(expected = RuntimeException.class)
-    @UsingDataSet("zzz/users.xml")
+    @Test
+    @UsingDataSet(value="zzz/users.xml",cleanBefore = true)
     public void shouldFailToSeedInexistentXMLDataSet() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test(expected = RuntimeException.class)
-    @UsingDataSet("users")
+    @Test
+    @UsingDataSet(value="users",cleanBefore = true)
     public void shouldFailToSeedDataSetWithoutExtension() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test(expected = RuntimeException.class)
-    @UsingDataSet("users.doc")
+    @Test
+    @UsingDataSet(value = "users.doc",cleanBefore = true)
     public void shouldFailToSeedUnknownDataSetFormat() {
-
+        List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test

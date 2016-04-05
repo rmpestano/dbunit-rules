@@ -82,13 +82,16 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     @Override
-    public void createDataSet(){
+    public void createDataSet() {
         this.createDataSet(dataSetModel);
     }
 
     @Override
     public void createDataSet(DataSetModel dataSetModel) {
         if (dataSetModel != null && dataSetModel.getName() != null) {
+            if (!dataSetModel.getName().contains(".")) {
+                log.error("Dataset " + dataSetModel.getName() + "does not have extension");
+            }
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
 
             String[] dataSets = dataSetModel.getName().trim().split(",");
@@ -100,11 +103,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 if (dataSetModel.isDisableConstraints()) {
                     disableConstraints();
                 }
-                if(dataSetModel.isCleanBefore()){
+                if (dataSetModel.isCleanBefore()) {
                     try {
                         clearDatabase(dataSetModel);
                     } catch (SQLException e) {
-                        LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("Could not clean database before test.",e);
+                        LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("Could not clean database before test.", e);
                     }
                 }
 
@@ -142,7 +145,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                             break;
                         }
                         default:
-                            log.error("Unsupported dataset extension" + extension);
+                            log.error("Unsupported dataset extension");
                     }
 
                     if (target != null) {
@@ -158,14 +161,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     }
 
                 }
-
-
-            } catch (Exception e) {
-                log.error("Could not create dataSet " + dataSetName, e);
+            }catch (Exception e){
+                log.error("Could not initialize dataset:" + e.getMessage(), e);
             }
-
-        } else {
-            log.error("No dataset name was provided");
         }
     }
 
@@ -183,7 +181,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private IDataSet performSequenceFiltering(DataSetModel dataSet, IDataSet target) throws DataSetException, SQLException {
         if (dataSet.isUseSequenceFiltering()) {
-            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection,target.getTableNames());
+            ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection, target.getTableNames());
             target = new FilteredDataSet(filteredTable, target);
         }
         return target;
@@ -211,21 +209,23 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     public void executeStatements(String[] statements) {
-        try {
-            boolean autoCommit = connectionHolder.getConnection().getAutoCommit();
-            connectionHolder.getConnection().setAutoCommit(false);
-            java.sql.Statement statement = connectionHolder.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
-            for (String stm : statements) {
-                statement.addBatch(stm);
+        if (statements != null && statements.length > 0 && !"".equals(statements[0].trim())) {
+            try {
+                boolean autoCommit = connectionHolder.getConnection().getAutoCommit();
+                connectionHolder.getConnection().setAutoCommit(false);
+                java.sql.Statement statement = connectionHolder.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                        ResultSet.CONCUR_UPDATABLE);
+                for (String stm : statements) {
+                    statement.addBatch(stm);
+                }
+                statement.executeBatch();
+                connectionHolder.getConnection().commit();
+                connectionHolder.getConnection().setAutoCommit(autoCommit);
+            } catch (Exception e) {
+                log.error("Could not createDataSet statements:" + e.getMessage(), e);
             }
-            statement.executeBatch();
-            connectionHolder.getConnection().commit();
-            connectionHolder.getConnection().setAutoCommit(autoCommit);
-        } catch (Exception e) {
-            log.error("Could not createDataSet statements:" + e.getMessage(), e);
-        }
 
+        }
     }
 
     private IDataSet performReplacements(IDataSet dataSet) {
@@ -289,9 +289,12 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     private InputStream loadDataSet(String dataSet) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(dataSet);
-        if(is == null){//if not found try to get from datasets folder
-            is = Thread.currentThread().getContextClassLoader().getResourceAsStream("datasets/" + dataSet);
+        if (!dataSet.startsWith("/")) {
+            dataSet = "/" + dataSet;
+        }
+        InputStream is = getClass().getResourceAsStream(dataSet);
+        if (is == null) {//if not found try to get from datasets folder
+            is = getClass().getResourceAsStream("/datasets" + dataSet);
         }
         return is;
     }
@@ -301,11 +304,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
      */
     public void clearDatabase(DataSetModel dataset) throws SQLException {
         Connection connection = connectionHolder.getConnection();
-        if(isHSqlDB()){
+        if (isHSqlDB()) {
             connection.createStatement().execute("TRUNCATE SCHEMA public AND COMMIT;");
         } else {
 
-            if(dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0){
+            if (dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
                 for (String table : dataset.getTableOrdering()) {
                     connection.createStatement().executeUpdate("DELETE FROM " + table + " where 1=1");
                     connection.commit();
@@ -328,7 +331,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         try {
             DatabaseMetaData metaData = con.getMetaData();
 
-            result = metaData.getTables(null, null, "%", new String[] { "TABLE" });
+            result = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 
             while (result.next()) {
                 tables.add(result.getString("TABLE_NAME"));
@@ -342,26 +345,31 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         }
     }
 
-    public void executeScript(String scriptPath){
-        URL resource = Thread.currentThread().getContextClassLoader().getResource(scriptPath.trim());
-        String absolutePath = "";
-        if(resource != null){
-            absolutePath = resource.getPath();
-        } else{
-            resource = Thread.currentThread().getContextClassLoader().getResource("scripts/"+scriptPath.trim());
-            if(resource != null){
-                absolutePath = resource.getPath();
+    public void executeScript(String scriptPath) {
+        if (scriptPath != null && !"".equals(scriptPath)) {
+            if (!scriptPath.startsWith("/")) {
+                scriptPath = "/" + scriptPath;
             }
-        }
-        if(resource == null){
-            throw new RuntimeException(String.format("Could not find script %s in classpath",scriptPath));
-        }
+            URL resource = getClass().getResource(scriptPath.trim());
+            String absolutePath = "";
+            if (resource != null) {
+                absolutePath = resource.getPath();
+            } else {
+                resource = getClass().getResource("/scripts" + scriptPath.trim());
+                if (resource != null) {
+                    absolutePath = resource.getPath();
+                }
+            }
+            if (resource == null) {
+                log.error(String.format("Could not find script %s in classpath", scriptPath));
+            }
 
-        File scriptFile  = new File(Paths.get(absolutePath).toUri());
+            File scriptFile = new File(Paths.get(absolutePath).toUri());
 
-        String[] scriptsStatements = readScriptStatements(scriptFile);
-        if(scriptsStatements != null && scriptsStatements.length > 0){
-            executeStatements(scriptsStatements);
+            String[] scriptsStatements = readScriptStatements(scriptFile);
+            if (scriptsStatements != null && scriptsStatements.length > 0) {
+                executeStatements(scriptsStatements);
+            }
         }
     }
 
@@ -369,7 +377,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         RandomAccessFile rad = null;
         int lineNum = 0;
         try {
-            rad = new RandomAccessFile(scriptFile,"r");
+            rad = new RandomAccessFile(scriptFile, "r");
             String line;
             List<String> scripts = new ArrayList<>();
             while ((line = rad.readLine()) != null) {
@@ -382,14 +390,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             }
             return scripts.toArray(new String[scripts.size()]);
         } catch (Exception e) {
-            log.warn(String.format("Could not read script file %s. Error in line %d.",scriptFile.getAbsolutePath(),lineNum),e);
+            log.warn(String.format("Could not read script file %s. Error in line %d.", scriptFile.getAbsolutePath(), lineNum), e);
             return null;
         } finally {
-            if(rad != null){
+            if (rad != null) {
                 try {
                     rad.close();
                 } catch (IOException e) {
-                    log.warn("Could not close script file "+scriptFile.getAbsolutePath());
+                    log.warn("Could not close script file " + scriptFile.getAbsolutePath());
 
                 }
             }

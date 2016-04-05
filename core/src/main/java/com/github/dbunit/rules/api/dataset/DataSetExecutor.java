@@ -2,6 +2,8 @@ package com.github.dbunit.rules.api.dataset;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 
+import java.sql.SQLException;
+
 /**
  * Created by pestano on 01/08/15.
  */
@@ -24,4 +26,10 @@ public interface DataSetExecutor{
     void setDataSetModel(DataSetModel dataSetModel);
 
     DataSetModel getDataSetModel();
+
+    void clearDatabase(DataSetModel dataset) throws SQLException;
+
+    void executeStatements(String[] statements);
+
+    void executeScript(String scriptPath);
 }

@@ -5,6 +5,7 @@ import java.lang.annotation.*;
 import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import org.dbunit.operation.DatabaseOperation;
 
 /**
@@ -19,8 +20,7 @@ public @interface UsingDataSet {
   @Nonbinding
   String value() default "";
 
-  @Nonbinding
-  SeedStrategy seedStrategy() default SeedStrategy.CLEAN_INSERT;
+  @Nonbinding SeedStrategy seedStrategy() default SeedStrategy.CLEAN_INSERT;
 
   /**
    * @return if true dataset processor will look at constraints and dataset and try to determine the correct ordering for the SQL statements
@@ -82,19 +82,6 @@ public @interface UsingDataSet {
   String[] executeScriptsAfter() default {};
 
 
-  enum SeedStrategy {
-    CLEAN_INSERT(DatabaseOperation.CLEAN_INSERT), UPDATE(DatabaseOperation.UPDATE), INSERT(DatabaseOperation.INSERT), DELETE(DatabaseOperation.DELETE),
-    REFRESH(DatabaseOperation.REFRESH), DELETE_ALL(DatabaseOperation.DELETE_ALL), TRUNCATE_TABLE(DatabaseOperation.TRUNCATE_TABLE);
 
-    private final DatabaseOperation value;
-
-    SeedStrategy(DatabaseOperation databaseOperation) {
-      this.value = databaseOperation;
-    }
-
-    public DatabaseOperation getValue() {
-      return value;
-    }
-  }
 
 }

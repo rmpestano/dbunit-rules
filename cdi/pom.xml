@@ -10,6 +10,12 @@
     <artifactId>cdi</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.github.dbunit-rules</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>

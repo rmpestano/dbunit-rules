@@ -1,5 +1,6 @@
 package com.github.dbunit.rules.cdi;
 
+import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 
 import javax.inject.Inject;
@@ -25,20 +26,33 @@ public class DBUnitInterceptor implements Serializable {
         Object proceed = null;
         UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
         if (usingDataSet != null) {
-            dataSetProcessor.process(usingDataSet);
+            if (usingDataSet == null || usingDataSet.value() == null) {
+                throw new RuntimeException("Provide dataset name(s).");
+            }
+            DataSetModel dataSetModel = new DataSetModel(usingDataSet.value()).
+                    cleanAfter(usingDataSet.cleanAfter()).
+                    cleanBefore(usingDataSet.cleanBefore()).
+                    disableConstraints(usingDataSet.disableConstraints()).
+                    executeScripsBefore(usingDataSet.executeScriptsBefore()).
+                    executeScriptsAfter(usingDataSet.executeCommandsAfter()).
+                    executeStatementsAfter(usingDataSet.executeCommandsAfter()).
+                    executeStatementsBefore(usingDataSet.executeCommandsBefore()).
+                    seedStrategy(usingDataSet.seedStrategy()).
+                    tableOrdering(usingDataSet.tableOrdering()).
+                    useSequenceFiltering(usingDataSet.useSequenceFiltering());
+            dataSetProcessor.process(dataSetModel);
             proceed = invocationContext.proceed();
             if(usingDataSet.cleanAfter()){
-                dataSetProcessor.clearDatabase(usingDataSet);
+                dataSetProcessor.clearDatabase(dataSetModel);
             }
 
             if (!"".equals(usingDataSet.executeCommandsAfter())) {
-                dataSetProcessor.executeCommands(usingDataSet.executeCommandsAfter());
+                dataSetProcessor.executeStatements(dataSetModel.getExecuteStatementsAfter());
             }
 
-            if(usingDataSet.executeScriptsAfter().length > 0){
+            if(usingDataSet.executeScriptsAfter().length > 0 && !"".equals(usingDataSet.executeScriptsAfter()[0])){
                 for (int i = 0; i < usingDataSet.executeScriptsAfter().length; i++) {
                     dataSetProcessor.executeScript(usingDataSet.executeScriptsAfter()[i]);
-
                 }
             }
         }

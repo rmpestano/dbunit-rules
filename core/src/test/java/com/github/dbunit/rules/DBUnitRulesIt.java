@@ -52,6 +52,7 @@ public class DBUnitRulesIt {
     }
 
 
+
     @Test
     @DataSet(value = "datasets/yml/users.yml",
             useSequenceFiltering = false,

@@ -1,15 +1,14 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -44,7 +43,7 @@ public class ExecuteScriptsIt {
 
     @Test
     @UsingDataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"},
-            executeScriptsAfter = "after.sql", seedStrategy = UsingDataSet.SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
+            executeScriptsAfter = "after.sql", seedStrategy = SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
     public void shouldExecuteScriptsBefore() {
         User userFromSqlScript = new User(10);
         List<User> users = listUsers("select u from User u where u.id = 6");

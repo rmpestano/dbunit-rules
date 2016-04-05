@@ -96,6 +96,25 @@ public class JPADataSetExecutor implements DataSetExecutor {
     }
 
     @Override
+    public void clearDatabase(DataSetModel dataset) throws SQLException {
+        if(dataset == null){
+            dataset = dataSetModel;
+        }
+        executor.clearDatabase(dataset);
+    }
+
+    @Override
+    public void executeStatements(String[] statements) {
+        executor.executeStatements(statements);
+
+    }
+
+    @Override
+    public void executeScript(String scriptPath) {
+        executor.executeScript(scriptPath);
+    }
+
+    @Override
     public void setDataSetModel(DataSetModel dataSetModel) {
         this.dataSetModel = dataSetModel;
     }

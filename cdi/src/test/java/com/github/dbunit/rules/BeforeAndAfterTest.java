@@ -1,8 +1,8 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.User;
-import junit.framework.Assert;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
@@ -35,7 +34,7 @@ public class BeforeAndAfterTest {
     }
 
     @Test
-    @UsingDataSet(value = "yml/users.yml", seedStrategy = UsingDataSet.SeedStrategy.INSERT,
+    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT,
              cleanBefore = true, cleanAfter = true
     )
     public void shouldClearDatabaseBeforeAndAfter() {
