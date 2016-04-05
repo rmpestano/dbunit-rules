@@ -156,6 +156,7 @@
                         <include>**/*It.java</include>
                         <include>**/*Test.java</include>
                         <include>**/*Feature.java</include>
+                        <include>**/*Bdd.java</include>
                     </includes>
                     <systemPropertyVariables>
                         <java.util.logging.config.file>
@@ -186,6 +187,26 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.cukedoctor</groupId>
+                <artifactId>cukedoctor-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <outputFileName>documentation</outputFileName>
+                    <outputDir>docs</outputDir>
+                    <format>all</format><!--pdf and html5 -->
+                    <toc>right</toc>
+                    <numbered>true</numbered>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>

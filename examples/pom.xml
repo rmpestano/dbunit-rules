@@ -205,27 +205,6 @@
                 </dependencies>
             </plugin>
 
-            <plugin>
-                <groupId>com.github.cukedoctor</groupId>
-                <artifactId>cukedoctor-maven-plugin</artifactId>
-                <version>0.7.0</version>
-                <configuration>
-                    <outputFileName>documentation</outputFileName>
-                    <outputDir>docs</outputDir>
-                    <format>all</format><!--pdf and html5 -->
-                    <toc>right</toc>
-                    <numbered>true</numbered>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
