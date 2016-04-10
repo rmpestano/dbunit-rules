@@ -280,12 +280,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     public static DataSetExecutorImpl getExecutorById(String id) {
-        DataSetExecutorImpl executor = executors.get(id);
-        if (executor == null) {
-            LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("No executor found with id " + id + ". Falling back to default executor");
-            executor = executors.get(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID);
-        }
-        return executor;
+        return executors.get(id);
     }
 
     private InputStream loadDataSet(String dataSet) {

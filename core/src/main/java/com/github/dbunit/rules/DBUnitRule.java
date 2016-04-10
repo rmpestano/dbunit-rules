@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -49,6 +50,7 @@ public class DBUnitRule implements MethodRule {
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
+    Logger.getLogger(getClass().getSimpleName()).info("Apply - "+currentMethod+" - Executor:"+executor);
     DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     if(dataSet == null){
       dataSet = frameworkMethod.getDeclaringClass().getAnnotation(DataSet.class);
@@ -76,6 +78,7 @@ public class DBUnitRule implements MethodRule {
         @Override
         public void evaluate() throws Throwable {
           try {
+            Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
             statement.evaluate();
           } finally {
 
@@ -89,6 +92,7 @@ public class DBUnitRule implements MethodRule {
             if (model != null && model.getExecuteScriptsAfter() != null && model.getExecuteScriptsAfter().length > 0) {
               try {
                 for (int i = 0; i < model.getExecuteScriptsAfter().length; i++) {
+                  Logger.getLogger(getClass().getSimpleName()).info("Scripts after - "+currentMethod+" -  Executor:"+executor);
                   executor.executeScript(model.getExecuteScriptsAfter()[i]);
                 }
               } catch (Exception e) {
@@ -115,7 +119,6 @@ public class DBUnitRule implements MethodRule {
   }
 
   private void init(String name, ConnectionHolder connectionHolder) {
-
     DataSetExecutorImpl instance = DataSetExecutorImpl.getExecutorById(name);
     if(instance == null){
       instance = DataSetExecutorImpl.instance(name, connectionHolder);

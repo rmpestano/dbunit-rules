@@ -39,7 +39,7 @@ public class ConnectionHolderIt {
 
 
     @Test
-    @DataSet(value = "datasets/yml/users.yml")
+    @DataSet(value = "datasets/yml/users.yml", executorId = "ConnectionHolderIt")
     public void shouldLoadUserFollowers() {
         User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -52,7 +52,7 @@ public class ConnectionHolderIt {
     }
 
     @Test
-    @DataSet(value = "datasets/json/users.json")
+    @DataSet(value = "datasets/json/users.json", executorId = "ConnectionHolderIt")
     public void shouldLoadUsersFromJsonDataset() {
         User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -65,7 +65,7 @@ public class ConnectionHolderIt {
     }
 
     @Test
-    @DataSet(value = "datasets/xml/users.xml")
+    @DataSet(value = "datasets/xml/users.xml", executorId = "ConnectionHolderIt")
     public void shouldLoadUsersFromXmlDataset() {
         User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();

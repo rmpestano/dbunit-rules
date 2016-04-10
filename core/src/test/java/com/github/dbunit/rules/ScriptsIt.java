@@ -23,14 +23,14 @@ import static org.assertj.core.api.Assertions.fail;
 public class ScriptsIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.getConnection());
 
     @BeforeClass
     public static void before() {
-        EntityManager em = EntityManagerProvider.instance("rules-it").em();
+        EntityManager em = EntityManagerProvider.instance("scripts-it").em();
         em.getTransaction().begin();
         em.createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
         em.flush();
@@ -40,7 +40,7 @@ public class ScriptsIt {
     }
 
     @Test
-    @DataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"},
+    @DataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"}, executorId = "scripts-it",
             executeScriptsAfter = "after.sql", strategy = SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
     public void shouldExecuteScriptsBefore() {
         User userFromSqlScript = new User(10);
@@ -52,12 +52,14 @@ public class ScriptsIt {
     }
 
     private List<User> listUsers(String sql) {
-        return EntityManagerProvider.instance("rules-it").em().createQuery(sql).getResultList();
+        return EntityManagerProvider.instance("scripts-it").em().createQuery(sql).getResultList();
     }
 
     @AfterClass
-    public static void after() {
-        List<User> users = EntityManagerProvider.instance("rules-it").em().createQuery("select u from User u").getResultList();
+    public static void after() throws InterruptedException {
+        EntityManager em = EntityManagerProvider.instance("scripts-it").em();
+        em.clear();
+        List<User> users = em.createQuery("select u from User u").getResultList();
         if (users == null || users.size() != 1) {
             fail("We should have 1 user after test execution");
         }
