@@ -50,7 +50,6 @@ public class DBUnitRule implements MethodRule {
   @Override
   public Statement apply(final Statement statement, final FrameworkMethod frameworkMethod, Object o){
     currentMethod = frameworkMethod.getName();
-    Logger.getLogger(getClass().getSimpleName()).info("Apply - "+currentMethod+" - Executor:"+executor);
     DataSet dataSet = frameworkMethod.getAnnotation(DataSet.class);
     if(dataSet == null){
       dataSet = frameworkMethod.getDeclaringClass().getAnnotation(DataSet.class);
@@ -64,7 +63,7 @@ public class DBUnitRule implements MethodRule {
           @Override
           public void evaluate() throws Throwable {
             //intentional cause we can have multiple @Rule so multiple executors on top of same dataset
-            LoggerFactory.getLogger(getClass().getName()).warn("Dataset executor: '" + datasetExecutorId + "' for method " + currentMethod + "() - does not match current executor id -> '" + executor.getId() + "'.\nIgnore this warn if you are using multiple executors");
+            LoggerFactory.getLogger(getClass().getName()).warn("Dataset executor: '" + datasetExecutorId + "' for method " + currentMethod + "() - does not match current executor id -> '" + executor.getId());
           }
         };
       } else if (executorNameIsProvided) {
@@ -92,7 +91,6 @@ public class DBUnitRule implements MethodRule {
             if (model != null && model.getExecuteScriptsAfter() != null && model.getExecuteScriptsAfter().length > 0) {
               try {
                 for (int i = 0; i < model.getExecuteScriptsAfter().length; i++) {
-                  Logger.getLogger(getClass().getSimpleName()).info("Scripts after - "+currentMethod+" -  Executor:"+executor);
                   executor.executeScript(model.getExecuteScriptsAfter()[i]);
                 }
               } catch (Exception e) {
