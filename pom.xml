@@ -223,7 +223,8 @@
                         <version>${jacoco.version}</version>
                         <configuration>
                             <excludes>
-                                <exclude>**/*example.*</exclude>
+                                <exclude>**/*Repository.*</exclude>
+				<exclude>**/*Service.*</exclude>	
                             </excludes>
                         </configuration>
 
