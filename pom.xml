@@ -226,7 +226,7 @@
                                 <exclude>**/*Repository.*</exclude>
 				<exclude>**/*Service.*</exclude>	
 				<exclude>*_.class</exclude>
-				<exclude>*Q*.class</exclude>
+				<exclude>**/Q*.class</exclude>
                             </excludes>
                         </configuration>
 
