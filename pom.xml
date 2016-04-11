@@ -225,8 +225,9 @@
                             <excludes>
                                 <exclude>**/*Repository.*</exclude>
 				<exclude>**/*Service.*</exclude>	
-				<exclude>**/*_.*</exclude>
-				<exclude>**/Q.*</exclude>
+				<exclude>**/*Contact.*</exclude>		
+				<exclude>**/*Company.*</exclude>
+				<exclude>**/*AbstractEntity.*</exclude>		
                             </excludes>
                         </configuration>
 
