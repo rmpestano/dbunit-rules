@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
@@ -106,4 +107,49 @@
 
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>docs</id>
+                <build>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.github.cukedoctor</groupId>
+                            <artifactId>cukedoctor-maven-plugin</artifactId>
+                            <version>1.0.1-SNAPSHOT</version>
+                            <configuration>
+                                <outputFileName>documentation</outputFileName>
+                                <outputDir>docs</outputDir>
+                                <format>all</format>
+                                <!--pdf and html5 -->
+                                <toc>center</toc>
+                                <numbered>true</numbered>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <goals>
+                                        <goal>execute</goal>
+                                    </goals>
+                                    <phase>verify</phase>
+                                </execution>
+                            </executions>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-scm-publish-plugin</artifactId>
+                            <version>1.1</version>
+                            <configuration>
+                                <checkoutDirectory>${project.build.outputDirectory}</checkoutDirectory>
+                                <checkinComment>Publishing DBUnit Rules CDI ${project.parent.version} living documentation.
+                                </checkinComment>
+                                <content>target/docs</content>
+                                <skipDeletedFiles>true</skipDeletedFiles>
+                                <pubScmUrl>scm:git:https://rmpestano:bigboss666@github.com/rmpestano/dbunit-rules.git
+                                </pubScmUrl>
+                                <scmBranch>gh-pages</scmBranch>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </build>
+        </profile>
+    </profiles>
 </project>

@@ -190,28 +190,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>com.github.cukedoctor</groupId>
-                <artifactId>cukedoctor-maven-plugin</artifactId>
-                <version>1.0.1-SNAPSHOT</version>
-                <configuration>
-                    <outputFileName>documentation</outputFileName>
-                    <outputDir>docs</outputDir>
-                    <format>all</format>
-                    <!--pdf and html5 -->
-                    <toc>right</toc>
-                    <numbered>true</numbered>
-                    <introChapterDir>cdi/target</introChapterDir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <phase>verify</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
     <profiles>
@@ -268,29 +246,6 @@
                     <scope>test</scope>
                 </dependency>
             </dependencies>
-        </profile>
-        <profile>
-            <id>publish-docs</id>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-scm-publish-plugin</artifactId>
-                        <version>1.1</version>
-                        <configuration>
-                            <checkoutDirectory>${project.build.outputDirectory}</checkoutDirectory>
-                            <checkinComment>Publishing DBUnit Rules CDI ${project.parent.version} living documentation.
-                            </checkinComment>
-                            <content>target/docs</content>
-                            <skipDeletedFiles>true</skipDeletedFiles>
-                            <pubScmUrl>scm:git:https://${GH_USER}:${GH_PASS}@github.com/rmpestano/dbunit-rules.git
-                            </pubScmUrl>
-                            <scmBranch>gh-pages</scmBranch>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
     </profiles>

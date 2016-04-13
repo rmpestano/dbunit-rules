@@ -14,5 +14,5 @@ env:
 
 script:
 - mvn clean install jacoco:report coveralls:report -Pcoverage
-- mvn -q cukedoctor:execute scm-publish:publish-scm -Ppublish-docs
+- cd cdi && mvn -q cukedoctor:execute scm-publish:publish-scm -Pdocs
 
