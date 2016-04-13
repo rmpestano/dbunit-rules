@@ -8,9 +8,12 @@
 :sectanchors:
 :sectlink:
 :docinfo:
+:source-highlighter: highlightjs
 :toclevels: 3
 
 = *Living Documentation*
+
+include::/home/rmpestano/projects/dbunit-rules/cdi/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
 
 == *Summary*
 [cols="12*^m", options="header,footer"]
@@ -34,17 +37,17 @@
 |1
 |0
 |1
-|1
+|4
 |0
 |0
 |0
 |0
 |0
-|1
-|118ms
+|4
+|05s 686ms
 |[green]#*passed*#
 12+^|*Totals*
-|1|0|1|1|0|0|0|0|0|1 2+|118ms
+|1|0|1|4|0|0|0|0|0|4 2+|05s 686ms
 |===
 
 == *Features*
@@ -61,7 +64,7 @@ CDI must be enabled in your test, see the following example:
 
 [source, java]
 ----
-\@RunWith(CdiTestRunner.class) <1>
+@RunWith(CdiTestRunner.class) <1>
 public class DBUnitCDITest {
 
 }
@@ -72,7 +75,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(118ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 767ms)#
 ******
 
 [discrete]
@@ -93,6 +96,52 @@ DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green
 
 ******
 
+=====
+And ::
+=====
+The following dataset located at src/test/resources/datasets/users.yml: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+----
+
+user:
+- id: 1
+  name: "@realpestano"
+- id: 2
+  name: "@dbunit"
+tweet:
+- id: abcdef12345
+  content: "dbunit rules!"
+  user_id: 1
+- id: abcdef12233
+  content: "dbunit rules!"
+  user_id: 2
+- id: abcdef1343
+  content: "CDI for the win!"
+  user_id: 2
+follower:
+- id: 1
+  user_id: 1
+  follower_id: 2
+
+----
+=====
+When ::
+=====
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+[source,java]
+----
+include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=seedDatabase]
+----
+
+
+******
+
+=====
+Then ::
+=====
+The database should be seeded with the dataset content icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 918ms)#
 =====
 ****
 
