@@ -1,4 +1,4 @@
-:toc: right
+:toc: center
 :backend: pdf
 :doctitle: Living Documentation
 :doctype: book
@@ -44,10 +44,10 @@ include::/home/rmpestano/projects/dbunit-rules/cdi/target/test-classes/cukedocto
 |0
 |0
 |4
-|05s 686ms
+|497ms
 |[green]#*passed*#
 12+^|*Totals*
-|1|0|1|4|0|0|0|0|0|4 2+|05s 686ms
+|1|0|1|4|0|0|0|0|0|4 2+|497ms
 |===
 
 == *Features*
@@ -75,7 +75,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 767ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(326ms)#
 ******
 
 [discrete]
@@ -141,7 +141,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 918ms)#
+The database should be seeded with the dataset content icon:thumbs-up[role="green",title="Passed"] [small right]#(170ms)#
 =====
 ****
 

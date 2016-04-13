@@ -418,14 +418,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </style> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css"> 
  </head> 
- <body class="book toc2 toc-right"> 
-  <div name="themes" id="themes" style="width:150px;font-size:10px;position:relative;top:0;right:0px"> 
+ <body class="book"> 
+  <div name="themes" id="themes" style="float:right;width:150px;font-size:10px;position:relative;top:0;right:0px"> 
    <b>Theme:&nbsp;</b> 
    <select style="width:100px;font-size:10px;" name="select" onchange="window.location.href = window.location.href.substring(0,window.location.href.indexOf('?')) + '?theme='+ this.value"> <option value="asciidoctor" selected>Asciidoctor</option> <option value="colony">Colony</option> <option value="foundation">Foundation</option> <option value="github">Github</option> <option value="iconic">Iconic</option> <option value="maker">Maker</option> <option value="rocket-panda">Rocket Panda</option> <option value="readthedocs">Read the Docs</option> <option value="rubygems">Rubygems</option> </select> 
   </div> 
   <div id="header"> 
    <h1>Living Documentation</h1> 
-   <div id="toc" class="toc2"> 
+   <div id="toc" class="toc"> 
     <div id="toctitle">
       Table of Contents 
     </div> 
@@ -455,14 +455,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
        <li> <p><a href="https://github.com/junit-team/junit4/wiki/Rules">JUnit rule</a> to integrate with DBUnit via annotations:</p> 
         <div class="listingblock"> 
          <div class="content"> 
-          <pre>    @Rule
+          <pre class="highlightjs highlight"><code class="language-java" data-lang="java">    @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(jdbcConnection);<i class="conum" data-value="1"></i><b>(1)</b>
 
     @Test
     @DataSet(value = "datasets/yml/users.yml")
     public void shouldSeedDataSet(){
         //database is seed with users.yml dataset
-    }</pre> 
+    }</code></pre> 
          </div> 
         </div> 
         <div class="colist arabic"> 
@@ -534,7 +534,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>05s 686ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>497ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -566,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>05s 686ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>497ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -631,7 +631,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(01s 767ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(326ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -707,7 +707,20 @@ follower:
             <div class="content"> 
              <div class="listingblock"> 
               <div class="content"> 
-               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">Unresolved directive in documentation.adoc - include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=seedDatabase]</code></pre> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">    @Test
+    @UsingDataSet("yml/users.yml")
+    public void shouldSeedUserDataSetUsingCdiInterceptor() {
+        List&lt;User&gt; users = em.createQuery("select u from User u order by u.id asc").getResultList();
+        User user1 = new User(1);
+        User user2 = new User(2);
+        Tweet tweetUser1 = new Tweet();
+        tweetUser1.setId("abcdef12345");
+        Tweet tweetUser2 = new Tweet();
+        tweetUser2.setId("abcdef12233");
+        assertThat(users).isNotNull().hasSize(2).contains(user1, user2);
+        List&lt;Tweet&gt; tweetsUser1 = users.get(0).getTweets();
+        assertThat(tweetsUser1).isNotNull().hasSize(1).contains(tweetUser1);
+    }</code></pre> 
               </div> 
              </div> 
             </div> 
@@ -724,7 +737,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The database should be seeded with the dataset content <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(03s 918ms)</span></p> 
+            <p>The database should be seeded with the dataset content <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(170ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -737,8 +750,8 @@ follower:
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.1-SNAPSHOT</a> - Apr 12, 2016 11:44:58 PM 
-   <span style="float:right;font-size:11px"> Execution time: 5.432 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.1-SNAPSHOT</a> - Apr 12, 2016 11:50:04 PM 
+   <span style="float:right;font-size:11px"> Execution time: 0.837 seconds</span> 
   </div> 
   <style>  
 
