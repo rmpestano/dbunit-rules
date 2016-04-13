@@ -27,7 +27,7 @@
 
 The project is composed by 5 modules:
 
-* https://github.com/rmpestano/dbunit-rules/tree/master/core[Core^]: Contains the dataset executor login and JUnit rules;
+* https://github.com/rmpestano/dbunit-rules/tree/master/core[Core^]: Contains the dataset executor and JUnit rule;
 * https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI^]: provides the DBUnit interceptor
 * https://github.com/rmpestano/dbunit-rules/tree/master/cucumber[Cucumber^]: a CDI aware cucumber runner;
 * https://github.com/rmpestano/dbunit-rules/tree/master/jpa[JPA^]: Comes with a dataset executor based on JPA entity manager
