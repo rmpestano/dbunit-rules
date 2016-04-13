@@ -227,11 +227,11 @@
                         <configuration>
                             <excludes>
                                 <exclude>**/*Repository.*</exclude>
-				<exclude>**/Q*</exclude>
-				<exclude>**/*Service.*</exclude>	
-				<exclude>**/*Contact*</exclude>		
-				<exclude>**/*Company*</exclude>
-				<exclude>**/*AbstractEntity*</exclude>		
+                                <exclude>**/Q*</exclude>
+                                <exclude>**/*Service.*</exclude>
+                                <exclude>**/*Contact*</exclude>
+                                <exclude>**/*Company*</exclude>
+                                <exclude>**/*AbstractEntity*</exclude>
                             </excludes>
                         </configuration>
 
@@ -310,5 +310,14 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots/>
+            <id>snapshots</id>
+            <name>libs-snapshot</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>
