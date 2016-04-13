@@ -4,7 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by pestano on 22/07/15.
@@ -22,7 +24,7 @@ public class User {
     private List<Tweet> tweets;
 
     @OneToMany(mappedBy = "followedUser")
-    private List<Follower> followers;
+    private Set<Follower> followers;
 
     public User() {
     }
@@ -47,11 +49,11 @@ public class User {
         this.tweets = tweets;
     }
 
-    public List<Follower> getFollowers() {
+    public Set<Follower> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(List<Follower> followers) {
+    public void setFollowers(HashSet<Follower> followers) {
         this.followers = followers;
     }
 

@@ -1,0 +1,36 @@
+= *Introduction*
+
+*DBUnit Rules* aims for bringing http://dbunit.sourceforge.net/[DBUnit^] closer to your JUnit tests. Here are the main features:
+
+* https://github.com/junit-team/junit4/wiki/Rules[JUnit rule] to integrate with DBUnit via annotations:
++
+[source,java]
+----
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(jdbcConnection);//<1>
+
+    @Test
+    @DataSet(value = "datasets/yml/users.yml")
+    public void shouldSeedDataSet(){
+        //database is seed with users.yml dataset
+    }
+----
+<1> The rule depends on a JDBC connection.
++
+* CDI interceptor to seed database without rule instantiation;
+* Json, Yaml, xml and flat xml support;
+* Cucumber integration;
+* JPA integration;
+* Multiple database support;
+* Date/time support in datasets;
+
+
+The project is composed by 5 modules:
+
+* https://github.com/rmpestano/dbunit-rules/tree/master/core[Core^]: Contains the dataset executor login and JUnit rules;
+* https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI^]: provides the DBUnit interceptor
+* https://github.com/rmpestano/dbunit-rules/tree/master/cucumber[Cucumber^]: a CDI aware cucumber runner;
+* https://github.com/rmpestano/dbunit-rules/tree/master/jpa[JPA^]: Comes with a dataset executor based on JPA entity manager
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples[Examples module^].
+
+

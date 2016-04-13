@@ -65,4 +65,20 @@ public class Tweet {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tweet tweet = (Tweet) o;
+
+        return !(id != null ? !id.equals(tweet.id) : tweet.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
