@@ -143,7 +143,7 @@
                                 </checkinComment>
                                 <content>target/docs</content>
                                 <skipDeletedFiles>true</skipDeletedFiles>
-                                <pubScmUrl>scm:git:https://rmpestano:bigboss666@github.com/rmpestano/dbunit-rules.git
+                                <pubScmUrl>scm:git:https://${GH_USER}:${GH_PASS}github.com/rmpestano/dbunit-rules.git
                                 </pubScmUrl>
                                 <scmBranch>gh-pages</scmBranch>
                             </configuration>
