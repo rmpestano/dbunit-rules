@@ -672,9 +672,14 @@ public class ContactSteps {
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
 <2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
 
+== Documentation
+
+Documentation of this projects is based on its https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules/bdd[BDD tests^], access it here: http://rmpestano.github.io/dbunit-rules/documentation.html.
+
+
 == Snapshots
 
-Snapshots are avaiable in maven central, to use it just add the following snippet in your pom.xml:
+Snapshots are available in maven central, to use it just add the following snippet in your pom.xml:
 
 [source,xml]
 ----
