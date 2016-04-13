@@ -13,7 +13,7 @@
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.6.1-SNAPSHOT</version>
+    <version>0.6.1</version>
 
     <modules>
         <module>core</module>
@@ -226,7 +226,12 @@
                         <version>${jacoco.version}</version>
                         <configuration>
                             <excludes>
-                                <exclude>**/*org.example.*</exclude>
+                                <exclude>**/*Repository.*</exclude>
+				<exclude>**/Q*</exclude>
+				<exclude>**/*Service.*</exclude>	
+				<exclude>**/*Contact*</exclude>		
+				<exclude>**/*Company*</exclude>
+				<exclude>**/*AbstractEntity*</exclude>		
                             </excludes>
                         </configuration>
 
