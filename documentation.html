@@ -440,7 +440,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         </ul> </li> 
        <li><a href="#Seeding-database-with-DBUnit-Rules-Core-module">3.2. <strong>Seeding database with DBUnit Rules Core module</strong></a> 
         <ul class="sectlevel3"> 
-         <li><a href="#_scenario_seed_database_using_yml_dataset_2">3.2.1. Scenario: Seed database using yml dataset</a></li> 
+         <li><a href="#_scenario_seed_database_using_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.2.1. Scenario: Seed database using yml dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
         </ul> </li> 
       </ul> </li> 
     </ul> 
@@ -528,17 +528,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
       </thead> 
       <tfoot> 
        <tr> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>831ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>01s 006ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -570,14 +570,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>826ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>01s 006ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
         <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Seeding-database-with-DBUnit-Rules-Core-module">Seeding database with DBUnit Rules Core module</a></strong></code></p></td> 
        </tr> 
        <tr> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
@@ -585,10 +584,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>000ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="red"><strong>failed</strong></span></code></p></td> 
        </tr> 
        <tr> 
         <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong>Totals</strong></code></p></td> 
@@ -629,7 +629,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(509ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(623ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -758,7 +758,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(316ms)</span></p> 
+            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(382ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -778,7 +778,7 @@ follower:
        </div> 
       </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_using_yml_dataset_2"><a class="anchor" href="#_scenario_seed_database_using_yml_dataset_2"></a>3.2.1. Scenario: Seed database using yml dataset</h4> 
+       <h4 id="_scenario_seed_database_using_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_seed_database_using_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.2.1. Scenario: Seed database using yml dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
        <div class="sidebarblock"> 
         <div class="content"> 
          <div class="dlist"> 
@@ -791,7 +791,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>the following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
+            <p>The following junit rules <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -820,8 +820,8 @@ follower:
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2-SNAPSHOT</a> - Apr 16, 2016 12:48:16 PM 
-   <span style="float:right;font-size:11px"> Execution time: 8.684 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2-SNAPSHOT</a> - Apr 16, 2016 12:52:31 PM 
+   <span style="float:right;font-size:11px"> Execution time: 9.511 seconds</span> 
   </div> 
   <style>  
 

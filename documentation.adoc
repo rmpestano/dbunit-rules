@@ -44,11 +44,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|826ms
+|01s 006ms
 |[green]#*passed*#
 
 12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
-|1
 |0
 |1
 |1
@@ -56,12 +55,13 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |0
+|1
 |0
 |1
-|004ms
-|[green]#*passed*#
+|000ms
+|[red]#*failed*#
 12+^|*Totals*
-|2|0|2|5|0|0|0|0|0|5 2+|831ms
+|1|1|2|4|0|0|0|1|0|5 2+|01s 006ms
 |===
 
 == *Features*
@@ -102,7 +102,7 @@ public class DBUnitCDITest { +
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(509ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(623ms)#
 ******
 
 [discrete]
@@ -166,7 +166,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(316ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(382ms)#
 =====
 ****
 
@@ -186,12 +186,12 @@ ____ +
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 ****
 
-==== Scenario: Seed database using yml dataset
+==== Scenario: Seed database using yml dataset icon:thumbs-down[role="red",title="Failed"]
 
 ****
 Given ::
 =====
-the following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
+The following junit rules icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
 ******
 
 [discrete]
