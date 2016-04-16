@@ -3,8 +3,6 @@ package com.github.dbunit.rules.bdd;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
-import cucumber.api.PendingException;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -12,11 +10,11 @@ import cucumber.api.java.en.When;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by rafael-pestano on 09/10/2015.
@@ -39,7 +37,7 @@ public class SeedDatabaseStepdefs {
         assertTrue(true);
     }
 
-    @And("^The following dataset located at src/test/resources/datasets/users.yml:$")
+    @And("^The following dataset$")
     public void The_following_dataset_located_at_src_test_resources_datasets_users_yal(String docsstring) throws Throwable {
     }
 
@@ -48,7 +46,7 @@ public class SeedDatabaseStepdefs {
         assertTrue(true);
     }
 
-    @Then("^The database should be seeded with the dataset content$")
+    @Then("^The database should be seeded with the dataset content before test execution$")
     @UsingDataSet("yml/users.yml")
     public void The_database_should_be_seeded_with_the_dataset_content() throws Throwable {
         List<User> users = em.createQuery("select u from User u order by u.id asc").getResultList();

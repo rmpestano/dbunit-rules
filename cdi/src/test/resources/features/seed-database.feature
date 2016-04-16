@@ -20,6 +20,13 @@ public class DBUnitCDITest {
 =====
 
 #cukedoctor-discrete
+#{[IMPORTANT]}
+#{======}
+#{Your test itself must be a CDI bean to be intercepted. if you’re using https://deltaspike.apache.org/documentation/test-control.html[Deltaspike test control^] just enable the following property in `test/resources/META-INF/apache-deltaspike.properties`:}
+#{----}
+#{deltaspike.testcontrol.use_test_class_as_cdi_bean=true}
+#{----}
+#{======}
 Given DBUnit interceptor is enabled in your test beans.xml:
   """
 .src/test/resources/META-INF/beans.xml
@@ -34,34 +41,20 @@ Given DBUnit interceptor is enabled in your test beans.xml:
               <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
        </interceptors>
 </beans>
-
 ----
 
   """
 
 
-And The following dataset located at src/test/resources/datasets/users.yml:
-  """
-user:
-  - id: 1
-    name: "@realpestano"
-  - id: 2
-    name: "@dbunit"
-tweet:
-  - id: abcdef12345
-    content: "dbunit rules!"
-    user_id: 1
-  - id: abcdef12233
-    content: "dbunit rules!"
-    user_id: 2
-  - id: abcdef1343
-    content: "CDI for the win!"
-    user_id: 2
-follower:
-  - id: 1
-    user_id: 1
-    follower_id: 2
-  """
+#cukedoctor-discrete
+And The following dataset
+
+ """
+.src/test/resources/dataset/yml/users.yml
+----
+include::../../src/test/resources/datasets/yml/users.yml[]
+----
+ """
 
 #cukedoctor-discrete
 When The following test is executed:
@@ -72,4 +65,4 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 ----
  """
 
-Then The database should be seeded with the dataset content
+Then The database should be seeded with the dataset content before test execution

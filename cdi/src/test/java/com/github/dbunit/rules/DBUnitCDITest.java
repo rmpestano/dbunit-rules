@@ -78,8 +78,6 @@ public class DBUnitCDITest {
         User user2 = new User(2);
         Tweet tweetUser1 = new Tweet();
         tweetUser1.setId("abcdef12345");
-        Tweet tweetUser2 = new Tweet();
-        tweetUser2.setId("abcdef12233");
         assertThat(users).isNotNull().hasSize(2).contains(user1, user2);
         List<Tweet> tweetsUser1 = users.get(0).getTweets();
         assertThat(tweetsUser1).isNotNull().hasSize(1).contains(tweetUser1);
