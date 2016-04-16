@@ -15,4 +15,4 @@ before_script:
 
 script:
 - mvn clean install jacoco:report coveralls:report -Pcoverage
-- cd cdi && mvn -q cukedoctor:execute scm-publish:publish-scm -Pdocs
+- cd cdi && mvn -u -q cukedoctor:execute scm-publish:publish-scm -Pdocs
