@@ -44,24 +44,24 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|804ms
+|754ms
 |[green]#*passed*#
 
 12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
-|0
-|1
-|1
-|0
-|0
-|0
-|0
 |1
 |0
 |1
-|000ms
-|[red]#*failed*#
+|1
+|0
+|0
+|0
+|0
+|0
+|1
+|010ms
+|[green]#*passed*#
 12+^|*Totals*
-|1|1|2|4|0|0|0|1|0|5 2+|804ms
+|2|0|2|5|0|0|0|0|0|5 2+|764ms
 |===
 
 == *Features*
@@ -70,15 +70,14 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 === *Seeding database with DBUnit Rules CDI module*
 
 ****
+==== +
 [quote] +
 ____ +
-In order to manage database state in *CDI* based tests +
- +
-As a developer +
- +
-I want to use DBUnit in a CDI test environment +
+In order to manage database state in *CDI* based tests + +
+As a developer + +
+I want to use DBUnit in a CDI test environment. +
 ____ +
- +
+==== +
  +
 DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^]. +
  +
@@ -102,7 +101,7 @@ public class DBUnitCDITest { +
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(539ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(549ms)#
 ******
 
 [discrete]
@@ -166,7 +165,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(265ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(204ms)#
 =====
 ****
 
@@ -174,24 +173,24 @@ The database should be seeded with the dataset content before test execution ico
 === *Seeding database with DBUnit Rules Core module*
 
 ****
+==== +
 [quote] +
 ____ +
-In order to prepare database state during JUnit tests +
- +
-As a developer +
- +
-I want to integrate DBUnit in my JUnit tests. +
+In order to manage database state in JUnit tests + +
+As a developer + +
+I want to use DBUnit in my tests. +
 ____ +
+==== +
  +
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 ****
 
-==== Scenario: Seed database using yml dataset icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Seed database using yml dataset
 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
 ******
 
 [discrete]
