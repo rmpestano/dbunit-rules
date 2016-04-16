@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.bdd;
+package com.github.dbunit.rules.bdd.cdi;
 
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.Tweet;

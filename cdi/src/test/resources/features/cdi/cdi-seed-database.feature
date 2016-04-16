@@ -1,5 +1,15 @@
-#order=1
+#order=2
 Feature: Seeding database with DBUnit Rules CDI module
+[quote]
+____
+In order to manage database state in *CDI* based tests
+
+As a developer
+
+I want to use DBUnit in a CDI test environment
+____
+
+
 DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
 
 [IMPORTANT]
@@ -50,7 +60,6 @@ Given DBUnit interceptor is enabled in your test beans.xml:
 And The following dataset
 
  """
-[discrete]
 .src/test/resources/dataset/yml/users.yml
 ----
 include::../../src/test/resources/datasets/yml/users.yml[]
