@@ -14,7 +14,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
   Scenario: Seed database using yml dataset
 
     #cukedoctor-discrete
-    Given the following junit rules
+    Given The following junit rules
     """
 .src/test/resources/dataset/yml/users.yml
 [source,java]
