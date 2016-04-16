@@ -1,13 +1,13 @@
-#order:1
+#order: 1
 Feature: Seeding database with DBUnit Rules Core module
-  [quote]
-  ____
-  In order to prepare database state during JUnit tests
-
-  As a developer
-
-  I want to integrate DBUnit in my JUnit tests.
-  ____
+====
+[quote]
+____
+In order to manage database state in JUnit tests +
+As a developer +
+I want to use DBUnit in my tests.
+____
+====
 
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 

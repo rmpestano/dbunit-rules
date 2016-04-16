@@ -1,14 +1,13 @@
-#order:2
+#order: 2
 Feature: Seeding database with DBUnit Rules CDI module
+====
 [quote]
 ____
-In order to manage database state in *CDI* based tests
-
-As a developer
-
-I want to use DBUnit in a CDI test environment
+In order to manage database state in *CDI* based tests +
+As a developer +
+I want to use DBUnit in a CDI test environment.
 ____
-
+====
 
 DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
 

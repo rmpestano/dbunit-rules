@@ -1,6 +1,7 @@
 package com.github.dbunit.rules.bdd.core;
 
 import com.github.dbunit.rules.model.User;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ public class CoreSeedDatabaseStepdefs {
 
 
 
-    @Given("^the following junit rules$")
+    @Given("^The following junit rules$")
     public void the_following_junit_rules(String docString) throws Throwable {
 
     }
