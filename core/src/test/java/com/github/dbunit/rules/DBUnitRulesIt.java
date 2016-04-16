@@ -27,12 +27,13 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class DBUnitRulesIt {
 
+    // tag::rules[]
     @Rule
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
-
+   // end::rules[]
 
     @Test
     @DataSet(value = "datasets/yml/users.yml",disableConstraints = true)
@@ -75,6 +76,7 @@ public class DBUnitRulesIt {
     }
 
 
+    // tag::seedDatabase[]
     @Test
     @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true)
     public void shouldSeedUserDataSet() {
@@ -88,6 +90,7 @@ public class DBUnitRulesIt {
         Calendar now = Calendar.getInstance();
         assertThat(date.get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
     }
+    // end::seedDatabase[]
 
     @Test
     @DataSet(value = "datasets/yml/users.yml")

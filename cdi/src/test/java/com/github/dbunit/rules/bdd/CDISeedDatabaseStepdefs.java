@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by rafael-pestano on 09/10/2015.
  */
-public class SeedDatabaseStepdefs {
+public class CDISeedDatabaseStepdefs {
 
     @Inject
     EntityManager em;

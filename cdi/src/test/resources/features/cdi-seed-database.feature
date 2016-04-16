@@ -1,9 +1,6 @@
 #order=1
-Feature: Seeding database
-
-
-Scenario: Seed database using dbunit CDI
-  DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
+Feature: Seeding database with DBUnit Rules CDI module
+DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
 
 [IMPORTANT]
 =====
@@ -18,6 +15,9 @@ public class DBUnitCDITest {
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
 =====
+
+Scenario: Seed database using yml dataset
+
 
 #cukedoctor-discrete
 #{[IMPORTANT]}
@@ -50,6 +50,7 @@ Given DBUnit interceptor is enabled in your test beans.xml:
 And The following dataset
 
  """
+[discrete]
 .src/test/resources/dataset/yml/users.yml
 ----
 include::../../src/test/resources/datasets/yml/users.yml[]
