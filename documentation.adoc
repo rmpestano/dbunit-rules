@@ -44,7 +44,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|754ms
+|831ms
 |[green]#*passed*#
 
 12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
@@ -58,10 +58,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |1
-|010ms
+|015ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|5|0|0|0|0|0|5 2+|764ms
+|2|0|2|5|0|0|0|0|0|5 2+|847ms
 |===
 
 == *Features*
@@ -101,7 +101,7 @@ public class DBUnitCDITest { +
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(549ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(506ms)#
 ******
 
 [discrete]
@@ -165,7 +165,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(204ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(325ms)#
 =====
 ****
 
@@ -190,7 +190,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(015ms)#
 ******
 
 [discrete]
