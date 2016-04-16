@@ -1,4 +1,4 @@
-#order=1
+#order:1
 Feature: Seeding database with DBUnit Rules Core module
   [quote]
   ____
