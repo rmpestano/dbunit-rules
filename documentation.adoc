@@ -44,10 +44,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|775ms
+|01s 308ms
 |[green]#*passed*#
 12+^|*Totals*
-|1|0|1|4|0|0|0|0|0|4 2+|775ms
+|1|0|1|4|0|0|0|0|0|4 2+|01s 308ms
 |===
 
 == *Features*
@@ -75,7 +75,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(486ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(891ms)#
 ******
 
 [discrete]
@@ -96,33 +96,31 @@ DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green
 
 ******
 
+[IMPORTANT]
+======
+
+Your test itself must be a CDI bean to be intercepted. if you’re using https://deltaspike.apache.org/documentation/test-control.html[Deltaspike test control^] just enable the following property in `test/resources/META-INF/apache-deltaspike.properties`:
+----
+
+deltaspike.testcontrol.use_test_class_as_cdi_bean=true
+----
+======
+
 =====
 And ::
 =====
-The following dataset located at src/test/resources/datasets/users.yml: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+.src/test/resources/dataset/yml/users.yml
+----
+include::../../src/test/resources/datasets/yml/users.yml[]
 ----
 
-user:
-- id: 1
-  name: "@realpestano"
-- id: 2
-  name: "@dbunit"
-tweet:
-- id: abcdef12345
-  content: "dbunit rules!"
-  user_id: 1
-- id: abcdef12233
-  content: "dbunit rules!"
-  user_id: 2
-- id: abcdef1343
-  content: "CDI for the win!"
-  user_id: 2
-follower:
-- id: 1
-  user_id: 1
-  follower_id: 2
 
-----
+******
+
 =====
 When ::
 =====
@@ -141,7 +139,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content icon:thumbs-up[role="green",title="Passed"] [small right]#(288ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(416ms)#
 =====
 ****
 
