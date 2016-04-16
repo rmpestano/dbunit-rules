@@ -33,7 +33,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |Duration
 |Status
 
-12+^|*<<Seeding-database>>*
+12+^|*<<Seeding-database-with-DBUnit-Rules-CDI-module>>*
 |1
 |0
 |1
@@ -44,38 +44,41 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|01s 308ms
+|960ms
 |[green]#*passed*#
 12+^|*Totals*
-|1|0|1|4|0|0|0|0|0|4 2+|01s 308ms
+|1|0|1|4|0|0|0|0|0|4 2+|960ms
 |===
 
 == *Features*
 
-[[Seeding-database, Seeding database]]
-=== *Seeding database*
+[[Seeding-database-with-DBUnit-Rules-CDI-module, Seeding database with DBUnit Rules CDI module]]
+=== *Seeding database with DBUnit Rules CDI module*
 
-==== Scenario: Seed database using dbunit CDI
-DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
-
-[IMPORTANT]
+****
+DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^]. +
+ +
+[IMPORTANT] +
+===== +
+CDI must be enabled in your test, see the following example: +
+ +
+[source, java] +
+---- +
+@RunWith(CdiTestRunner.class) <1> +
+public class DBUnitCDITest { +
+ +
+} +
+---- +
+<1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners. +
 =====
-CDI must be enabled in your test, see the following example:
+****
 
-[source, java]
-----
-@RunWith(CdiTestRunner.class) <1>
-public class DBUnitCDITest {
-
-}
-----
-<1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
-=====
+==== Scenario: Seed database using yml dataset
 
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(891ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(519ms)#
 ******
 
 [discrete]
@@ -113,6 +116,8 @@ The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#
 ******
 
 [discrete]
+[discrete]
+[discrete]
 .src/test/resources/dataset/yml/users.yml
 ----
 include::../../src/test/resources/datasets/yml/users.yml[]
@@ -139,7 +144,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(416ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(441ms)#
 =====
 ****
 

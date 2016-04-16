@@ -434,9 +434,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
      <li><a href="#__strong_summary_strong">2. <strong>Summary</strong></a></li> 
      <li><a href="#__strong_features_strong">3. <strong>Features</strong></a> 
       <ul class="sectlevel2"> 
-       <li><a href="#Seeding-database">3.1. <strong>Seeding database</strong></a> 
+       <li><a href="#Seeding-database-with-DBUnit-Rules-CDI-module">3.1. <strong>Seeding database with DBUnit Rules CDI module</strong></a> 
         <ul class="sectlevel3"> 
-         <li><a href="#_scenario_seed_database_using_dbunit_cdi">3.1.1. Scenario: Seed database using dbunit CDI</a></li> 
+         <li><a href="#_scenario_seed_database_using_yml_dataset">3.1.1. Scenario: Seed database using yml dataset</a></li> 
         </ul> </li> 
       </ul> </li> 
     </ul> 
@@ -534,7 +534,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>01s 308ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>960ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -553,7 +553,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>Status</code></p></td> 
        </tr> 
        <tr> 
-        <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Seeding-database">Seeding database</a></strong></code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Seeding-database-with-DBUnit-Rules-CDI-module">Seeding database with DBUnit Rules CDI module</a></strong></code></p></td> 
        </tr> 
        <tr> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
@@ -566,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>01s 308ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>960ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -580,45 +580,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
     <h2 id="__strong_features_strong"><a class="anchor" href="#__strong_features_strong"></a>3. <strong>Features</strong></h2> 
     <div class="sectionbody"> 
      <div class="sect2"> 
-      <h3 id="Seeding-database"><a class="anchor" href="#Seeding-database"></a>3.1. <strong>Seeding database</strong></h3> 
-      <span class="fa fa-minus-square fa-fw" style="cursor:pointer;float:right;margin-top:-30px" title="Minimize" onclick="hideFeatureScenarios('Seeding-database');document.getElementById('hidden-Seeding-database').style.display = 'inline';this.style.display = 'none'"> </span> 
-      <span id="hidden-Seeding-database" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Seeding-database');this.style.display = 'none'"> </span> 
+      <h3 id="Seeding-database-with-DBUnit-Rules-CDI-module"><a class="anchor" href="#Seeding-database-with-DBUnit-Rules-CDI-module"></a>3.1. <strong>Seeding database with DBUnit Rules CDI module</strong></h3> 
+      <span class="fa fa-minus-square fa-fw" style="cursor:pointer;float:right;margin-top:-30px" title="Minimize" onclick="hideFeatureScenarios('Seeding-database-with-DBUnit-Rules-CDI-module');document.getElementById('hidden-Seeding-database-with-DBUnit-Rules-CDI-module').style.display = 'inline';this.style.display = 'none'"> </span> 
+      <span id="hidden-Seeding-database-with-DBUnit-Rules-CDI-module" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Seeding-database-with-DBUnit-Rules-CDI-module');this.style.display = 'none'"> </span> 
+      <div class="sidebarblock"> 
+       <div class="content"> 
+        <div class="paragraph"> 
+         <p>DBUnit CDI integration is done through a <a href="https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors" target="_blank">CDI interceptor</a>.<br> <br> [IMPORTANT]<br> =====<br> CDI must be enabled in your test, see the following example:<br> <br> [source, java]<br> ----<br> @RunWith(CdiTestRunner.class) &lt;1&gt;<br> public class DBUnitCDITest {<br> <br> }<br> ----<br> &lt;1&gt; <a href="https://deltaspike.apache.org/documentation/test-control.html" target="_blank">CdiTestRunner</a> is provided by <a href="https://deltaspike.apache.org" target="_blank">Apache Deltaspike</a> but you should be able to use other CDI test runners.<br></p> 
+        </div> 
+        <div class="exampleblock"> 
+         <div class="content"> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_using_dbunit_cdi"><a class="anchor" href="#_scenario_seed_database_using_dbunit_cdi"></a>3.1.1. Scenario: Seed database using dbunit CDI</h4> 
-       <div class="paragraph"> 
-        <p>DBUnit CDI integration is done through a <a href="https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors" target="_blank">CDI interceptor</a>.</p> 
-       </div> 
-       <div class="admonitionblock important"> 
-        <table> 
-         <tbody> 
-          <tr> 
-           <td class="icon"> <i class="fa icon-important" title="Important"></i> </td> 
-           <td class="content"> 
-            <div class="paragraph"> 
-             <p>CDI must be enabled in your test, see the following example:</p> 
-            </div> 
-            <div class="listingblock"> 
-             <div class="content"> 
-              <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@RunWith(CdiTestRunner.class) <i class="conum" data-value="1"></i><b>(1)</b>
-public class DBUnitCDITest {
-
-}</code></pre> 
-             </div> 
-            </div> 
-            <div class="colist arabic"> 
-             <table> 
-              <tbody> 
-               <tr> 
-                <td><i class="conum" data-value="1"></i><b>1</b></td> 
-                <td><a href="https://deltaspike.apache.org/documentation/test-control.html" target="_blank">CdiTestRunner</a> is provided by <a href="https://deltaspike.apache.org" target="_blank">Apache Deltaspike</a> but you should be able to use other CDI test runners.</td> 
-               </tr> 
-              </tbody> 
-             </table> 
-            </div> </td> 
-          </tr> 
-         </tbody> 
-        </table> 
-       </div> 
+       <h4 id="_scenario_seed_database_using_yml_dataset"><a class="anchor" href="#_scenario_seed_database_using_yml_dataset"></a>3.1.1. Scenario: Seed database using yml dataset</h4> 
        <div class="sidebarblock"> 
         <div class="content"> 
          <div class="dlist"> 
@@ -631,7 +608,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(891ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(519ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -760,7 +737,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(416ms)</span></p> 
+            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(441ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -773,8 +750,8 @@ follower:
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.1</a> - Apr 16, 2016 10:52:46 AM 
-   <span style="float:right;font-size:11px"> Execution time: 12.264 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2-SNAPSHOT</a> - Apr 16, 2016 11:54:04 AM 
+   <span style="float:right;font-size:11px"> Execution time: 7.344 seconds</span> 
   </div> 
   <style>  
 
