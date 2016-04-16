@@ -538,7 +538,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>847ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>973ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -570,7 +570,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>831ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>969ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -587,7 +587,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>015ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -606,12 +606,50 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
       <span id="hidden-Seeding-database-with-DBUnit-Rules-CDI-module" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Seeding-database-with-DBUnit-Rules-CDI-module');this.style.display = 'none'"> </span> 
       <div class="sidebarblock"> 
        <div class="content"> 
-        <div class="paragraph"> 
-         <p>====<br> [quote]<br> <em><em>_<br> In order to manage database state in <strong>CDI</strong> based tests +<br> As a developer +<br> I want to use DBUnit in a CDI test environment.<br> </em>_</em><br> ====<br> <br> DBUnit CDI integration is done through a <a href="https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors" target="_blank">CDI interceptor</a>.<br> <br> [IMPORTANT]<br> =====<br> CDI must be enabled in your test, see the following example:<br> <br> [source, java]<br> ----<br> @RunWith(CdiTestRunner.class) &lt;1&gt;<br> public class DBUnitCDITest {<br> <br> }<br> ----<br> &lt;1&gt; <a href="https://deltaspike.apache.org/documentation/test-control.html" target="_blank">CdiTestRunner</a> is provided by <a href="https://deltaspike.apache.org" target="_blank">Apache Deltaspike</a> but you should be able to use other CDI test runners.<br></p> 
-        </div> 
         <div class="exampleblock"> 
          <div class="content"> 
+          <div class="quoteblock"> 
+           <blockquote> 
+            <div class="paragraph"> 
+             <p>In order to manage database state in <strong>CDI</strong> based tests<br> As a developer<br> I want to use DBUnit in a CDI test environment.</p> 
+            </div> 
+           </blockquote> 
+          </div> 
          </div> 
+        </div> 
+        <div class="paragraph"> 
+         <p>DBUnit CDI integration is done through a <a href="https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors" target="_blank">CDI interceptor</a>.</p> 
+        </div> 
+        <div class="admonitionblock important"> 
+         <table> 
+          <tbody> 
+           <tr> 
+            <td class="icon"> <i class="fa icon-important" title="Important"></i> </td> 
+            <td class="content"> 
+             <div class="paragraph"> 
+              <p>CDI must be enabled in your test, see the following example:</p> 
+             </div> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@RunWith(CdiTestRunner.class) <i class="conum" data-value="1"></i><b>(1)</b>
+public class DBUnitCDITest {
+
+}</code></pre> 
+              </div> 
+             </div> 
+             <div class="colist arabic"> 
+              <table> 
+               <tbody> 
+                <tr> 
+                 <td><i class="conum" data-value="1"></i><b>1</b></td> 
+                 <td><a href="https://deltaspike.apache.org/documentation/test-control.html" target="_blank">CdiTestRunner</a> is provided by <a href="https://deltaspike.apache.org" target="_blank">Apache Deltaspike</a> but you should be able to use other CDI test runners.</td> 
+                </tr> 
+               </tbody> 
+              </table> 
+             </div> </td> 
+           </tr> 
+          </tbody> 
+         </table> 
         </div> 
        </div> 
       </div> 
@@ -629,7 +667,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(506ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(558ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -758,7 +796,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(325ms)</span></p> 
+            <p>The database should be seeded with the dataset content before test execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(411ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -772,8 +810,19 @@ follower:
       <span id="hidden-Seeding-database-with-DBUnit-Rules-Core-module" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Seeding-database-with-DBUnit-Rules-Core-module');this.style.display = 'none'"> </span> 
       <div class="sidebarblock"> 
        <div class="content"> 
+        <div class="exampleblock"> 
+         <div class="content"> 
+          <div class="quoteblock"> 
+           <blockquote> 
+            <div class="paragraph"> 
+             <p>In order to manage database state in JUnit tests<br> As a developer<br> I want to use DBUnit in my tests.</p> 
+            </div> 
+           </blockquote> 
+          </div> 
+         </div> 
+        </div> 
         <div class="paragraph"> 
-         <p>====<br> [quote]<br> <em><em>_<br> In order to manage database state in JUnit tests +<br> As a developer +<br> I want to use DBUnit in my tests.<br> </em>_</em><br> ====<br> <br> DBUnit Rules Core module brings <a href="http://dbunit.sourceforge.net/" target="_blank">DBunit</a> to your unit tests via <a href="https://github.com/junit-team/junit4/wiki/Rules" target="_blank">JUnit rules</a>.</p> 
+         <p>DBUnit Rules Core module brings <a href="http://dbunit.sourceforge.net/" target="_blank">DBunit</a> to your unit tests via <a href="https://github.com/junit-team/junit4/wiki/Rules" target="_blank">JUnit rules</a>.</p> 
         </div> 
        </div> 
       </div> 
@@ -791,7 +840,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(015ms)</span></p> 
+            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -820,8 +869,8 @@ follower:
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2-SNAPSHOT</a> - Apr 16, 2016 10:49:26 PM 
-   <span style="float:right;font-size:11px"> Execution time: 11.269 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2-SNAPSHOT</a> - Apr 16, 2016 11:01:29 PM 
+   <span style="float:right;font-size:11px"> Execution time: 5.8 seconds</span> 
   </div> 
   <style>  
 

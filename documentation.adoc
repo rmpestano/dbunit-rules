@@ -44,7 +44,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|831ms
+|969ms
 |[green]#*passed*#
 
 12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
@@ -58,10 +58,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |1
-|015ms
+|004ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|5|0|0|0|0|0|5 2+|847ms
+|2|0|2|5|0|0|0|0|0|5 2+|973ms
 |===
 
 == *Features*
@@ -70,29 +70,29 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 === *Seeding database with DBUnit Rules CDI module*
 
 ****
-==== +
-[quote] +
-____ +
-In order to manage database state in *CDI* based tests + +
-As a developer + +
-I want to use DBUnit in a CDI test environment. +
-____ +
-==== +
- +
-DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^]. +
- +
-[IMPORTANT] +
-===== +
-CDI must be enabled in your test, see the following example: +
- +
-[source, java] +
----- +
-@RunWith(CdiTestRunner.class) <1> +
-public class DBUnitCDITest { +
- +
-} +
----- +
-<1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners. +
+====
+[quote]
+____
+In order to manage database state in *CDI* based tests +
+As a developer +
+I want to use DBUnit in a CDI test environment.
+____
+====
+
+DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
+
+[IMPORTANT]
+=====
+CDI must be enabled in your test, see the following example:
+
+[source, java]
+----
+@RunWith(CdiTestRunner.class) <1>
+public class DBUnitCDITest {
+
+}
+----
+<1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
 =====
 ****
 
@@ -101,7 +101,7 @@ public class DBUnitCDITest { +
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(506ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(558ms)#
 ******
 
 [discrete]
@@ -165,7 +165,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(325ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(411ms)#
 =====
 ****
 
@@ -173,15 +173,15 @@ The database should be seeded with the dataset content before test execution ico
 === *Seeding database with DBUnit Rules Core module*
 
 ****
-==== +
-[quote] +
-____ +
-In order to manage database state in JUnit tests + +
-As a developer + +
-I want to use DBUnit in my tests. +
-____ +
-==== +
- +
+====
+[quote]
+____
+In order to manage database state in JUnit tests +
+As a developer +
+I want to use DBUnit in my tests.
+____
+====
+
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 ****
 
@@ -190,7 +190,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(015ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
 ******
 
 [discrete]
