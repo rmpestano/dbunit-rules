@@ -44,7 +44,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|009ms
+|013ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -58,10 +58,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|519ms
+|690ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|8|0|0|0|0|0|8 2+|528ms
+|2|0|2|8|0|0|0|0|0|8 2+|704ms
 |===
 
 == *Features*
@@ -87,15 +87,16 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(013ms)#
 ******
 
 [discrete]
-.src/test/resources/dataset/yml/users.yml
-[discrete]
 [source,java]
 ----
+@RunWith(JUnit4.class)
+public class DBUnitRulesIt {
 include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
+}
 ----
 [discrete]
 <1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBunit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
@@ -177,7 +178,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(519ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(690ms)#
 ******
 
 [discrete]
