@@ -16,10 +16,12 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
     #cukedoctor-discrete
     Given The following junit rules
     """
-.src/test/resources/dataset/yml/users.yml
 [source,java]
 ----
+@RunWith(JUnit4.class)
+public class DBUnitRulesIt {
 include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
+}
 ----
 <1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBunit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
 <2> DBUnit rule responsible for reading `@DataSet` annotation and prepare the database for each test.
