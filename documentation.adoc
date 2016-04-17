@@ -33,20 +33,6 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |Duration
 |Status
 
-12+^|*<<Seeding-database-with-DBUnit-Rules-CDI-module>>*
-|1
-|0
-|1
-|4
-|0
-|0
-|0
-|0
-|0
-|4
-|01s 206ms
-|[green]#*passed*#
-
 12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
 |1
 |0
@@ -58,13 +44,65 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |1
-|010ms
+|045ms
+|[green]#*passed*#
+
+12+^|*<<Seeding-database-with-DBUnit-Rules-CDI-module>>*
+|1
+|0
+|1
+|4
+|0
+|0
+|0
+|0
+|0
+|4
+|01s 163ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|5|0|0|0|0|0|5 2+|01s 217ms
+|2|0|2|5|0|0|0|0|0|5 2+|01s 209ms
 |===
 
 == *Features*
+
+[[Seeding-database-with-DBUnit-Rules-Core-module, Seeding database with DBUnit Rules Core module]]
+=== *Seeding database with DBUnit Rules Core module*
+
+****
+====
+[quote]
+____
+In order to manage database state in JUnit tests +
+As a developer +
+I want to use DBUnit in my tests.
+____
+====
+
+DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
+****
+
+==== Scenario: Seed database using yml dataset
+
+****
+Given ::
+=====
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(045ms)#
+******
+
+[discrete]
+.src/test/resources/dataset/yml/users.yml
+[discrete]
+[source,java]
+----
+include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
+----
+
+
+******
+
+=====
+****
 
 [[Seeding-database-with-DBUnit-Rules-CDI-module, Seeding database with DBUnit Rules CDI module]]
 === *Seeding database with DBUnit Rules CDI module*
@@ -101,7 +139,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(897ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(638ms)#
 ******
 
 [discrete]
@@ -165,45 +203,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(308ms)#
-=====
-****
-
-[[Seeding-database-with-DBUnit-Rules-Core-module, Seeding database with DBUnit Rules Core module]]
-=== *Seeding database with DBUnit Rules Core module*
-
-****
-====
-[quote]
-____
-In order to manage database state in JUnit tests +
-As a developer +
-I want to use DBUnit in my tests.
-____
-====
-
-DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
-****
-
-==== Scenario: Seed database using yml dataset
-
-****
-Given ::
-=====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
-******
-
-[discrete]
-.src/test/resources/dataset/yml/users.yml
-[discrete]
-[source,java]
-----
-include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
-----
-
-
-******
-
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(524ms)#
 =====
 ****
 
