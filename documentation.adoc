@@ -33,21 +33,21 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |Duration
 |Status
 
-12+^|*<<Seeding-database-with-DBUnit-Rules-Core-module>>*
+12+^|*<<Manage-database-with-DBUnit-Rules-Core>>*
 |1
 |0
 |1
-|1
+|4
 |0
 |0
 |0
 |0
 |0
-|1
-|045ms
+|4
+|009ms
 |[green]#*passed*#
 
-12+^|*<<Seeding-database-with-DBUnit-Rules-CDI-module>>*
+12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
 |1
 |0
 |1
@@ -58,16 +58,16 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|01s 163ms
+|519ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|5|0|0|0|0|0|5 2+|01s 209ms
+|2|0|2|8|0|0|0|0|0|8 2+|528ms
 |===
 
 == *Features*
 
-[[Seeding-database-with-DBUnit-Rules-Core-module, Seeding database with DBUnit Rules Core module]]
-=== *Seeding database with DBUnit Rules Core module*
+[[Manage-database-with-DBUnit-Rules-Core, Manage database with DBUnit Rules Core]]
+=== *Manage database with DBUnit Rules Core*
 
 ****
 ====
@@ -87,7 +87,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(045ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
 ******
 
 [discrete]
@@ -97,15 +97,53 @@ The following junit rules icon:thumbs-up[role="green",title="Passed"] [small rig
 ----
 include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
 ----
+[discrete]
+<1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBunit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
+[discrete]
+<2> DBUnit rule responsible for reading `@DataSet` annotation and prepare the database for each test.
 
 
 ******
 
 =====
+And ::
+=====
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+.src/test/resources/dataset/yml/users.yml
+----
+include::../../src/test/resources/datasets/yml/users.yml[]
+----
+
+
+******
+
+=====
+When ::
+=====
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+[source,java]
+----
+include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=seedDatabase]
+----
+
+
+******
+
+=====
+Then ::
+=====
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+=====
 ****
 
-[[Seeding-database-with-DBUnit-Rules-CDI-module, Seeding database with DBUnit Rules CDI module]]
-=== *Seeding database with DBUnit Rules CDI module*
+[[Manage-database-with-DBUnit-Rules-CDI, Manage database with DBUnit Rules CDI]]
+=== *Manage database with DBUnit Rules CDI*
 
 ****
 ====
@@ -139,7 +177,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(638ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(519ms)#
 ******
 
 [discrete]
@@ -203,7 +241,7 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 =====
 Then ::
 =====
-The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(524ms)#
+The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
