@@ -24,15 +24,16 @@ import static org.junit.Assert.assertEquals;
  * Created by pestano on 23/07/15.
  */
 
+
 @RunWith(JUnit4.class)
 public class DBUnitRulesIt {
 
     // tag::rules[]
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it"); //<1>
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection()); //<2>
    // end::rules[]
 
     @Test

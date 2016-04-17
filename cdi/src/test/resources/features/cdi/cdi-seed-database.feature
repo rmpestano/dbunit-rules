@@ -1,5 +1,5 @@
 # order: 2
-Feature: Seeding database with DBUnit Rules CDI module
+Feature: Manage database with DBUnit Rules CDI
 ====
 [quote]
 ____

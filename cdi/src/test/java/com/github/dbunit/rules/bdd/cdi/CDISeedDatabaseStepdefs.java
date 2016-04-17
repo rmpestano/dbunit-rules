@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -27,11 +28,6 @@ public class CDISeedDatabaseStepdefs {
     List<User> usersFound;
 
 
-    @Then("^I must find (\\d+) of users$")
-    public void I_must_find_number_of_users(int usersExpected) throws Throwable {
-        assertEquals(usersExpected, usersFound.size());
-    }
-
     @Given("^DBUnit interceptor is enabled in your test beans.xml:$")
     public void DBUnit_interceptor_is_enabled_in_your_test_beans_xml(String docstring) throws Throwable {
         assertTrue(true);
@@ -39,12 +35,20 @@ public class CDISeedDatabaseStepdefs {
 
     @And("^The following dataset$")
     public void The_following_dataset_located_at_src_test_resources_datasets_users_yal(String docsstring) throws Throwable {
+        assertNotNull(docsstring);
     }
 
     @When("^The following test is executed:$")
     public void The_test_below_is_executed(String docSstring) throws Throwable {
         assertTrue(true);
     }
+
+    @Then("^The database should be seeded with the dataset content before test execution$")
+    public void The_database_should_be_seeded_with_the_dataset_content() throws Throwable {
+
+    }
+
+    /*  Use database seeding in cucumber on cucumber feature
 
     @Then("^The database should be seeded with the dataset content before test execution$")
     @UsingDataSet("yml/users.yml")
@@ -64,6 +68,8 @@ public class CDISeedDatabaseStepdefs {
         assertThat(tweetsUser2).isNotNull().hasSize(2).contains(tweetUser2);
 
     }
+
+     */
 
 
 }
