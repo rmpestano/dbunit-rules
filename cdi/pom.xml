@@ -119,8 +119,8 @@
                             <configuration>
                                 <outputFileName>documentation</outputFileName>
                                 <outputDir>docs</outputDir>
-                                <format>all</format>
                                 <!--pdf and html5 -->
+                                <format>all</format>
                                 <toc>center</toc>
                                 <numbered>true</numbered>
                                 <docVersion>${project.version}</docVersion>
