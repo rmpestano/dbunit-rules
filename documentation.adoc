@@ -15,7 +15,7 @@
 
 = *Living Documentation*
 
-include::/home/pestano/projects/dbunit-rules/cdi/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
+include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
 
 == *Summary*
 [cols="12*^m", options="header,footer"]
@@ -46,7 +46,7 @@ include::/home/pestano/projects/dbunit-rules/cdi/target/test-classes/cukedoctor-
 |0
 |0
 |4
-|002ms
+|018ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,10 +60,10 @@ include::/home/pestano/projects/dbunit-rules/cdi/target/test-classes/cukedoctor-
 |0
 |0
 |4
-|159ms
+|484ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|8|0|0|0|0|0|8 2+|161ms
+|2|0|2|8|0|0|0|0|0|8 2+|503ms
 |===
 
 == *Features*
@@ -89,7 +89,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(017ms)#
 ******
 
 [discrete]
@@ -180,7 +180,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(158ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(484ms)#
 ******
 
 [discrete]
