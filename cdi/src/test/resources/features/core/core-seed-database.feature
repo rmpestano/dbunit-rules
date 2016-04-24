@@ -3,8 +3,8 @@ Feature: Manage database with DBUnit Rules Core
 ====
 [quote]
 ____
-In order to manage database state in JUnit tests +
-As a developer +
+In order to manage database state in JUnit tests
+As a developer
 I want to use DBUnit in my tests.
 ____
 ====

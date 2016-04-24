@@ -3,8 +3,8 @@ Feature: Manage database with DBUnit Rules CDI
 ====
 [quote]
 ____
-In order to manage database state in *CDI* based tests +
-As a developer +
+In order to manage database state in *CDI* based tests
+As a developer
 I want to use DBUnit in a CDI test environment.
 ____
 ====

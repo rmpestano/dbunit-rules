@@ -115,7 +115,7 @@
                         <plugin>
                             <groupId>com.github.cukedoctor</groupId>
                             <artifactId>cukedoctor-maven-plugin</artifactId>
-                            <version>1.0.2-20160417.040328-5</version>
+                            <version>1.0.2</version>
                             <configuration>
                                 <outputFileName>documentation</outputFileName>
                                 <outputDir>docs</outputDir>
