@@ -10,10 +10,12 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
+:revnumber: 0.6.2-SNAPSHOT
+:hardbreaks:
 
 = *Living Documentation*
 
-include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
+include::/home/pestano/projects/dbunit-rules/cdi/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
 
 == *Summary*
 [cols="12*^m", options="header,footer"]
@@ -44,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|013ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -58,10 +60,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|690ms
+|159ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|8|0|0|0|0|0|8 2+|704ms
+|2|0|2|8|0|0|0|0|0|8 2+|161ms
 |===
 
 == *Features*
@@ -73,8 +75,8 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 ====
 [quote]
 ____
-In order to manage database state in JUnit tests +
-As a developer +
+In order to manage database state in JUnit tests
+As a developer
 I want to use DBUnit in my tests.
 ____
 ====
@@ -87,7 +89,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(013ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -150,8 +152,8 @@ The database should be seeded with the dataset content before test execution ico
 ====
 [quote]
 ____
-In order to manage database state in *CDI* based tests +
-As a developer +
+In order to manage database state in *CDI* based tests
+As a developer
 I want to use DBUnit in a CDI test environment.
 ____
 ====
@@ -178,7 +180,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(690ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(158ms)#
 ******
 
 [discrete]
