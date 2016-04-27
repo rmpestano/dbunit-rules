@@ -66,12 +66,13 @@ public class JSReplacer {
         try{
           Object eval = engine.eval(scriptToExecute);
           if(eval == null){
-            log.warning(String.format("No result for script %s. It will NOT be replaced in dataset %s.",script,replacementDataSet));
+            log.warning(String.format("No result for script %s. It will NOT be replaced in dataset %s.", script, replacementDataSet));
           } else{
             scriptResult = eval.toString();
             replacementDataSet.addReplacementObject(script,scriptResult);
           }
         }catch (Exception e){
+          log.log(Level.WARNING, "Could not perform replacement for script: " + script, e);
 
         }
     }
