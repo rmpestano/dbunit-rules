@@ -45,4 +45,6 @@ public class JavascripReplacementsIt {
         assertThat(tweet).isNotNull();
         assertThat(tweet.getLikes()).isEqualTo(50);
     }
+
+
 }
