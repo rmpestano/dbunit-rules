@@ -1,12 +1,13 @@
 package com.github.dbunit.rules.replacer;
 
-import com.github.dbunit.rules.api.replacer.*;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ReplacementDataSet;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
+
+import com.github.dbunit.rules.api.replacer.*;
 
 /**
  * based on: http://marcin-michalski.pl/2012/10/22/decorating-dbunit-datasets-power-of-replacementdataset/

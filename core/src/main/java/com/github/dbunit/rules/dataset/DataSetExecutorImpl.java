@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import com.github.dbunit.rules.api.dataset.*;
+import com.github.dbunit.rules.replacer.JSReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -229,7 +230,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     private IDataSet performReplacements(IDataSet dataSet) {
-        return DateTimeReplacer.replace(dataSet);
+        IDataSet replace = DateTimeReplacer.replace(dataSet);
+        replace = JSReplacer.replace(replace);
+        return replace;
     }
 
 
