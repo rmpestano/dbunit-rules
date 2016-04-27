@@ -14,7 +14,7 @@ import com.github.dbunit.rules.model.Tweet;
 /**
  * Created by pestano on 15/02/16.
  */
-public class JavascripReplacementsIt {
+public class JavascriptReplacementsIt {
 
     Calendar now;
 
