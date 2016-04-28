@@ -3,6 +3,7 @@ package com.github.dbunit.rules.bdd.cdi;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -34,19 +35,30 @@ public class CDISeedDatabaseStepdefs {
     }
 
     @And("^The following dataset$")
-    public void The_following_dataset_located_at_src_test_resources_datasets_users_yal(String docsstring) throws Throwable {
-        assertNotNull(docsstring);
+    public void The_following_dataset(String docstring) throws Throwable {
+        assertNotNull(docstring);
     }
 
     @When("^The following test is executed:$")
-    public void The_test_below_is_executed(String docSstring) throws Throwable {
-        assertTrue(true);
+    public void The_test_below_is_executed(String docstring) throws Throwable {
+        assertNotNull(docstring);
     }
 
     @Then("^The database should be seeded with the dataset content before test execution$")
     public void The_database_should_be_seeded_with_the_dataset_content() throws Throwable {
 
     }
+
+    @Given("^Groovy script engine is on test classpath$")
+    public void Groovy_script_engine_is_on_test_classpath(String docstring) throws Throwable {
+        // Express the Regexp above with the code you wish you had
+        assertNotNull(docstring);
+    }
+
+    @Then("^Dataset script should be interpreted when seeding the database$")
+    public void Dataset_script_should_be_interpreted_when_seeding_the_database() throws Throwable {
+        // Express the Regexp above with the code you wish you had
+     }
 
     /*  Use database seeding in cucumber on cucumber feature
 

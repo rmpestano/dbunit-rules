@@ -38,6 +38,7 @@ public class ScriptReplacementsIt {
         assertThat(tweet.getDate().get(Calendar.HOUR_OF_DAY)).isEqualTo(now.get(Calendar.HOUR_OF_DAY));
     }
 
+// tag::javascript-likes[]
     @Test
     @DataSet(value = "datasets/yml/js-with-calc-replacements.yml",cleanBefore = true ,disableConstraints = true, executorId = "scripts-it")
     public void shouldReplaceLikesUsingJavaScriptInDataset() {
@@ -45,7 +46,10 @@ public class ScriptReplacementsIt {
         assertThat(tweet).isNotNull();
         assertThat(tweet.getLikes()).isEqualTo(50);
     }
+// end::javascript-likes[]
 
+
+// tag::groovy[]
     @Test
     @DataSet(value = "datasets/yml/groovy-with-date-replacements.yml",cleanBefore = true, disableConstraints = true, executorId = "scripts-it")
     public void shouldReplaceDateUsingGroovyInDataset() {
@@ -54,6 +58,7 @@ public class ScriptReplacementsIt {
         assertThat(tweet.getDate().get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
         assertThat(tweet.getDate().get(Calendar.HOUR_OF_DAY)).isEqualTo(now.get(Calendar.HOUR_OF_DAY));
     }
+// end::groovy[]
 
 
 }
