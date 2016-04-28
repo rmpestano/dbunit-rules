@@ -20,7 +20,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 == *Summary*
 [cols="12*^m", options="header,footer"]
 |===
-3+|Scenarios 7+|Steps 2+|Features: 2
+3+|Scenarios 7+|Steps 2+|Features: 3
 
 |[green]#*Passed*#
 |[red]#*Failed*#
@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|001ms
+|011ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,10 +60,24 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|610ms
+|536ms
+|[green]#*passed*#
+
+12+^|*<<Dynamic-data-using-scritable-datasets>>*
+|2
+|0
+|2
+|7
+|0
+|0
+|0
+|0
+|0
+|7
+|001ms
 |[green]#*passed*#
 12+^|*Totals*
-|2|0|2|8|0|0|0|0|0|8 2+|612ms
+|4|0|4|15|0|0|0|0|0|15 2+|550ms
 |===
 
 == *Features*
@@ -89,7 +103,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(011ms)#
 ******
 
 [discrete]
@@ -180,7 +194,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(610ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(536ms)#
 ******
 
 [discrete]
@@ -245,6 +259,120 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 Then ::
 =====
 The database should be seeded with the dataset content before test execution icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+=====
+****
+
+[[Dynamic-data-using-scritable-datasets, Dynamic data using scritable datasets]]
+=== *Dynamic data using scritable datasets*
+
+****
+====
+[quote]
+____
+In order to have dynamic data in datasets
+As a developer
+I want to use scripts in DBUnit datasets.
+____
+====
+
+Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platform, for more information access the official https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/api.html[docs here^]].
+****
+
+==== Scenario: Seed database with groovy script in dataset
+
+****
+Given ::
+=====
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+******
+
+----
+<dependency>
+    <groupId>org.codehaus.groovy</groupId>
+    <artifactId>groovy-all</artifactId>
+    <version>2.4.6</version>
+    <scope>test</scope>
+</dependency>
+----
+
+
+******
+
+=====
+And ::
+=====
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+----
+include::../../../core/src/test/resources/datasets/yml/groovy-with-date-replacements.yml[]
+----
+[discrete]
+<1> Groovy scripting is enabled by `groovy:` string.
+
+
+******
+
+=====
+When ::
+=====
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+[source,java,indent=0,linenums]
+----
+include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsIt.java[tags=groovy]
+----
+
+
+******
+
+=====
+Then ::
+=====
+Dataset script should be interpreted when seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+=====
+****
+
+==== Scenario: Seed database with javascript in dataset
+
+NOTE: Javascript engine comes within JDK so no additional classpath dependency is necessary.
+
+****
+Given ::
+=====
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+----
+include::../../../core/src/test/resources/datasets/yml/js-with-calc-replacements.yml[]
+----
+[discrete]
+<1> Javascript scripting is enabled by `js:` string.
+
+
+******
+
+=====
+When ::
+=====
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+[source,java,linenums,indent=0]
+----
+include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsIt.java[tags=javascript-likes]
+----
+
+
+******
+
+=====
+Then ::
+=====
+Dataset script should be interpreted when seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
