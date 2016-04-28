@@ -8,15 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class ScriptReplacer {
 
     private static ScriptReplacer instance;
 
+    private Pattern scriptEnginePattern = Pattern.compile(".*\\D.*:.+");//any non digit char followed by ':' followed by 1 or more chars (eg: js: new Date().toString()
+
     private static Logger log = Logger.getLogger(ScriptReplacer.class.getName());
 
     private Map<String, ScriptEngine> engines;
-    private ScriptEngineManager manager;
+
+    private ScriptEngineManager       manager;
 
     private ScriptReplacer() {
         engines = new HashMap<>();
@@ -43,7 +47,7 @@ public class ScriptReplacer {
             for (Column column : table.getTableMetaData().getColumns()) {
                 for (int i = 0; i < table.getRowCount(); i++) {
                     String value = table.getValue(i, column.getColumnName()).toString();
-                    if (value.contains(":")) {
+                    if (scriptEnginePattern.matcher(value).matches()) {
                         ScriptEngine engine = getScriptEngine(value);
                         if(engine != null){
                             Object scriptResult = getScriptResult(value, engine);
@@ -77,10 +81,6 @@ public class ScriptReplacer {
     }
 
     private Object getScriptResult(String script, ScriptEngine engine) {
-       /* format is 'js:script to execute', ex:
-        - id: "2"
-        date: "js:var date=new Date(); date.toString();"
-        date: "groovy:new Date()"*/
         String scriptToExecute = script.substring(script.indexOf(":")+1);
         try {
             return engine.eval(scriptToExecute);
