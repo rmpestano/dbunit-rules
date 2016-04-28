@@ -45,12 +45,15 @@ public class ScriptReplacer {
                     String value = table.getValue(i, column.getColumnName()).toString();
                     if (value.contains(":")) {
                         ScriptEngine engine = getScriptEngine(value);
-                        Object scriptResult = getScriptResult(value, engine);
-                        if (scriptResult != null) {
-                            dataSet.addReplacementObject(value, scriptResult);
-                        } else {
-                            throw new RuntimeException(String.format("Could not perform script replacement for table '%s', column '%s'.", table.getTableMetaData().getTableName(), column.getColumnName()));
+                        if(engine != null){
+                            Object scriptResult = getScriptResult(value, engine);
+                            if (scriptResult != null) {
+                                dataSet.addReplacementObject(value, scriptResult);
+                            } else {
+                                throw new RuntimeException(String.format("Could not perform script replacement for table '%s', column '%s'.", table.getTableMetaData().getTableName(), column.getColumnName()));
+                            }
                         }
+
                     }
                 }
             }
