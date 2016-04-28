@@ -14,7 +14,7 @@ import com.github.dbunit.rules.model.Tweet;
 /**
  * Created by pestano on 15/02/16.
  */
-public class JavascriptReplacementsIt {
+public class ScriptReplacementsIt {
 
     Calendar now;
 
@@ -44,6 +44,15 @@ public class JavascriptReplacementsIt {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
         assertThat(tweet).isNotNull();
         assertThat(tweet.getLikes()).isEqualTo(50);
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/groovy-with-date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    public void shouldReplaceDateUsingGroovyInDataset() {
+        Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
+        assertThat(tweet).isNotNull();
+        assertThat(tweet.getDate().get(Calendar.DAY_OF_MONTH)).isEqualTo(now.get(Calendar.DAY_OF_MONTH));
+        assertThat(tweet.getDate().get(Calendar.HOUR_OF_DAY)).isEqualTo(now.get(Calendar.HOUR_OF_DAY));
     }
 
 

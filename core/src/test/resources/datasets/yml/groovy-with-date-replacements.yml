@@ -1,0 +1,5 @@
+tweet:
+  - id: "1"
+    content: "dbunit rules!"
+    date: "groovy:new Date()"
+    user_id: 1

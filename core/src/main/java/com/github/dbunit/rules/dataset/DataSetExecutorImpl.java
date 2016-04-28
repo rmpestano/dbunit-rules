@@ -2,7 +2,6 @@ package com.github.dbunit.rules.dataset;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -12,10 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 import com.github.dbunit.rules.api.dataset.*;
-import com.github.dbunit.rules.replacer.JSReplacer;
+import com.github.dbunit.rules.replacer.ScriptReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -231,7 +229,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private IDataSet performReplacements(IDataSet dataSet) {
         IDataSet replace = DateTimeReplacer.replace(dataSet);
-        replace = JSReplacer.replace(replace);
+        replace = ScriptReplacer.replace(replace);
         return replace;
     }
 
