@@ -66,7 +66,7 @@ public class ScriptReplacer {
 
     private ScriptEngine getScriptEngine(String value) {
         String engineName = value.substring(0, value.indexOf(":"));
-        if (engines.get(engineName) != null) {
+        if (engines.containsKey(engineName)) {
             return engines.get(engineName);
         } else {
             ScriptEngine engine = manager.getEngineByName(engineName);
