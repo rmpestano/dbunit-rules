@@ -65,6 +65,8 @@ public class ScriptReplacer {
             ScriptEngine engine = manager.getEngineByName(engineName);
             if (engine != null) {
                 engines.put(engineName, engine);
+            } else{
+                log.warning(String.format("Could not find script engine with name %s in classpath",engineName));
             }
             return engine;
         }
