@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|408ms
+|581ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -77,7 +77,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |002ms
 |[green]#*passed*#
 12+^|*Totals*
-|4|0|4|15|0|0|0|0|0|15 2+|413ms
+|4|0|4|15|0|0|0|0|0|15 2+|587ms
 |===
 
 == *Features*
@@ -194,7 +194,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(408ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(581ms)#
 ******
 
 [discrete]
