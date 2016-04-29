@@ -46,11 +46,14 @@ public class ScriptReplacer {
             ITable table = iterator.getTable();
             for (Column column : table.getTableMetaData().getColumns()) {
                 for (int i = 0; i < table.getRowCount(); i++) {
-                    String value = table.getValue(i, column.getColumnName()).toString();
-                    if (scriptEnginePattern.matcher(value).matches()) {
-                        ScriptEngine engine = getScriptEngine(value);
+                    Object value = table.getValue(i, column.getColumnName());
+                    if(value == null){
+                        continue;
+                    }
+                    if (scriptEnginePattern.matcher(value.toString()).matches()) {
+                        ScriptEngine engine = getScriptEngine(value.toString());
                         if(engine != null){
-                            Object scriptResult = getScriptResult(value, engine);
+                            Object scriptResult = getScriptResult(value.toString(), engine);
                             if (scriptResult != null) {
                                 dataSet.addReplacementObject(value, scriptResult);
                             } else {
