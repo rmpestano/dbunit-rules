@@ -19,7 +19,7 @@ include::../../src/test/java/com/github/dbunit/rules/bdd/DBUnitRulesBdd.java[]
 ----
 
 
-IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^],you *cannot* use cucumber runner with _DBunit Rules Core_ because its based on JUnit rules.
+IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^], you won't be able to use Cucumber runner with _DBunit Rules Core_ because its based on JUnit rules.
 
 [discrete]
 === *Dependencies*
