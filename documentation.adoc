@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|005ms
+|008ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|588ms
+|450ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -74,10 +74,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|001ms
+|002ms
 |[green]#*passed*#
 12+^|*Totals*
-|4|0|4|15|0|0|0|0|0|15 2+|595ms
+|4|0|4|15|0|0|0|0|0|15 2+|460ms
 |===
 
 == *Features*
@@ -103,7 +103,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(005ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
 ******
 
 [discrete]
@@ -194,7 +194,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(588ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(449ms)#
 ******
 
 [discrete]
