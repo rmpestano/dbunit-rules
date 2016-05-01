@@ -51,59 +51,64 @@
 
         <!-- test dependencies-->
 
-        <dependency>
+        <!--tag::deltaspike-cdi-deps[]-->
+        <dependency> <!--1-->
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-api</artifactId>
             <version>${ds.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <dependency> <!--1-->
             <groupId>org.apache.deltaspike.core</groupId>
             <artifactId>deltaspike-core-impl</artifactId>
             <version>${ds.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <dependency> <!--1-->
             <groupId>org.apache.deltaspike.modules</groupId>
             <artifactId>deltaspike-test-control-module-impl</artifactId>
             <version>${ds.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+
+        <dependency> <!--2-->
             <groupId>org.apache.deltaspike.cdictrl</groupId>
             <artifactId>deltaspike-cdictrl-owb</artifactId>
             <version>${ds.version}</version>
             <scope>test</scope>
         </dependency>
 
-        <dependency>
+        <dependency>  <!--2-->
             <groupId>org.apache.openwebbeans</groupId>
             <artifactId>openwebbeans-impl</artifactId>
             <version>1.6.2</version>
             <scope>test</scope>
         </dependency>
+        <!--end::deltaspike-cdi-deps[]-->
 
+
+        <!--tag::cucumber-deps[]-->
         <dependency>
             <groupId>com.github.dbunit-rules</groupId>
             <artifactId>cucumber</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <dependency> <!--1-->
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
             <version>1.2.4</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+        <dependency> <!--1-->
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>1.2.4</version>
             <scope>test</scope>
         </dependency>
-
+        <!--end::cucumber-deps[]-->
     </dependencies>
 
     <profiles>

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNull;
 public class ContactSteps {
 
     @Inject
-    ContactRepository contactRepository;
+    ContactRepository contactRepository; //<1>
 
     Long count;
 

@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(features = {
         "src/test/resources/features/core/core-seed-database.feature",
         "src/test/resources/features/cdi/cdi-seed-database.feature",
+        "src/test/resources/features/cucumber/cucumber-seed-database.feature",
         "src/test/resources/features/general/dataset-replacements.feature"
 },
         plugin = "json:target/dbunit-rules.json")
