@@ -445,10 +445,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <ul class="sectlevel3"> 
          <li><a href="#_scenario_seed_database_using_yml_dataset_2">3.2.1. Scenario: Seed database using yml dataset</a></li> 
         </ul> </li> 
-       <li><a href="#Dynamic-data-using-scritable-datasets">3.3. <strong>Dynamic data using scritable datasets</strong></a> 
+       <li><a href="#Manage-database-with-DBUnit-Rules-Cucumber">3.3. <strong>Manage database with DBUnit Rules Cucumber</strong></a> 
         <ul class="sectlevel3"> 
-         <li><a href="#_scenario_seed_database_with_groovy_script_in_dataset">3.3.1. Scenario: Seed database with groovy script in dataset</a></li> 
-         <li><a href="#_scenario_seed_database_with_javascript_in_dataset">3.3.2. Scenario: Seed database with javascript in dataset</a></li> 
+         <li><a href="#_scenario_seed_database_using_dbunit_rules_in_cucumber_tests">3.3.1. Scenario: Seed database using DBUnit rules in Cucumber tests</a></li> 
+        </ul> </li> 
+       <li><a href="#Dynamic-data-using-scritable-datasets">3.4. <strong>Dynamic data using scritable datasets</strong></a> 
+        <ul class="sectlevel3"> 
+         <li><a href="#_scenario_seed_database_with_groovy_script_in_dataset">3.4.1. Scenario: Seed database with groovy script in dataset</a></li> 
+         <li><a href="#_scenario_seed_database_with_javascript_in_dataset">3.4.2. Scenario: Seed database with javascript in dataset</a></li> 
         </ul> </li> 
       </ul> </li> 
     </ul> 
@@ -531,22 +535,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
        <tr> 
         <th class="tableblock halign-center valign-top" colspan="3">Scenarios</th> 
         <th class="tableblock halign-center valign-top" colspan="7">Steps</th> 
-        <th class="tableblock halign-center valign-top" colspan="2">Features: 3</th> 
+        <th class="tableblock halign-center valign-top" colspan="2">Features: 4</th> 
        </tr> 
       </thead> 
       <tfoot> 
        <tr> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>15</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>20</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>15</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>441ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>20</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>406ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -578,7 +582,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -595,7 +599,24 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>437ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>397ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
+       </tr> 
+       <tr> 
+        <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Manage-database-with-DBUnit-Rules-Cucumber">Manage database with DBUnit Rules Cucumber</a></strong></code></p></td> 
+       </tr> 
+       <tr> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>1</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>001ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -612,7 +633,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>001ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -661,7 +682,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
+            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -859,7 +880,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(437ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(397ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -997,7 +1018,406 @@ follower:
       </div> 
      </div> 
      <div class="sect2"> 
-      <h3 id="Dynamic-data-using-scritable-datasets"><a class="anchor" href="#Dynamic-data-using-scritable-datasets"></a>3.3. <strong>Dynamic data using scritable datasets</strong></h3> 
+      <h3 id="Manage-database-with-DBUnit-Rules-Cucumber"><a class="anchor" href="#Manage-database-with-DBUnit-Rules-Cucumber"></a>3.3. <strong>Manage database with DBUnit Rules Cucumber</strong></h3> 
+      <span class="fa fa-minus-square fa-fw" style="cursor:pointer;float:right;margin-top:-30px" title="Minimize" onclick="hideFeatureScenarios('Manage-database-with-DBUnit-Rules-Cucumber');document.getElementById('hidden-Manage-database-with-DBUnit-Rules-Cucumber').style.display = 'inline';this.style.display = 'none'"> </span> 
+      <span id="hidden-Manage-database-with-DBUnit-Rules-Cucumber" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Manage-database-with-DBUnit-Rules-Cucumber');this.style.display = 'none'"> </span> 
+      <div class="sidebarblock"> 
+       <div class="content"> 
+        <div class="exampleblock"> 
+         <div class="content"> 
+          <div class="quoteblock"> 
+           <blockquote> 
+            <div class="paragraph"> 
+             <p>In order to manage database state in <code>BDD</code> tests<br> As a BDD developer<br> I want to use DBUnit along side my BDD tests.</p> 
+            </div> 
+           </blockquote> 
+          </div> 
+         </div> 
+        </div> 
+        <div class="paragraph"> 
+         <p>DBUnit enters the BDD world through a dedicated JUNit runner which is based on <a href="https://cucumber.io/" target="_blank">Cucumber</a> and <a href="https://deltaspike.apache.org/" target="_blank">Apache DeltaSpike</a>.</p> 
+        </div> 
+        <div class="paragraph"> 
+         <p>This runner just starts CDI within your BDD tests so you just have to use <a href="#Manage-database-with-DBUnit-Rules-CDI">DBUnit rules CDI interceptor</a> on Cucumber steps, here is the so called Cucumber CDI runner declaration:</p> 
+        </div> 
+        <div class="listingblock"> 
+         <div class="content"> 
+          <pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.github.dbunit.rules.bdd;
+
+import com.github.dbunit.rules.cucumber.CdiCucumberTestRunner;
+import cucumber.api.CucumberOptions;
+import org.junit.runner.RunWith;
+
+/**
+ * Created by rmpestano on 4/17/16.
+ */
+@RunWith(CdiCucumberTestRunner.class)
+@CucumberOptions(features = {
+        "src/test/resources/features/core/core-seed-database.feature",
+        "src/test/resources/features/cdi/cdi-seed-database.feature",
+        "src/test/resources/features/cucumber/cucumber-seed-database.feature",
+        "src/test/resources/features/general/dataset-replacements.feature"
+},
+        plugin = "json:target/dbunit-rules.json")
+public class DBUnitRulesBdd {
+}</code></pre> 
+         </div> 
+        </div> 
+        <div class="admonitionblock important"> 
+         <table> 
+          <tbody> 
+           <tr> 
+            <td class="icon"> <i class="fa icon-important" title="Important"></i> </td> 
+            <td class="content"> As cucumber doesn’t work with JUnit Rules, see <a href="https://github.com/cucumber/cucumber-jvm/issues/393" target="_blank">this issue</a>, so you <strong>cannot</strong> use cucumber runner with <em>DBunit Rules Core</em> because its based on JUnit rules. </td> 
+           </tr> 
+          </tbody> 
+         </table> 
+        </div> 
+        <h3 id="__strong_dependencies_strong" class="discrete"><strong>Dependencies</strong></h3> 
+        <div class="paragraph"> 
+         <p>Here is a set of maven dependencies needed by DBUnit rules Cucumber:</p> 
+        </div> 
+        <div class="admonitionblock note"> 
+         <table> 
+          <tbody> 
+           <tr> 
+            <td class="icon"> <i class="fa icon-note" title="Note"></i> </td> 
+            <td class="content"> Most of the dependencies, except CDI container implementation, are bring by DBUnit Rules Cucumber module transitively. </td> 
+           </tr> 
+          </tbody> 
+         </table> 
+        </div> 
+        <div class="listingblock"> 
+         <div class="title">
+           Cucumber dependencies 
+         </div> 
+         <div class="content"> 
+          <pre>        &lt;dependency&gt;
+            &lt;groupId&gt;com.github.dbunit-rules&lt;/groupId&gt;
+            &lt;artifactId&gt;cucumber&lt;/artifactId&gt;
+            &lt;version&gt;${project.parent.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;groupId&gt;info.cukes&lt;/groupId&gt;
+            &lt;artifactId&gt;cucumber-junit&lt;/artifactId&gt;
+            &lt;version&gt;1.2.4&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;groupId&gt;info.cukes&lt;/groupId&gt;
+            &lt;artifactId&gt;cucumber-java&lt;/artifactId&gt;
+            &lt;version&gt;1.2.4&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;</pre> 
+         </div> 
+        </div> 
+        <div class="colist arabic"> 
+         <table> 
+          <tbody> 
+           <tr> 
+            <td><i class="conum" data-value="1"></i><b>1</b></td> 
+            <td>You don’t need to declare because it comes with DBUnit Rules Cucumber module dependency.</td> 
+           </tr> 
+          </tbody> 
+         </table> 
+        </div> 
+        <div class="listingblock"> 
+         <div class="title">
+           DeltaSpike and CDI dependency 
+         </div> 
+         <div class="content"> 
+          <pre>        &lt;dependency&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;groupId&gt;org.apache.deltaspike.modules&lt;/groupId&gt;
+            &lt;artifactId&gt;deltaspike-test-control-module-api&lt;/artifactId&gt;
+            &lt;version&gt;${ds.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;groupId&gt;org.apache.deltaspike.core&lt;/groupId&gt;
+            &lt;artifactId&gt;deltaspike-core-impl&lt;/artifactId&gt;
+            &lt;version&gt;${ds.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt; <i class="conum" data-value="1"></i><b>(1)</b>
+            &lt;groupId&gt;org.apache.deltaspike.modules&lt;/groupId&gt;
+            &lt;artifactId&gt;deltaspike-test-control-module-impl&lt;/artifactId&gt;
+            &lt;version&gt;${ds.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt; <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;groupId&gt;org.apache.deltaspike.cdictrl&lt;/groupId&gt;
+            &lt;artifactId&gt;deltaspike-cdictrl-owb&lt;/artifactId&gt;
+            &lt;version&gt;${ds.version}&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;  <i class="conum" data-value="2"></i><b>(2)</b>
+            &lt;groupId&gt;org.apache.openwebbeans&lt;/groupId&gt;
+            &lt;artifactId&gt;openwebbeans-impl&lt;/artifactId&gt;
+            &lt;version&gt;1.6.2&lt;/version&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;</pre> 
+         </div> 
+        </div> 
+        <div class="colist arabic"> 
+         <table> 
+          <tbody> 
+           <tr> 
+            <td><i class="conum" data-value="1"></i><b>1</b></td> 
+            <td>Also comes with DBUit Rules Cucumber.</td> 
+           </tr> 
+           <tr> 
+            <td><i class="conum" data-value="2"></i><b>2</b></td> 
+            <td>You can use CDI implementation of your choice.</td> 
+           </tr> 
+          </tbody> 
+         </table> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_seed_database_using_dbunit_rules_in_cucumber_tests"><a class="anchor" href="#_scenario_seed_database_using_dbunit_rules_in_cucumber_tests"></a>3.3.1. Scenario: Seed database using DBUnit rules in Cucumber tests</h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following feature <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>Feature: Contacts test
+  As a user of contacts repository
+  I want to crud contacts
+  So that I can expose contacts service
+
+
+  Scenario Outline: search contacts
+    Given we have a list of contacts
+    When we search contacts by name "&lt;name&gt;"
+    Then we should find &lt;result&gt; contacts
+
+  Examples: examples1
+  | name     | result |
+  | delta    | 1      |
+  | sp       | 2      |
+  | querydsl | 1      |
+  | abcd     | 0      |
+
+
+  Scenario: delete a contact
+
+    Given we have a list of contacts
+    When we delete contact by id 1
+    Then we should not find contact 1</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             And 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>contact:
+  - id: 1
+    name: "deltaspike"
+    email: "users@deltaspike.apache.org"
+    company_id: 1
+  - id: 2
+    name: "querydsl"
+    email: "info@mysema.com"
+    company_id: 2
+  - id: 3
+    name: "Spring"
+    email: "spring@pivotal.io"
+    company_id: 3
+
+company:
+  - id: 1
+    name: "Apache"
+  - id: 2
+    name: "Mysema"
+  - id: 3
+    name: "Pivotal"
+  - id: 4
+    name: "Google"</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             And 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following Cucumber test <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.github.dbunit.rules.examples.cucumber;
+
+import com.github.dbunit.rules.cucumber.CdiCucumberTestRunner;
+import cucumber.api.CucumberOptions;
+import org.junit.runner.RunWith;
+
+
+@RunWith(CdiCucumberTestRunner.class)
+@CucumberOptions(
+        features = {"src/test/resources/features/contacts.feature"},
+        plugin = {"json:target/cucumber.json"}
+        //glue = "com.github.dbunit.rules.examples.glues"
+)
+public class ContactFeature {
+}</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following cucumber steps are executed <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.github.dbunit.rules.examples.cucumber; <i class="conum" data-value="1"></i><b>(1)</b>
+
+import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import org.example.jpadomain.Contact;
+import org.example.jpadomain.Contact_;
+import org.example.service.deltaspike.ContactRepository;
+
+import javax.inject.Inject;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+public class ContactSteps {
+
+    @Inject
+    ContactRepository contactRepository; <i class="conum" data-value="1"></i><b>(1)</b>
+
+    Long count;
+
+    @When("^^we search contacts by name \"([^\"]*)\"$")
+    public void we_search_contacts_by_name_(String name) throws Throwable {
+        Contact contact = new Contact();
+        contact.setName(name);
+        count = contactRepository.countLike(contact, Contact_.name);
+    }
+
+
+    @Then("^we should find (\\d+) contacts$")
+    public void we_should_find_result_contacts(Long result) throws Throwable {
+        assertEquals(result,count);
+    }
+
+    @Given("^we have a list of contacts")
+    @UsingDataSet("datasets/contacts.yml") <i class="conum" data-value="2"></i><b>(2)</b>
+    public void given() {
+        assertEquals(contactRepository.count(), new Long(3));
+    }
+
+    @When("^we delete contact by id (\\d+)$")
+    public void we_delete_contact_by_id(long id) throws Throwable {
+        contactRepository.remove(contactRepository.findBy(id));
+    }
+
+    @Then("^we should not find contact (\\d+)$")
+    public void we_should_not_find_contacts_in_database(long id) throws Throwable {
+        assertNull(contactRepository.findBy(id));
+    }
+}</code></pre> 
+              </div> 
+             </div> 
+             <div class="colist arabic"> 
+              <table> 
+               <tbody> 
+                <tr> 
+                 <td><i class="conum" data-value="1"></i><b>1</b></td> 
+                 <td>As the Cucumber cdi runner enables CDI, you can use injection into your Cucumber steps.</td> 
+                </tr> 
+                <tr> 
+                 <td><i class="conum" data-value="2"></i><b>2</b></td> 
+                 <td>Here we use the DBUnit Rules CDI interceptor to seed the database before step execution.</td> 
+                </tr> 
+               </tbody> 
+              </table> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The database should be seeded with the dataset content before step execution <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="sect2"> 
+      <h3 id="Dynamic-data-using-scritable-datasets"><a class="anchor" href="#Dynamic-data-using-scritable-datasets"></a>3.4. <strong>Dynamic data using scritable datasets</strong></h3> 
       <span class="fa fa-minus-square fa-fw" style="cursor:pointer;float:right;margin-top:-30px" title="Minimize" onclick="hideFeatureScenarios('Dynamic-data-using-scritable-datasets');document.getElementById('hidden-Dynamic-data-using-scritable-datasets').style.display = 'inline';this.style.display = 'none'"> </span> 
       <span id="hidden-Dynamic-data-using-scritable-datasets" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Dynamic-data-using-scritable-datasets');this.style.display = 'none'"> </span> 
       <div class="sidebarblock"> 
@@ -1019,7 +1439,7 @@ follower:
        </div> 
       </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_with_groovy_script_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_groovy_script_in_dataset"></a>3.3.1. Scenario: Seed database with groovy script in dataset</h4> 
+       <h4 id="_scenario_seed_database_with_groovy_script_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_groovy_script_in_dataset"></a>3.4.1. Scenario: Seed database with groovy script in dataset</h4> 
        <div class="sidebarblock"> 
         <div class="content"> 
          <div class="dlist"> 
@@ -1135,7 +1555,7 @@ public void shouldReplaceDateUsingGroovyInDataset() {
        </div> 
       </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_with_javascript_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_javascript_in_dataset"></a>3.3.2. Scenario: Seed database with javascript in dataset</h4> 
+       <h4 id="_scenario_seed_database_with_javascript_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_javascript_in_dataset"></a>3.4.2. Scenario: Seed database with javascript in dataset</h4> 
        <div class="admonitionblock note"> 
         <table> 
          <tbody> 
@@ -1244,8 +1664,8 @@ public void shouldReplaceLikesUsingJavaScriptInDataset() {
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - May 1, 2016 2:35:01 AM 
-   <span style="float:right;font-size:11px"> Execution time: 9.014 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - May 1, 2016 12:37:09 PM 
+   <span style="float:right;font-size:11px"> Execution time: 8.509 seconds</span> 
   </div> 
   <style>  
 
