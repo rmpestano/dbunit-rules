@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|004ms
+|006ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|397ms
+|471ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,10 +88,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|002ms
+|005ms
 |[green]#*passed*#
 12+^|*Totals*
-|5|0|5|20|0|0|0|0|0|20 2+|406ms
+|5|0|5|20|0|0|0|0|0|20 2+|485ms
 |===
 
 == *Features*
@@ -117,7 +117,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(005ms)#
 ******
 
 [discrete]
@@ -208,7 +208,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(397ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(471ms)#
 ******
 
 [discrete]
@@ -299,7 +299,7 @@ include::../../src/test/java/com/github/dbunit/rules/bdd/DBUnitRulesBdd.java[]
 ----
 
 
-IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^], so you *cannot* use cucumber runner with _DBunit Rules Core_ because its based on JUnit rules.
+IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^],you *cannot* use cucumber runner with _DBunit Rules Core_ because its based on JUnit rules.
 
 [discrete]
 === *Dependencies*
@@ -411,7 +411,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(005ms)#
 ******
 
 ----
