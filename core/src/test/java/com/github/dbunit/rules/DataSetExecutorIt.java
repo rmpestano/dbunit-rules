@@ -1,6 +1,6 @@
 package com.github.dbunit.rules;
 
-import static com.github.dbunit.rules.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -110,7 +111,7 @@ public class DataSetExecutorIt {
     public void shouldLoadUsersFromJsonDataset() {
         DataSetModel dataSetModel = new DataSetModel("datasets/json/users.json");
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) emProvider.clear().em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
@@ -124,7 +125,7 @@ public class DataSetExecutorIt {
     public void shouldLoadUsersFromXmlDataset() {
         DataSetModel dataSetModel = new DataSetModel("datasets/xml/users.xml");
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) emProvider.clear().em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);

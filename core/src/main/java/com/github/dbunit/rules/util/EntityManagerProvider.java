@@ -1,8 +1,7 @@
-package com.github.dbunit.rules.jpa;
+package com.github.dbunit.rules.util;
 
 /**
- * from https://github.com/AdamBien/rulz/tree/master/em/
- * only difference is is that we need jdbc connection to create dataset
+ * COPIED from JPA module because of maven cyclic dependencies (even with test scope)
  */
 
 import org.hibernate.Session;
@@ -23,24 +22,26 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityManagerProvider implements TestRule {
 
-    private Map<String, EntityManagerFactory> emfs = new ConcurrentHashMap<>();//one emf per unit
+    private static Map<String, EntityManagerProvider> providers = new ConcurrentHashMap<>();//one emf per unit
 
-    private EntityManager       em;
+    private EntityManagerFactory emf;
 
-    private EntityTransaction   tx;
+    private EntityManager em;
 
-    private Connection          conn;
+    private EntityTransaction tx;
+
+    private Connection conn;
 
     private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
-
-    private static EntityManagerProvider instance;
 
     private EntityManagerProvider() {
     }
 
     public static synchronized EntityManagerProvider instance(String unitName) {
+        EntityManagerProvider instance = providers.get(unitName);
         if (instance == null) {
             instance = new EntityManagerProvider();
+            providers.put(unitName,instance);
         }
 
         try {
@@ -52,14 +53,30 @@ public class EntityManagerProvider implements TestRule {
         return instance;
     }
 
+    /**
+     *
+     * clear entities on underlying context
+     * @return
+     */
+    public static synchronized EntityManagerProvider newInstance(String unitName) {
+        EntityManagerProvider instance =  new EntityManagerProvider();
+        providers.put(unitName,instance);
+        try {
+            instance.init(unitName);
+        } catch (Exception e) {
+            log.error("Could not initialize persistence unit " + unitName, e);
+        }
+
+        return instance;
+    }
+
     private void init(String unitName) {
-        EntityManagerFactory emf = emfs.get(unitName);
         if (emf == null) {
             log.debug("creating emf for unit "+unitName);
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
             this.tx = this.em.getTransaction();
-            if (isHibernatePresentOnClasspath() && em.getDelegate() instanceof Session) {
+            if (em.getDelegate() instanceof Session) {
                 conn = ((SessionImpl) em.unwrap(Session.class)).connection();
             } else{
                 /**
@@ -69,24 +86,32 @@ public class EntityManagerProvider implements TestRule {
                 conn = em.unwrap(Connection.class);
                 tx.commit();
             }
-            emfs.put(unitName,emf);
 
         }
         emf.getCache().evictAll();
-
     }
 
 
-    public static Connection getConnection() {
-        return instance.conn;
+    public Connection getConnection() {
+        return conn;
     }
 
-    public static EntityManager em() {
-        return instance.em;
+    public EntityManager em() {
+        return em;
     }
 
-    public static EntityTransaction tx() {
-        return instance.tx;
+    /**
+     * clear entityManager persistence context of this provider
+     * @return
+     */
+    public EntityManagerProvider clear(){
+        em.clear();
+        return this;
+    }
+
+
+    public EntityTransaction tx() {
+        return tx;
     }
 
     @Override
@@ -100,15 +125,6 @@ public class EntityManagerProvider implements TestRule {
             }
 
         };
-    }
-
-    private boolean isHibernatePresentOnClasspath(){
-        try {
-            Class.forName( "org.hibernate.Session" );
-            return true;
-        } catch( ClassNotFoundException e ) {
-            return false;
-        }
     }
 
 }

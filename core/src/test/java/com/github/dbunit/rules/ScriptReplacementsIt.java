@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Calendar;
 
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

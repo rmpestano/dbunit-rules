@@ -1,6 +1,6 @@
 package com.github.dbunit.rules.examples;
 
-import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.example.CdiConfig;
 
 import javax.enterprise.context.ApplicationScoped;

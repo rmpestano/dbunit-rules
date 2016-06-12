@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;

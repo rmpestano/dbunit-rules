@@ -3,6 +3,7 @@ package com.github.dbunit.rules;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.model.User;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -52,7 +53,7 @@ public class ScriptsIt {
     }
 
     private List<User> listUsers(String sql) {
-        return EntityManagerProvider.instance("scripts-it").em().createQuery(sql).getResultList();
+        return EntityManagerProvider.newInstance("scripts-it").em().createQuery(sql).getResultList();
     }
 
     @AfterClass

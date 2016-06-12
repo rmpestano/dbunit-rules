@@ -6,7 +6,7 @@ import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
-import org.junit.After;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;

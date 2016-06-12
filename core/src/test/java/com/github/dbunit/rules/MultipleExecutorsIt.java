@@ -1,6 +1,6 @@
 package com.github.dbunit.rules;
 
-import static com.github.dbunit.rules.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -119,7 +120,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
             executor.createDataSet(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -136,7 +137,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/json/users.json");
             executor.createDataSet(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -153,7 +154,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetModel dataSetModel = new DataSetModel("datasets/xml/users.xml");
             executor.createDataSet(dataSetModel);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
