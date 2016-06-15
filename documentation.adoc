@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|020ms
+|015ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|417ms
+|948ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,10 +88,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|003ms
+|004ms
 |[green]#*passed*#
 12+^|*Totals*
-|5|0|5|20|0|0|0|0|0|20 2+|444ms
+|5|0|5|20|0|0|0|0|0|20 2+|973ms
 |===
 
 == *Features*
@@ -117,7 +117,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(019ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(015ms)#
 ******
 
 [discrete]
@@ -208,7 +208,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(416ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(948ms)#
 ******
 
 [discrete]
@@ -326,7 +326,7 @@ include::../../pom.xml[tags=deltaspike-cdi-deps]
 ****
 Given ::
 =====
-The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -411,7 +411,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 ----
