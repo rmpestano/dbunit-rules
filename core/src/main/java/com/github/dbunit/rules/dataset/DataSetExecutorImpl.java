@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.dbunit.rules.api.dataset.*;
+import com.github.dbunit.rules.assertion.DataSetAssertion;
 import com.github.dbunit.rules.replacer.ScriptReplacer;
-import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
@@ -89,9 +89,6 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             }
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
 
-            String[] dataSetNames = dataSetModel.getName().trim().split(",");
-
-            List<IDataSet> dataSets = new ArrayList<>();
             try {
                 initDatabaseConnection();
                 if (dataSetModel.isDisableConstraints()) {
@@ -114,59 +111,74 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                         executeScript(dataSetModel.getExecuteScriptsBefore()[i]);
                     }
                 }
-                for (String dataSet : dataSetNames) {
-                    IDataSet target = null;
-                    String dataSetName = dataSet.trim();
-                    String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
-                    switch (extension) {
-                        case "yml": {
-                            target = new YamlDataSet(loadDataSet(dataSetName));
-                            break;
-                        }
-                        case "xml": {
-                            target = new FlatXmlDataSetBuilder().build(loadDataSet(dataSetName));
-                            break;
-                        }
-                        case "csv": {
-                            target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
-                            break;
-                        }
-                        case "xls": {
-                            target = new XlsDataSet(loadDataSet(dataSetName));
-                            break;
-                        }
-                        case "json": {
-                            target = new JSONDataSet(loadDataSet(dataSetName));
-                            break;
-                        }
-                        default:
-                            log.error("Unsupported dataset extension");
-                    }
 
-                    if (target != null) {
-                        target = performSequenceFiltering(dataSetModel, target);
+                IDataSet resultingDataSet = loadDataSet(dataSetModel.getName());
 
-                        target = performTableOrdering(dataSetModel, target);
+                resultingDataSet = performSequenceFiltering(dataSetModel, resultingDataSet);
 
-                        target = performReplacements(target);
+                resultingDataSet = performTableOrdering(dataSetModel, resultingDataSet);
 
-                        operation.execute(databaseConnection, target);
-                        dataSets.add(target);
-                    } else {
-                        log.warn("DataSet not created" + dataSetName);
-                    }
+                resultingDataSet = performReplacements(resultingDataSet);
 
-                }
+                operation.execute(databaseConnection, resultingDataSet);
 
-                if(!dataSets.isEmpty()){
-                    return new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
-                }
-            }catch (Exception e){
+            } catch (Exception e) {
                 log.error("Could not initialize dataset:" + e.getMessage(), e);
             }
+
+
         }
         //no dataset created
         return null;
+    }
+
+    /**
+     * @param name one or more (comma separated) dataset names to load
+     * @return loaded dataset (in case of multiple dataSets they will be merged in one using composite dataset)
+     */
+    public IDataSet loadDataSet(String name) throws DataSetException, IOException {
+        String[] dataSetNames = name.trim().split(",");
+
+        List<IDataSet> dataSets = new ArrayList<>();
+        for (String dataSet : dataSetNames) {
+            IDataSet target = null;
+            String dataSetName = dataSet.trim();
+            String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
+            switch (extension) {
+                case "yml": {
+                    target = new YamlDataSet(getDataSetStream(dataSetName));
+                    break;
+                }
+                case "xml": {
+                    target = new FlatXmlDataSetBuilder().build(getDataSetStream(dataSetName));
+                    break;
+                }
+                case "csv": {
+                    target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
+                    break;
+                }
+                case "xls": {
+                    target = new XlsDataSet(getDataSetStream(dataSetName));
+                    break;
+                }
+                case "json": {
+                    target = new JSONDataSet(getDataSetStream(dataSetName));
+                    break;
+                }
+                default:
+                    log.error("Unsupported dataset extension");
+            }
+
+            if (target != null) {
+                dataSets.add(target);
+            }
+        }
+
+        if (dataSets.isEmpty()) {
+            throw new RuntimeException("No dataset loaded for name " + name);
+        }
+
+        return new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
     }
 
     @Override
@@ -287,7 +299,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return executors.get(id);
     }
 
-    private InputStream loadDataSet(String dataSet) {
+    private InputStream getDataSetStream(String dataSet) {
         if (!dataSet.startsWith("/")) {
             dataSet = "/" + dataSet;
         }
@@ -410,18 +422,25 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return connectionHolder.getConnection() != null && connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase().contains("hsql");
     }
 
-    public void compareCurrentDataSetWith(IDataSet expected, String[] excludeCols) throws DatabaseUnitException {
+    public void compareCurrentDataSetWith(DataSetModel expectedDataSetModel, String[] excludeCols) throws DatabaseUnitException {
         IDataSet current = null;
+        IDataSet expected = null;
         try {
+            if (databaseConnection == null) {
+                //no dataset was created yet (e.g only @ExpectedDataSet declared in test method)
+                initDatabaseConnection();
+            }
             current = databaseConnection.createDataSet();
-        } catch (SQLException e) {
-            throw new RuntimeException("Could not create dataset to compare.",e);
+            current.getTable("user");
+            expected = loadDataSet(expectedDataSetModel.getName());
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create dataset to compare.", e);
         }
-        String[] tableNames = new String[0];
+        String[] tableNames = null;
         try {
             tableNames = expected.getTableNames();
         } catch (DataSetException e) {
-            throw new RuntimeException("Could extract dataset table names.",e);
+            throw new RuntimeException("Could extract dataset table names.", e);
         }
 
         for (String tableName : tableNames) {
@@ -431,10 +450,10 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 expectedTable = expected.getTable(tableName);
                 actualTable = current.getTable(tableName);
             } catch (DataSetException e) {
-                throw new RuntimeException("Could extract dataset table.",e);
+                throw new RuntimeException("Could extract dataset table.", e);
             }
             ITable filteredActualTable = DefaultColumnFilter.includedColumnsTable(actualTable, expectedTable.getTableMetaData().getColumns());
-            Assertion.assertEqualsIgnoreCols(expectedTable, filteredActualTable,excludeCols);
+            DataSetAssertion.assertEqualsIgnoreCols(expectedTable, filteredActualTable, excludeCols);
         }
 
     }

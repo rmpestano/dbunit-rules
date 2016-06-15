@@ -85,14 +85,7 @@ public class DBUnitRule implements MethodRule {
           try {
             Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
             statement.evaluate();
-            ExpectedDataSet expectedDataSet = frameworkMethod.getAnnotation(ExpectedDataSet.class);
-            if(expectedDataSet  != null){
-               expectedDataSet = frameworkMethod.getDeclaringClass().getAnnotation(ExpectedDataSet.class);
-            }
-            if(expectedDataSet != null){
-              IDataSet expected = executor.createDataSet(new DataSetModel(expectedDataSet.value()).disableConstraints(true));
-              executor.compareCurrentDataSetWith(expected,expectedDataSet.ignoreCols());
-            }
+            performDataSetComparison(frameworkMethod);
           } finally {
 
             if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {
@@ -127,9 +120,21 @@ public class DBUnitRule implements MethodRule {
       return new Statement() {
         @Override
         public void evaluate() throws Throwable {
-          //intentional
+          statement.evaluate();
+          performDataSetComparison(frameworkMethod);
         }
       };
+    }
+  }
+
+  private void performDataSetComparison(FrameworkMethod frameworkMethod) throws DatabaseUnitException {
+    ExpectedDataSet expectedDataSet = frameworkMethod.getAnnotation(ExpectedDataSet.class);
+    if(expectedDataSet  == null){
+      //try to infer from class level annotation
+      expectedDataSet = frameworkMethod.getDeclaringClass().getAnnotation(ExpectedDataSet.class);
+    }
+    if(expectedDataSet != null){
+      executor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
     }
   }
 

@@ -103,7 +103,7 @@ public class DataSetProcessor {
         dataSetExecutor.executeScript(script);
     }
 
-    public void compareCurrentDataSetWith(IDataSet expected, String[] excludeCols) throws DatabaseUnitException {
+    public void compareCurrentDataSetWith(DataSetModel expected, String[] excludeCols) throws DatabaseUnitException {
         dataSetExecutor.compareCurrentDataSetWith(expected, excludeCols);
     }
 

@@ -46,8 +46,7 @@ public class DBUnitInterceptor implements Serializable {
             proceed = invocationContext.proceed();
             ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
             if(expectedDataSet != null){
-                IDataSet expected = dataSetProcessor.process(new DataSetModel(expectedDataSet.value()).disableConstraints(true));
-                dataSetProcessor.compareCurrentDataSetWith(expected,expectedDataSet.ignoreCols());
+                dataSetProcessor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
             }
             if(usingDataSet.cleanAfter()){
                 dataSetProcessor.clearDatabase(dataSetModel);

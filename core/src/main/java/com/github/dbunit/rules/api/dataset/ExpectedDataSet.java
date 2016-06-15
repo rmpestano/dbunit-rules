@@ -22,5 +22,5 @@ public @interface ExpectedDataSet {
    *
    * @return column names to ignore in comparison
    */
-  String[] ignoreCols();
+  String[] ignoreCols() default "";
 }

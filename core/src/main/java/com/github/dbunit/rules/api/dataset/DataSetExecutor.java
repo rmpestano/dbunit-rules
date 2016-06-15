@@ -2,8 +2,10 @@ package com.github.dbunit.rules.api.dataset;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -18,6 +20,8 @@ public interface DataSetExecutor{
      * @return created IDataSet or null if none is created
      */
     IDataSet createDataSet(DataSetModel dataSetModel);
+
+    IDataSet loadDataSet(String name) throws DataSetException, IOException;
 
     ConnectionHolder getConnectionHolder();
 
@@ -34,5 +38,5 @@ public interface DataSetExecutor{
      * @param expected
      * @throws DatabaseUnitException if current dataset is not equal current dataset
      */
-    void compareCurrentDataSetWith(IDataSet expected, String[] ignoreCols) throws DatabaseUnitException;
+    void compareCurrentDataSetWith(DataSetModel expected, String[] ignoreCols) throws DatabaseUnitException;
 }
