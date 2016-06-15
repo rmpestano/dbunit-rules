@@ -1,6 +1,8 @@
 package com.github.dbunit.rules.api.dataset;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.dataset.IDataSet;
 
 import java.sql.SQLException;
 
@@ -12,24 +14,25 @@ public interface DataSetExecutor{
     /**
      * creates a dataset into executor's database connection using given dataSetModel
      * @param dataSetModel
+     *
+     * @return created IDataSet or null if none is created
      */
-    void createDataSet(DataSetModel dataSetModel);
-
-    /**
-     * creates a dataset into executor's database connection using its dataset model instance
-     * Note that dataset model instance should be set before calling this method.
-     */
-    void createDataSet();
+    IDataSet createDataSet(DataSetModel dataSetModel);
 
     ConnectionHolder getConnectionHolder();
-
-    void setDataSetModel(DataSetModel dataSetModel);
-
-    DataSetModel getDataSetModel();
 
     void clearDatabase(DataSetModel dataset) throws SQLException;
 
     void executeStatements(String[] statements);
 
     void executeScript(String scriptPath);
+
+    String getId();
+
+    /**
+     * compares dataset from executor's databse connection with a given dataset
+     * @param expected
+     * @throws DatabaseUnitException if current dataset is not equal current dataset
+     */
+    void compareCurrentDataSetWith(IDataSet expected, String[] ignoreCols) throws DatabaseUnitException;
 }

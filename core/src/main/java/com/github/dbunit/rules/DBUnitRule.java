@@ -2,9 +2,15 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.assertion.DataSetAssert;
+import com.github.dbunit.rules.assertion.DataSetAssertion;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.dataset.IDataSet;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
@@ -22,7 +28,7 @@ public class DBUnitRule implements MethodRule {
 
   private String currentMethod;
 
-  private DataSetExecutorImpl executor;
+  private DataSetExecutor executor;
 
   private DBUnitRule() {
   }
@@ -70,7 +76,7 @@ public class DBUnitRule implements MethodRule {
         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
       }
 
-      executor.createDataSet(model);
+      final IDataSet actual = executor.createDataSet(model);
 
       return new Statement() {
 
@@ -79,6 +85,14 @@ public class DBUnitRule implements MethodRule {
           try {
             Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
             statement.evaluate();
+            ExpectedDataSet expectedDataSet = frameworkMethod.getAnnotation(ExpectedDataSet.class);
+            if(expectedDataSet  != null){
+               expectedDataSet = frameworkMethod.getDeclaringClass().getAnnotation(ExpectedDataSet.class);
+            }
+            if(expectedDataSet != null){
+              IDataSet expected = executor.createDataSet(new DataSetModel(expectedDataSet.value()).disableConstraints(true));
+              executor.compareCurrentDataSetWith(expected,expectedDataSet.ignoreCols());
+            }
           } finally {
 
             if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {
@@ -94,6 +108,9 @@ public class DBUnitRule implements MethodRule {
                   executor.executeScript(model.getExecuteScriptsAfter()[i]);
                 }
               } catch (Exception e) {
+                if(e instanceof DatabaseUnitException){
+                  throw e;
+                }
                 LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
               }
             }//end execute scripts

@@ -14,15 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.dbunit.rules.api.dataset.*;
 import com.github.dbunit.rules.replacer.ScriptReplacer;
+import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
-import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.*;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
+import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.filter.SequenceTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
@@ -50,7 +50,6 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
 
-    private DataSetModel dataSetModel;
 
     public static DataSetExecutorImpl instance(ConnectionHolder connectionHolder) {
 
@@ -80,23 +79,19 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         this.id = executorId;
     }
 
-    @Override
-    public void createDataSet() {
-        this.createDataSet(dataSetModel);
-    }
 
     @Override
-    public void createDataSet(DataSetModel dataSetModel) {
+    public IDataSet createDataSet(DataSetModel dataSetModel) {
+
         if (dataSetModel != null && dataSetModel.getName() != null) {
             if (!dataSetModel.getName().contains(".")) {
                 log.error("Dataset " + dataSetModel.getName() + "does not have extension");
             }
             DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
 
-            String[] dataSets = dataSetModel.getName().trim().split(",");
+            String[] dataSetNames = dataSetModel.getName().trim().split(",");
 
-            IDataSet target = null;
-            String dataSetName = null;
+            List<IDataSet> dataSets = new ArrayList<>();
             try {
                 initDatabaseConnection();
                 if (dataSetModel.isDisableConstraints()) {
@@ -119,8 +114,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                         executeScript(dataSetModel.getExecuteScriptsBefore()[i]);
                     }
                 }
-                for (String dataSet : dataSets) {
-                    dataSetName = dataSet.trim();
+                for (String dataSet : dataSetNames) {
+                    IDataSet target = null;
+                    String dataSetName = dataSet.trim();
                     String extension = dataSetName.substring(dataSetName.lastIndexOf('.') + 1).toLowerCase();
                     switch (extension) {
                         case "yml": {
@@ -155,15 +151,22 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                         target = performReplacements(target);
 
                         operation.execute(databaseConnection, target);
+                        dataSets.add(target);
                     } else {
                         log.warn("DataSet not created" + dataSetName);
                     }
 
                 }
+
+                if(!dataSets.isEmpty()){
+                    return new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
+                }
             }catch (Exception e){
                 log.error("Could not initialize dataset:" + e.getMessage(), e);
             }
         }
+        //no dataset created
+        return null;
     }
 
     @Override
@@ -401,18 +404,38 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     }
 
-    @Override
-    public void setDataSetModel(DataSetModel dataSetModel) {
-        this.dataSetModel = dataSetModel;
-    }
-
-    @Override
-    public DataSetModel getDataSetModel() {
-        return dataSetModel;
-    }
 
     public boolean isHSqlDB() throws SQLException {
 
         return connectionHolder.getConnection() != null && connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase().contains("hsql");
+    }
+
+    public void compareCurrentDataSetWith(IDataSet expected, String[] excludeCols) throws DatabaseUnitException {
+        IDataSet current = null;
+        try {
+            current = databaseConnection.createDataSet();
+        } catch (SQLException e) {
+            throw new RuntimeException("Could not create dataset to compare.",e);
+        }
+        String[] tableNames = new String[0];
+        try {
+            tableNames = expected.getTableNames();
+        } catch (DataSetException e) {
+            throw new RuntimeException("Could extract dataset table names.",e);
+        }
+
+        for (String tableName : tableNames) {
+            ITable expectedTable = null;
+            ITable actualTable = null;
+            try {
+                expectedTable = expected.getTable(tableName);
+                actualTable = current.getTable(tableName);
+            } catch (DataSetException e) {
+                throw new RuntimeException("Could extract dataset table.",e);
+            }
+            ITable filteredActualTable = DefaultColumnFilter.includedColumnsTable(actualTable, expectedTable.getTableMetaData().getColumns());
+            Assertion.assertEqualsIgnoreCols(expectedTable, filteredActualTable,excludeCols);
+        }
+
     }
 }

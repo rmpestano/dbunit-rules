@@ -1,7 +1,9 @@
 package com.github.dbunit.rules.cdi;
 
 import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import org.dbunit.dataset.IDataSet;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -42,6 +44,11 @@ public class DBUnitInterceptor implements Serializable {
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
             dataSetProcessor.process(dataSetModel);
             proceed = invocationContext.proceed();
+            ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
+            if(expectedDataSet != null){
+                IDataSet expected = dataSetProcessor.process(new DataSetModel(expectedDataSet.value()).disableConstraints(true));
+                dataSetProcessor.compareCurrentDataSetWith(expected,expectedDataSet.ignoreCols());
+            }
             if(usingDataSet.cleanAfter()){
                 dataSetProcessor.clearDatabase(dataSetModel);
             }

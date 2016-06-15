@@ -5,7 +5,9 @@ import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.IDataSet;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 import org.slf4j.Logger;
@@ -71,8 +73,8 @@ public class DataSetProcessor {
         return connection;
     }
 
-    public void process(DataSetModel dataSetModel) {
-        dataSetExecutor.createDataSet(dataSetModel);
+    public IDataSet process(DataSetModel dataSetModel) {
+        return dataSetExecutor.createDataSet(dataSetModel);
     }
 
 
@@ -89,15 +91,20 @@ public class DataSetProcessor {
         try {
             dataSetExecutor.clearDatabase(dataSetModel);
         } catch (SQLException e) {
-           log.error("Could not clear database.",e);
+            log.error("Could not clear database.", e);
         }
     }
 
     public void executeStatements(String[] executeStatementsAfter) {
         dataSetExecutor.executeStatements(executeStatementsAfter);
     }
+
     public void executeScript(String script) {
-            dataSetExecutor.executeScript(script);
+        dataSetExecutor.executeScript(script);
+    }
+
+    public void compareCurrentDataSetWith(IDataSet expected, String[] excludeCols) throws DatabaseUnitException {
+        dataSetExecutor.compareCurrentDataSetWith(expected, excludeCols);
     }
 
 }
