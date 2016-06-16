@@ -4,8 +4,7 @@ import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +40,20 @@ public class ExpectedDataSetIt {
         assertThat(u.getName()).isEqualTo("expected user1");
         assertThat(u2.getId()).isNotNull();
         assertThat(u2.getName()).isEqualTo("expected user2");*/
+    }
+
+    @Test
+    @Ignore(value = "How to test failled comparisons?")
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+    public void shouldNotMatchExpectedDataSet() {
+        User u = new User();
+        u.setName("non expected user1");
+        User u2 = new User();
+        u2.setName("non expected user2");
+        emProvider.tx().begin();
+        emProvider.em().persist(u);
+        emProvider.em().persist(u2);
+        emProvider.tx().commit();
     }
 
     @Test

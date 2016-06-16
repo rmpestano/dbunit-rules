@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 @RunWith(CdiTestRunner.class)
-public class DBUnitCDITest {
+public class DBUnitCDIIt {
 
     @Inject
     EntityManager em;

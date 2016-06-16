@@ -3,7 +3,6 @@ package com.github.dbunit.rules.cdi;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
-import org.dbunit.dataset.IDataSet;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -27,7 +26,7 @@ public class DBUnitInterceptor implements Serializable {
 
         Object proceed = null;
         UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
-        if (usingDataSet != null) {
+        if (usingDataSet != null && !"".equals(usingDataSet.value())) {
             if (usingDataSet == null || usingDataSet.value() == null) {
                 throw new RuntimeException("Provide dataset name(s).");
             }
@@ -60,6 +59,12 @@ public class DBUnitInterceptor implements Serializable {
                 for (int i = 0; i < usingDataSet.executeScriptsAfter().length; i++) {
                     dataSetProcessor.executeScript(usingDataSet.executeScriptsAfter()[i]);
                 }
+            }
+        } else{//no dataset provided, just proceed and check expectedDataSet
+            proceed = invocationContext.proceed();
+            ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
+            if(expectedDataSet != null){
+                dataSetProcessor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
             }
         }
 
