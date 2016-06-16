@@ -340,39 +340,82 @@ Also note that the same can be done using @Rule but pay attention that you must 
 <1> *exec1* is the id of executor reponsible for dataset1-pu
 <2> executorId must match id provided in @Rule annotation
 
-=== Adding core module to your project
+=== Expected DataSet
+Using `@ExpectedDataSet` annotation you can specify the database state you expect after test execution, example:
 
-
-[source, xml]
+.expectedUsers.yml
 ----
-<dependency>
-      <groupId>com.github.dbunit-rules</groupId>
-      <artifactId>core</artifactId>
-      <version>0.7.0</version>
-      <scope>test</scope>
-</dependency>
+user:
+  - id: 1
+    name: "expected user1"
+  - id: 2
+    name: "expected user2"
 ----
 
-[NOTE]
+[source, java]
+----
+    @Test
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+    public void shouldMatchExpectedDataSet() {
+        User u = new User();
+        u.setName("expected user1");
+        User u2 = new User();
+        u2.setName("expected user2");
+        emProvider.tx().begin();
+        emProvider.em().persist(u);
+        emProvider.em().persist(u2);
+        emProvider.tx().commit();
+    }
+----
+
+NOTE: As you probably noticed, there is no need for assertions in the test itself.
+
+Now with an assertion error:
+
+[source, java]
+----
+    @Test
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+    public void shouldMatchExpectedDataSet() {
+        User u = new User();
+        u.setName("expected user1");
+        User u2 = new User();
+        u2.setName("expected user2");
+        emProvider.tx().begin();
+        emProvider.em().persist(u);
+        emProvider.em().persist(u2);
+        emProvider.tx().commit();
+    }
+----
+And here is how the error is shown in JUnit console:
+
+----
+Expected :expected user1
+Actual   :non expected user1
+ <Click to see difference>
+	at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39)
+	at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97)
+	at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223)
+	at com.github.dbunit.rules.assertion.DataSetAssert.compareData(DataSetAssert.java:94)
+----
+
+[TIP]
 ====
-It will bring the following (transitive) dependencies to your project:
+You can also use `regular expressions` in expected DataSet:
 
-[source,xml]
+.expectedUsersRegex.yml
 ----
-<dependency>
-      <groupId>org.dbunit</groupId>
-      <artifactId>dbunit</artifactId>
-</dependency>
-<dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-</dependency>
-<dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-lgpl</artifactId>
-</dependency>
+user:
+  - id: "regex:\\d+" #any number
+    name: regex:^expected user.*  #starts with regex
+  - id: "regex:\\d+"
+    name: regex:.*user2$   #ends with example
 ----
+
+The test remains the same as above but without the need to `ignore id column`.
 ====
+
+
 
 === EntityManagerProvider
 
@@ -444,6 +487,44 @@ Above JPA configuration depends on hsqldb (an in memory database) and eclipse li
 ----
 
 NOTE: A hibernate entity manager config sample can be https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/resources/META-INF/persistence.xml[found here^].
+
+
+TIP: EntityManager provider utility can be used in other contexts like a CDI producer, https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/EntityManagerProducer.java#L21[see here].
+
+=== Adding DBUnit Rules core to your project
+
+
+[source, xml]
+----
+<dependency>
+      <groupId>com.github.dbunit-rules</groupId>
+      <artifactId>core</artifactId>
+      <version>0.7.0</version>
+      <scope>test</scope>
+</dependency>
+----
+
+[NOTE]
+====
+It will bring the following (transitive) dependencies to your project:
+
+[source,xml]
+----
+<dependency>
+      <groupId>org.dbunit</groupId>
+      <artifactId>dbunit</artifactId>
+</dependency>
+<dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+</dependency>
+<dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-lgpl</artifactId>
+</dependency>
+----
+====
+
 
 
 == CDI module
