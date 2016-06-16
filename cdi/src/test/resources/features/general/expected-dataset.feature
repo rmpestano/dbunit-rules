@@ -98,5 +98,5 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
   #cukedoctor-discrete
     Then Test must fail showing what it was expecting as database state.
 """
-NOTE: This step is failing purposely to show the error message.
+NOTE: This step is purposely failing to show the error message below.
 """
