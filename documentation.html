@@ -451,8 +451,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         </ul> </li> 
        <li><a href="#Dynamic-data-using-scritable-datasets">3.4. <strong>Dynamic data using scritable datasets</strong></a> 
         <ul class="sectlevel3"> 
-         <li><a href="#_scenario_seed_database_with_groovy_script_in_dataset">3.4.1. Scenario: Seed database with groovy script in dataset</a></li> 
-         <li><a href="#_scenario_seed_database_with_javascript_in_dataset">3.4.2. Scenario: Seed database with javascript in dataset</a></li> 
+         <li><a href="#_scenario_seed_database_with_groovy_script_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.4.1. Scenario: Seed database with groovy script in dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
+         <li><a href="#_scenario_seed_database_with_javascript_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.4.2. Scenario: Seed database with javascript in dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
+        </ul> </li> 
+       <li><a href="#Database-assertion-using-expected-datasets">3.5. <strong>Database assertion using expected datasets</strong></a> 
+        <ul class="sectlevel3"> 
+         <li><a href="#_scenario_database_assertion_with_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.5.1. Scenario: Database assertion with yml dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
+         <li><a href="#_scenario_database_assertion_with_regular_expression_in_expected_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.5.2. Scenario: Database assertion with regular expression in expected dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
+         <li><a href="#_scenario_database_assertion_with_seeding_before_test_execution_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.5.3. Scenario: Database assertion with seeding before test execution <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
+         <li><a href="#_scenario_failling_database_assertion_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span">3.5.4. Scenario: Failling database assertion <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></a></li> 
         </ul> </li> 
       </ul> </li> 
     </ul> 
@@ -535,22 +542,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
        <tr> 
         <th class="tableblock halign-center valign-top" colspan="3">Scenarios</th> 
         <th class="tableblock halign-center valign-top" colspan="7">Steps</th> 
-        <th class="tableblock halign-center valign-top" colspan="2">Features: 4</th> 
+        <th class="tableblock halign-center valign-top" colspan="2">Features: 5</th> 
        </tr> 
       </thead> 
       <tfoot> 
        <tr> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>3</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>6</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>9</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>24</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>20</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>20</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>511ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>33</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>693ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -582,7 +589,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>012ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -599,7 +606,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>491ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>684ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -616,25 +623,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
         <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Dynamic-data-using-scritable-datasets">Dynamic data using scritable datasets</a></strong></code></p></td> 
        </tr> 
        <tr> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>2</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>3</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>003ms</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="red"><strong>failed</strong></span></code></p></td> 
+       </tr> 
+       <tr> 
+        <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Database-assertion-using-expected-datasets">Database assertion using expected datasets</a></strong></code></p></td> 
+       </tr> 
+       <tr> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>9</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>13</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="red"><strong>failed</strong></span></code></p></td> 
        </tr> 
        <tr> 
         <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong>Totals</strong></code></p></td> 
@@ -682,7 +706,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(011ms)</span></p> 
+            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -880,7 +904,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(490ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(684ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1045,7 +1069,8 @@ import org.junit.runner.RunWith;
         "src/test/resources/features/core/core-seed-database.feature",
         "src/test/resources/features/cdi/cdi-seed-database.feature",
         "src/test/resources/features/cucumber/cucumber-seed-database.feature",
-        "src/test/resources/features/general/dataset-replacements.feature"
+        "src/test/resources/features/general/dataset-replacements.feature",
+        "src/test/resources/features/general/expected-dataset.feature"
 },
         plugin = "json:target/dbunit-rules.json")
 public class DBUnitRulesBdd {
@@ -1228,7 +1253,7 @@ public class DBUnitRulesBdd {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1428,7 +1453,7 @@ public class ContactSteps {
        </div> 
       </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_with_groovy_script_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_groovy_script_in_dataset"></a>3.4.1. Scenario: Seed database with groovy script in dataset</h4> 
+       <h4 id="_scenario_seed_database_with_groovy_script_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_seed_database_with_groovy_script_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.4.1. Scenario: Seed database with groovy script in dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
        <div class="sidebarblock"> 
         <div class="content"> 
          <div class="dlist"> 
@@ -1441,7 +1466,7 @@ public class ContactSteps {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Groovy script engine is on test classpath <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(003ms)</span></p> 
+            <p>Groovy script engine is on test classpath <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1469,7 +1494,7 @@ public class ContactSteps {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>The following dataset <span class="icon purple"><i class="fa fa-thumbs-down" title="Skipped"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1506,7 +1531,7 @@ public class ContactSteps {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>The following test is executed: <span class="icon purple"><i class="fa fa-thumbs-down" title="Skipped"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1536,7 +1561,7 @@ public void shouldReplaceDateUsingGroovyInDataset() {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Dataset script should be interpreted when seeding the database <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>Dataset script should be interpreted while seeding the database <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -1544,7 +1569,7 @@ public void shouldReplaceDateUsingGroovyInDataset() {
        </div> 
       </div> 
       <div class="sect3"> 
-       <h4 id="_scenario_seed_database_with_javascript_in_dataset"><a class="anchor" href="#_scenario_seed_database_with_javascript_in_dataset"></a>3.4.2. Scenario: Seed database with javascript in dataset</h4> 
+       <h4 id="_scenario_seed_database_with_javascript_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_seed_database_with_javascript_in_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.4.2. Scenario: Seed database with javascript in dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
        <div class="admonitionblock note"> 
         <table> 
          <tbody> 
@@ -1567,7 +1592,7 @@ public void shouldReplaceDateUsingGroovyInDataset() {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(002ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1633,7 +1658,402 @@ public void shouldReplaceLikesUsingJavaScriptInDataset() {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Dataset script should be interpreted when seeding the database <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>Dataset script should be interpreted while seeding the database <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <div class="sect2"> 
+      <h3 id="Database-assertion-using-expected-datasets"><a class="anchor" href="#Database-assertion-using-expected-datasets"></a>3.5. <strong>Database assertion using expected datasets</strong></h3> 
+      <span class="fa fa-minus-square fa-fw" style="cursor:pointer;float:right;margin-top:-30px" title="Minimize" onclick="hideFeatureScenarios('Database-assertion-using-expected-datasets');document.getElementById('hidden-Database-assertion-using-expected-datasets').style.display = 'inline';this.style.display = 'none'"> </span> 
+      <span id="hidden-Database-assertion-using-expected-datasets" class="fa fa-plus-square fa-fw" style="cursor:pointer;float:right;display:none;margin-top:-30px" title="Maximize feature" onclick="showFeatureScenarios('Database-assertion-using-expected-datasets');this.style.display = 'none'"> </span> 
+      <div class="sidebarblock"> 
+       <div class="content"> 
+        <div class="exampleblock"> 
+         <div class="content"> 
+          <div class="quoteblock"> 
+           <blockquote> 
+            <div class="paragraph"> 
+             <p>In order to verify database state after test execution<br> As a developer<br> I want to assert database state with datasets.</p> 
+            </div> 
+           </blockquote> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_database_assertion_with_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_database_assertion_with_yml_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.5.1. Scenario: Database assertion with yml dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>user:
+  - id: 1
+    name: "expected user1"
+  - id: 2
+    name: "expected user2"</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@RunWith(JUnit4.class)
+public class ExpectedDataSetIt {
+
+    @Rule
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
+
+
+    @Test
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+    public void shouldMatchExpectedDataSet() {
+        User u = new User();
+        u.setName("expected user1");
+        User u2 = new User();
+        u2.setName("expected user2");
+        emProvider.tx().begin();
+        emProvider.em().persist(u);
+        emProvider.em().persist(u2);
+        emProvider.tx().commit();
+    }</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>Test must pass because database state is as in expected dataset. <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_database_assertion_with_regular_expression_in_expected_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_database_assertion_with_regular_expression_in_expected_dataset_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.5.2. Scenario: Database assertion with regular expression in expected dataset <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>user:
+  - id: "regex:\\d+"
+    name: regex:^expected user.* #expected user1
+  - id: "regex:\\d+"
+    name: regex:.*user2$ #expected user2</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@Test
+@ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
+public void shouldMatchExpectedDataSetUsingRegex() {
+    User u = new User();
+    u.setName("expected user1");
+    User u2 = new User();
+    u2.setName("expected user2");
+    emProvider.tx().begin();
+    emProvider.em().persist(u);
+    emProvider.em().persist(u2);
+    emProvider.tx().commit();
+}</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>Test must pass because database state is as in expected dataset. <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_database_assertion_with_seeding_before_test_execution_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_database_assertion_with_seeding_before_test_execution_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.5.3. Scenario: Database assertion with seeding before test execution <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>user:
+  - id: 1
+    name: "@realpestano"
+  - id: 2
+    name: "@dbunit"</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             And 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>user:
+  - id: 1
+    name: "expected user1"
+  - id: 2
+    name: "expected user2"</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@Test
+@DataSet(value = "yml/user.yml", disableConstraints = true,cleanAfter = true)
+@ExpectedDataSet(value = "yml/expectedUser.yml", ignoreCols = "id")
+public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
+    emProvider.tx().begin();
+    emProvider.em().remove(emProvider.em().find(User.class,1L));
+    emProvider.tx().commit();
+}</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>Test must pass because database state is as in expected dataset. <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_failling_database_assertion_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"><a class="anchor" href="#_scenario_failling_database_assertion_span_class_icon_red_i_class_fa_fa_thumbs_down_title_failed_i_span"></a>3.5.4. Scenario: Failling database assertion <span class="icon red"><i class="fa fa-thumbs-down" title="Failed"></i></span></h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre>user:
+  - id: 1
+    name: "expected user1"
+  - id: 2
+    name: "expected user2"</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@Test
+@ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+public void shouldNotMatchExpectedDataSet() {
+    User u = new User();
+    u.setName("non expected user1");
+    User u2 = new User();
+    u2.setName("non expected user2");
+    emProvider.tx().begin();
+    emProvider.em().persist(u);
+    emProvider.em().persist(u2);
+    emProvider.tx().commit();
+}</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>Test must fail showing what it was expecting as database state. <span class="icon yellow"><i class="fa fa-thumbs-down" title="Undefined"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="admonitionblock note"> 
+              <table> 
+               <tbody> 
+                <tr> 
+                 <td class="icon"> <i class="fa icon-note" title="Note"></i> </td> 
+                 <td class="content"> This step is failing purposely to show the error message. </td> 
+                </tr> 
+               </tbody> 
+              </table> 
+             </div> 
+            </div> 
            </div> 
           </div> 
          </div> 
@@ -1653,8 +2073,8 @@ public void shouldReplaceLikesUsingJavaScriptInDataset() {
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - Jun 16, 2016 1:33:46 PM 
-   <span style="float:right;font-size:11px"> Execution time: 11.219 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - Jun 16, 2016 7:21:25 PM 
+   <span style="float:right;font-size:11px"> Execution time: 11.549 seconds</span> 
   </div> 
   <style>  
 
