@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|050ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|502ms
+|04s 341ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -78,34 +78,34 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
-|0
-|2
-|2
 |2
 |0
 |2
+|7
 |0
-|3
+|0
+|0
+|0
 |0
 |7
-|001ms
-|[red]#*failed*#
+|005ms
+|[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
-|0
+|3
+|1
 |4
-|4
-|9
+|12
+|1
 |0
 |0
 |0
-|4
 |0
 |13
-|002ms
+|873ms
 |[red]#*failed*#
 12+^|*Totals*
-|3|6|9|24|0|2|0|7|0|33 2+|558ms
+|8|1|9|32|1|0|0|0|0|33 2+|05s 224ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(049ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(502ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 341ms)#
 ******
 
 [discrete]
@@ -420,12 +420,12 @@ ____
 Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platform, for more information access the official https://docs.oracle.com/javase/8/docs/technotes/guides/scripting/prog_guide/api.html[docs here^]].
 ****
 
-==== Scenario: Seed database with groovy script in dataset icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Seed database with groovy script in dataset
 
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 ----
@@ -443,7 +443,7 @@ Groovy script engine is on test classpath icon:thumbs-down[role="yellow",title="
 =====
 And ::
 =====
-The following dataset icon:thumbs-down[role="purple",title="Skipped"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
@@ -458,7 +458,7 @@ include::../../../core/src/test/resources/datasets/yml/groovy-with-date-replacem
 =====
 When ::
 =====
-The following test is executed: icon:thumbs-down[role="purple",title="Skipped"] [small right]#(000ms)#
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
@@ -473,18 +473,18 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsI
 =====
 Then ::
 =====
-Dataset script should be interpreted while seeding the database icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
-==== Scenario: Seed database with javascript in dataset icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Seed database with javascript in dataset
 
 NOTE: Javascript engine comes within JDK so no additional classpath dependency is necessary.
 
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
@@ -514,7 +514,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsI
 =====
 Then ::
 =====
-Dataset script should be interpreted while seeding the database icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
@@ -532,7 +532,7 @@ ____
 ====
 ****
 
-==== Scenario: Database assertion with yml dataset icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Database assertion with yml dataset
 
 ****
 Given ::
@@ -565,11 +565,11 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(014ms)#
 =====
 ****
 
-==== Scenario: Database assertion with regular expression in expected dataset icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Database assertion with regular expression in expected dataset
 
 ****
 Given ::
@@ -602,11 +602,11 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
-==== Scenario: Database assertion with seeding before test execution icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Database assertion with seeding before test execution
 
 ****
 Given ::
@@ -652,7 +652,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
@@ -661,7 +661,7 @@ Test must pass because database state is as in expected dataset. icon:thumbs-dow
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -689,14 +689,21 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail showing what it was expecting as database state. icon:thumbs-down[role="yellow",title="Undefined"] [small right]#(000ms)#
+Test must fail showing what it was expecting as database state. icon:thumbs-down[role="red",title="Failed"] [small right]#(853ms)#
 ******
 
 [discrete]
-NOTE: This step is failing purposely to show the error message.
+NOTE: This step is purposely failing to show the error message below.
 
 
 ******
+
+IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name) expected:<[]expected user1> but was:<[non ]expected user1>
+	at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39)
+	at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97)
+	at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223)
+	at ...
+
 
 =====
 ****
