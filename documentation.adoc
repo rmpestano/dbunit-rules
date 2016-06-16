@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|002ms
+|001ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|04s 341ms
+|03s 573ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|002ms
+|001ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|005ms
+|013ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -102,10 +102,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |13
-|873ms
+|552ms
 |[red]#*failed*#
 12+^|*Totals*
-|8|1|9|32|1|0|0|0|0|33 2+|05s 224ms
+|8|1|9|32|1|0|0|0|0|33 2+|04s 142ms
 |===
 
 == *Features*
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 341ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 573ms)#
 ******
 
 [discrete]
@@ -425,7 +425,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
 ******
 
 ----
@@ -484,7 +484,7 @@ NOTE: Javascript engine comes within JDK so no additional classpath dependency i
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 ----
@@ -514,7 +514,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsI
 =====
 Then ::
 =====
-Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 =====
 ****
 
@@ -537,7 +537,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 ----
@@ -565,7 +565,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(014ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 =====
 ****
 
@@ -628,7 +628,7 @@ The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#
 ******
 
 ----
-include::../../../core/src/test/resources/datasets/yml/expectedUsers.yml[]
+include::../../../core/src/test/resources/datasets/yml/expectedUser.yml[]
 ----
 
 
@@ -661,7 +661,7 @@ Test must pass because database state is as in expected dataset. icon:thumbs-up[
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
@@ -689,7 +689,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail showing what it was expecting as database state. icon:thumbs-down[role="red",title="Failed"] [small right]#(853ms)#
+Test must fail showing what it was expecting as database state. icon:thumbs-down[role="red",title="Failed"] [small right]#(545ms)#
 ******
 
 [discrete]
