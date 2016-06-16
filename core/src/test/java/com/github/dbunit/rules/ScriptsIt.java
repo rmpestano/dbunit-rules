@@ -14,6 +14,8 @@ import org.junit.runners.JUnit4;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -31,12 +33,12 @@ public class ScriptsIt {
 
     @BeforeClass
     public static void before() {
-        EntityManager em = EntityManagerProvider.instance("scripts-it").em();
-        em.getTransaction().begin();
-        em.createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
-        em.flush();
-        em.getTransaction().commit();
-        List<User> users = em.createQuery("select u from User u").getResultList();
+        EntityManagerProvider.newInstance("scripts-it");
+        tx().begin();
+        em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
+        em().flush();
+        tx().commit();
+        List<User> users = em().createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(1);
     }
 
@@ -58,9 +60,8 @@ public class ScriptsIt {
 
     @AfterClass
     public static void after() throws InterruptedException {
-        EntityManager em = EntityManagerProvider.instance("scripts-it").em();
-        em.clear();
-        List<User> users = em.createQuery("select u from User u").getResultList();
+        em().clear();
+        List<User> users = em().createQuery("select u from User u").getResultList();
         if (users == null || users.size() != 1) {
             fail("We should have 1 user after test execution");
         }

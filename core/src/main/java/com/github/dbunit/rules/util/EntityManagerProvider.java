@@ -32,13 +32,15 @@ public class EntityManagerProvider implements TestRule {
 
     private Connection conn;
 
+    private static EntityManagerProvider instance;
+
     private static Logger log = LoggerFactory.getLogger(EntityManagerProvider.class);
 
     private EntityManagerProvider() {
     }
 
     public static synchronized EntityManagerProvider instance(String unitName) {
-        EntityManagerProvider instance = providers.get(unitName);
+        instance = providers.get(unitName);
         if (instance == null) {
             instance = new EntityManagerProvider();
             providers.put(unitName,instance);
@@ -53,13 +55,14 @@ public class EntityManagerProvider implements TestRule {
         return instance;
     }
 
+
     /**
      *
      * clear entities on underlying context
      * @return
      */
     public static synchronized EntityManagerProvider newInstance(String unitName) {
-        EntityManagerProvider instance =  new EntityManagerProvider();
+        instance =  new EntityManagerProvider();
         providers.put(unitName,instance);
         try {
             instance.init(unitName);
@@ -76,7 +79,7 @@ public class EntityManagerProvider implements TestRule {
             emf = Persistence.createEntityManagerFactory(unitName);
             em = emf.createEntityManager();
             this.tx = this.em.getTransaction();
-            if (em.getDelegate() instanceof Session) {
+            if (isHibernateOnClasspath() && em.getDelegate() instanceof Session) {
                 conn = ((SessionImpl) em.unwrap(Session.class)).connection();
             } else{
                 /**
@@ -93,25 +96,34 @@ public class EntityManagerProvider implements TestRule {
 
 
     public Connection getConnection() {
-        return conn;
+        checkInstance();
+        return instance.conn;
     }
 
-    public EntityManager em() {
-        return em;
+    public static EntityManager em() {
+        checkInstance();
+        return instance.em;
+    }
+
+    private static void checkInstance() {
+        if(instance == null){
+            throw new IllegalStateException("Call instance('PU_NAME') before calling em()");
+        }
     }
 
     /**
      * clear entityManager persistence context of this provider
      * @return
      */
-    public EntityManagerProvider clear(){
-        em.clear();
-        return this;
+    public static EntityManagerProvider clear(){
+        em().clear();
+        return instance;
     }
 
 
-    public EntityTransaction tx() {
-        return tx;
+    public static EntityTransaction tx() {
+        checkInstance();
+        return instance.tx;
     }
 
     @Override
@@ -121,10 +133,18 @@ public class EntityManagerProvider implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 base.evaluate();
-                em.clear();
+                instance.em.clear();
             }
 
         };
     }
 
+    private boolean isHibernateOnClasspath() {
+        try {
+            Class.forName("org.hibernate.Session");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }

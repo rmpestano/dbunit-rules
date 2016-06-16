@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -39,7 +40,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",disableConstraints = true)
     public void shouldSeedDataSetDisablingContraints() {
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
     }
@@ -47,7 +48,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;")
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1); 
         assertThat(user.getTweets()).hasSize(1);
@@ -61,7 +62,7 @@ public class DBUnitRulesIt {
             executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
     )
     public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        List<User> users =  emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers").getResultList();
+        List<User> users =  em().createQuery("select u from User u join fetch u.tweets join fetch u.followers").getResultList();
         assertThat(users).isEmpty();
     }
 
@@ -72,7 +73,7 @@ public class DBUnitRulesIt {
             executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
     )
     public void shouldSeedDataSetUsingTableCreationOrder() {
-        List<User> users =  emProvider.em().createQuery("select u from User u left join fetch u.tweets left join fetch u.followers").getResultList();
+        List<User> users =  em().createQuery("select u from User u left join fetch u.tweets left join fetch u.followers").getResultList();
         assertThat(users).hasSize(2);
     }
 
@@ -81,7 +82,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml", useSequenceFiltering = true)
     public void shouldSeedUserDataSet() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).isNotNull().hasSize(1);
@@ -96,7 +97,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml")
     public void shouldLoadUserFollowers() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
@@ -109,7 +110,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/json/users.json")
     public void shouldLoadUsersFromJsonDataset() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
@@ -122,7 +123,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/xml/users.xml")
     public void shouldLoadUsersFromXmlDataset() {
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
@@ -135,7 +136,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(strategy = SeedStrategy.INSERT, value = "yml/user.yml, yml/tweet.yml, yml/follower.yml",  executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"})
     public void shouldLoadDataFromMultipleDataSets(){
-        User user = (User) emProvider.em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);

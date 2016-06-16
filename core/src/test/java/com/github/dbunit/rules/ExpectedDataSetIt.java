@@ -10,6 +10,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
+
 /**
  * Created by rmpestano on 6/15/16.
  */
@@ -34,10 +37,10 @@ public class ExpectedDataSetIt {
         u.setName("expected user1");
         User u2 = new User();
         u2.setName("expected user2");
-        emProvider.tx().begin();
-        emProvider.em().persist(u);
-        emProvider.em().persist(u2);
-        emProvider.tx().commit();
+        tx().begin();
+        em().persist(u);
+        em().persist(u2);
+        tx().commit();
     }
     // end::expected[]
 
@@ -50,10 +53,10 @@ public class ExpectedDataSetIt {
         u.setName("non expected user1");
         User u2 = new User();
         u2.setName("non expected user2");
-        emProvider.tx().begin();
-        emProvider.em().persist(u);
-        emProvider.em().persist(u2);
-        emProvider.tx().commit();
+        tx().begin();
+        em().persist(u);
+        em().persist(u2);
+        tx().commit();
     }
     // end::faillingExpected[]
 
@@ -65,10 +68,10 @@ public class ExpectedDataSetIt {
         u.setName("expected user1");
         User u2 = new User();
         u2.setName("expected user2");
-        emProvider.tx().begin();
-        emProvider.em().persist(u);
-        emProvider.em().persist(u2);
-        emProvider.tx().commit();
+        tx().begin();
+        em().persist(u);
+        em().persist(u2);
+        tx().commit();
     }
     // end::expectedRegex[]
 
@@ -77,9 +80,9 @@ public class ExpectedDataSetIt {
     @DataSet(value = "yml/user.yml", disableConstraints = true,cleanAfter = true)
     @ExpectedDataSet(value = "yml/expectedUser.yml", ignoreCols = "id")
     public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
-        emProvider.tx().begin();
-        emProvider.em().remove(emProvider.em().find(User.class,1L));
-        emProvider.tx().commit();
+        tx().begin();
+        em().remove(em().find(User.class,1L));
+        tx().commit();
     }
     // end::expectedWithSeeding[]
 }
