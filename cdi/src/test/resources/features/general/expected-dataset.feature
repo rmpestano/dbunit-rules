@@ -62,7 +62,7 @@ include::../../../core/src/test/resources/datasets/yml/user.yml[]
     And The following dataset
 """
 ----
-include::../../../core/src/test/resources/datasets/yml/expectedUsers.yml[]
+include::../../../core/src/test/resources/datasets/yml/expectedUser.yml[]
 ----
 """
 
