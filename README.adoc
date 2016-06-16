@@ -374,20 +374,6 @@ It will bring the following (transitive) dependencies to your project:
 ----
 ====
 
-== JPA module
-
-As stated before DBunit needs a jdbc connection, a way to create one is using JPA entity manager. https://github.com/rmpestano/dbunit-rules/tree/master/jpa[DBUnit rules JPA module^] can help on that:
-
-[source,xml]
-----
-<dependency>
-	<groupId>com.github.dbunit-rules</groupId>
-	<artifactId>jpa</artifactId>
-	<version>0.7.0</version>
-	<scope>test</scope>
-</dependency>
-----
-
 === EntityManagerProvider
 
 It is a component which holds JPA entity managers for your tests. To activate the EntityManagerProvider rule in your test use:
@@ -459,33 +445,6 @@ Above JPA configuration depends on hsqldb (an in memory database) and eclipse li
 
 NOTE: A hibernate entity manager config sample can be https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/resources/META-INF/persistence.xml[found here^].
 
-=== JPA DataSet Executor
-
-JPA module also provides a dataset executor based on JPA Entity Manager:
-
-[source,java]
-----
-@RunWith(JUnit4.class)
-public class JPADatasetExecutorIt {
-
-    @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
-
-
-    @Test
-    public void shouldSeedUserDataSetUsing() {
-        DataSetModel dataModel = new DataSetModel("datasets/yml/users.yml");
-        JPADataSetExecutor.instance(emProvider.em()).execute(dataModel);
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
-        assertThat(user).isNotNull();
-        assertThat(user.getId()).isEqualTo(1);
-    }
-
-}
-----
-
-IMPORTANT:
-EntityManagerProvider will only retrieve JPA entity manager from persistence units with *transaction-type="RESOURCE_LOCAL"*.
 
 == CDI module
 

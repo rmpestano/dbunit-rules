@@ -57,7 +57,7 @@ public class ExpectedDataSetIt {
     }
 
     @Test
-    @DataSet(value = "yml/user.yml", disableConstraints = true,cleanBefore = true)
+    @DataSet(value = "yml/user.yml", disableConstraints = true,cleanAfter = true)
     @ExpectedDataSet(value = "yml/expectedUser.yml", ignoreCols = "id")
     public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
         emProvider.tx().begin();
