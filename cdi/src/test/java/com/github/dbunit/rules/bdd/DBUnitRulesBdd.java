@@ -12,7 +12,8 @@ import org.junit.runner.RunWith;
         "src/test/resources/features/core/core-seed-database.feature",
         "src/test/resources/features/cdi/cdi-seed-database.feature",
         "src/test/resources/features/cucumber/cucumber-seed-database.feature",
-        "src/test/resources/features/general/dataset-replacements.feature"
+        "src/test/resources/features/general/dataset-replacements.feature",
+        "src/test/resources/features/general/expected-dataset.feature"
 },
         plugin = "json:target/dbunit-rules.json")
 public class DBUnitRulesBdd {

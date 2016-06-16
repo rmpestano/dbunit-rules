@@ -13,12 +13,16 @@ import javax.persistence.EntityManager;
 /**
  * Created by rafael-pestano on 16/06/2016.
  */
+// tag::expectedCDIDeclaration[]
 @RunWith(CdiTestRunner.class)
 public class ExpectedDataSetCDIIt {
 
     @Inject
     EntityManager em;
 
+// end::expectedCDIDeclaration[]
+
+    // tag::expectedCDI[]
     @Test
     @UsingDataSet //needed to activate interceptor (can be at class level)
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
@@ -32,4 +36,5 @@ public class ExpectedDataSetCDIIt {
         em.persist(u2);
         em.getTransaction().commit();
     }
+    // end::expectedCDI[]
 }

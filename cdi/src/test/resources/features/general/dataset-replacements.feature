@@ -45,7 +45,7 @@ include::../../../core/src/test/resources/datasets/yml/groovy-with-date-replacem
 include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsIt.java[tags=groovy]
 ----
 """
-    Then Dataset script should be interpreted when seeding the database
+    Then Dataset script should be interpreted while seeding the database
 
   Scenario: Seed database with javascript in dataset
 
@@ -70,4 +70,4 @@ include::../../../core/src/test/resources/datasets/yml/js-with-calc-replacements
 include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsIt.java[tags=javascript-likes]
 ----
 """
-    Then Dataset script should be interpreted when seeding the database
+    Then Dataset script should be interpreted while seeding the database
