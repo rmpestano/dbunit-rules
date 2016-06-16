@@ -417,7 +417,7 @@ The test remains the same as above but without the need to `ignore id column`.
 
 === EntityManagerProvider
 
-It is a component which holds JPA entity managers for your tests. To activate the EntityManagerProvider rule in your test use:
+It is a component which holds JPA entity managers for your tests. To activate it just use the EntityManagerProvider rule in your test use:
 
 [source,java]
 ----
@@ -464,7 +464,7 @@ Now you can use emProvider.getConnection() to retrieve jdbc connection and emPro
 
 </persistence>
 ----
-NOTE: It will only work with *transaction-type="RESOURCE_LOCAL"* because internally it uses Persistence.createEntityManagerFactory(unitName) to get em instance.
+NOTE: It will only work with *transaction-type="RESOURCE_LOCAL"* because internally it uses Persistence.createEntityManagerFactory(unitName) to get entityManager instance.
 
 Above JPA configuration depends on hsqldb (an in memory database) and eclipse link (JPA provider):
 
@@ -487,7 +487,7 @@ Above JPA configuration depends on hsqldb (an in memory database) and eclipse li
 NOTE: A hibernate entity manager config sample can be https://github.com/rmpestano/dbunit-rules/blob/master/examples/src/test/resources/META-INF/persistence.xml[found here^].
 
 
-TIP: EntityManager provider utility can be used in other contexts like a CDI producer, https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/EntityManagerProducer.java#L21[see here].
+TIP: EntityManager provider utility also can be used in other contexts like a CDI producer, https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/EntityManagerProducer.java#L21[see here].
 
 === Adding DBUnit Rules core to your project
 
