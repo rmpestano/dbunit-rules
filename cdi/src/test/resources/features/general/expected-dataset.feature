@@ -54,6 +54,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
        #cukedoctor-discrete
     Given The following dataset
 """
+.user.yml
 ----
 include::../../../core/src/test/resources/datasets/yml/user.yml[]
 ----
@@ -61,6 +62,7 @@ include::../../../core/src/test/resources/datasets/yml/user.yml[]
     #cukedoctor-discrete
     And The following dataset
 """
+.expectedUser.yml
 ----
 include::../../../core/src/test/resources/datasets/yml/expectedUser.yml[]
 ----
