@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|015ms
+|005ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|948ms
+|522ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|004ms
+|012ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,10 +88,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|004ms
+|002ms
 |[green]#*passed*#
 12+^|*Totals*
-|5|0|5|20|0|0|0|0|0|20 2+|973ms
+|5|0|5|20|0|0|0|0|0|20 2+|543ms
 |===
 
 == *Features*
@@ -117,7 +117,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(015ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
 ******
 
 [discrete]
@@ -208,7 +208,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(948ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(522ms)#
 ******
 
 [discrete]
@@ -326,7 +326,7 @@ include::../../pom.xml[tags=deltaspike-cdi-deps]
 ****
 Given ::
 =====
-The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
@@ -339,7 +339,7 @@ include::../../../examples/src/test/resources/features/contacts.feature[]
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(012ms)#
 ******
 
 ----
@@ -470,7 +470,7 @@ NOTE: Javascript engine comes within JDK so no additional classpath dependency i
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
