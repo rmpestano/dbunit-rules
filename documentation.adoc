@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|799ms
+|496ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|009ms
+|001ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,10 +88,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|002ms
+|011ms
 |[green]#*passed*#
 12+^|*Totals*
-|5|0|5|20|0|0|0|0|0|20 2+|814ms
+|5|0|5|20|0|0|0|0|0|20 2+|512ms
 |===
 
 == *Features*
@@ -208,7 +208,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(799ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(495ms)#
 ******
 
 [discrete]
@@ -339,7 +339,7 @@ include::../../../examples/src/test/resources/features/contacts.feature[]
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -485,7 +485,7 @@ include::../../../core/src/test/resources/datasets/yml/js-with-calc-replacements
 =====
 When ::
 =====
-The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following test is executed: icon:thumbs-up[role="green",title="Passed"] [small right]#(009ms)#
 ******
 
 [discrete]
