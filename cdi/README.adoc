@@ -1,4 +1,9 @@
 = DBUnit rules CDI
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
 
 A CDI interceptor to configure DBUnit datasets in your tests.
 
