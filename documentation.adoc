@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|002ms
+|050ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|684ms
+|502ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |3
 |0
 |7
-|002ms
+|001ms
 |[red]#*failed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -105,7 +105,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |002ms
 |[red]#*failed*#
 12+^|*Totals*
-|3|6|9|24|0|2|0|7|0|33 2+|693ms
+|3|6|9|24|0|2|0|7|0|33 2+|558ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(049ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(684ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(502ms)#
 ******
 
 [discrete]
@@ -484,7 +484,7 @@ NOTE: Javascript engine comes within JDK so no additional classpath dependency i
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
