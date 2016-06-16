@@ -14,6 +14,7 @@ ____
      #cukedoctor-discrete
     Given The following dataset
 """
+.expectedUsers.yml
 ----
 include::../../../core/src/test/resources/datasets/yml/expectedUsers.yml[]
 ----
@@ -34,6 +35,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
        #cukedoctor-discrete
     Given The following dataset
 """
+.expectedUsersRegex.yml
 ----
 include::../../../core/src/test/resources/datasets/yml/expectedUsersRegex.yml[]
 ----
@@ -83,6 +85,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
        #cukedoctor-discrete
     Given The following dataset
 """
+.expectedUsers.yml
 ----
 include::../../../core/src/test/resources/datasets/yml/expectedUsers.yml[]
 ----
