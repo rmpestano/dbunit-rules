@@ -29,7 +29,7 @@ public class DBUnitCDIIt {
 
     @Test
     @UsingDataSet(value = "",cleanBefore = true)
-    public void shouldFailToSeedEmptyDataSet() {
+    public void shouldNotSeedDBWhenUsingEmptyDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
@@ -64,7 +64,7 @@ public class DBUnitCDIIt {
 
     @Test
     @UsingDataSet(value = "users.doc",cleanBefore = true)
-    public void shouldFailToSeedUnknownDataSetFormat() {
+    public void shouldNotFailToSeedUnknownDataSetFormat() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
