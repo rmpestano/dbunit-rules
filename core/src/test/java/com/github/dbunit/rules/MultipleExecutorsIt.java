@@ -34,9 +34,9 @@ public class MultipleExecutorsIt {
 
     @BeforeClass
     public static void setup() {
-        executors.add(DataSetExecutorImpl.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").getConnection())));
-        executors.add(DataSetExecutorImpl.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").getConnection())));
-        executors.add(DataSetExecutorImpl.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").getConnection())));
+        executors.add(DataSetExecutorImpl.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").connection())));
+        executors.add(DataSetExecutorImpl.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").connection())));
+        executors.add(DataSetExecutorImpl.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").connection())));
     }
 
     @AfterClass

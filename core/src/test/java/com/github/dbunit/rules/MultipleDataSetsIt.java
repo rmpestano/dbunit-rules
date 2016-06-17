@@ -35,10 +35,10 @@ public class MultipleDataSetsIt {
     public EntityManagerProvider emProvider2 = EntityManagerProvider.instance("dataset2-pu");
 
     @Rule
-    public DBUnitRule exec1Rule = DBUnitRule.instance("exec1",emProvider1.getConnection());
+    public DBUnitRule exec1Rule = DBUnitRule.instance("exec1",emProvider1.connection());
 
     @Rule
-    public DBUnitRule exec2Rule = DBUnitRule.instance("exec2",emProvider2.getConnection());
+    public DBUnitRule exec2Rule = DBUnitRule.instance("exec2",emProvider2.connection());
 
 
     @Test

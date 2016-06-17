@@ -22,7 +22,7 @@ public class DateReplacementsIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.connection());
 
     @Before
     public void setup(){

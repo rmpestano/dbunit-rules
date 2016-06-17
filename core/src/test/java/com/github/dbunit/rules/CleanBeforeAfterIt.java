@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class CleanBeforeAfterIt {
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(EntityManagerProvider.instance("rules-it").getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(EntityManagerProvider.instance("rules-it").connection());
 
 
     @BeforeClass

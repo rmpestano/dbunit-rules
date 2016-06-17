@@ -32,7 +32,7 @@ public class DataSetExecutorIt {
 
     @BeforeClass
     public static void setup() {
-        executor = DataSetExecutorImpl.instance("executor-name", new ConnectionHolderImpl(instance("executor-it").getConnection()));
+        executor = DataSetExecutorImpl.instance("executor-name", new ConnectionHolderImpl(instance("executor-it").connection()));
     }
 
     @AfterClass
@@ -78,7 +78,7 @@ public class DataSetExecutorIt {
             tableOrdering(new String[]{"USER","TWEET","FOLLOWER"}).
             executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
            useSequenceFiltering(false);
-        DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.getConnection())).createDataSet(dataSetModel);
+        DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.connection())).createDataSet(dataSetModel);
         List<User> users =  emProvider.em().createQuery("select u from User u").getResultList();
         assertThat(users).hasSize(2);
     }

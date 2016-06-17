@@ -34,7 +34,7 @@ public class ConnectionHolderIt {
     });
 
     private Connection initConnection() {
-        return emProvider.getConnection();
+        return emProvider.connection();
     }
 
 

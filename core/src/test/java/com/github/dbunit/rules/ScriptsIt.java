@@ -11,7 +11,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
@@ -29,7 +28,7 @@ public class ScriptsIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.getConnection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.connection());
 
     @BeforeClass
     public static void before() {

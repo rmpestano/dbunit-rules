@@ -95,32 +95,73 @@ public class EntityManagerProvider implements TestRule {
     }
 
 
-    public Connection getConnection() {
+    /**
+     *
+     * @param puName
+     * @return jdbc connection of provider instance represented by given puName
+     */
+    public Connection connection(String puName) {
+        return instance(puName).conn;
+    }
+
+    /**
+     *
+     * @return jdbc conection of current provider instance
+     */
+    public Connection connection() {
         checkInstance();
         return instance.conn;
     }
 
+    /**
+     *
+     * @param puName
+     * @return entityManager represented by given puName
+     */
+    public static EntityManager em(String puName) {
+        return instance(puName).em;
+    }
+
+    /**
+     *
+     * @return entityManager of current instance of this provider
+     */
     public static EntityManager em() {
         checkInstance();
         return instance.em;
     }
 
-    private static void checkInstance() {
-        if(instance == null){
-            throw new IllegalStateException("Call instance('PU_NAME') before calling em()");
-        }
+    /**
+     * @param puName
+     * clears entityManager (represented by given puName) persistence context
+     * @return provider represented by puName
+     */
+    public static EntityManagerProvider clear(String puName){
+        em(puName).clear();
+        return instance;
     }
 
     /**
-     * clear entityManager persistence context of this provider
-     * @return
+     * clears entityManager persistence context of current instance of this provider
+     * @return current provider
      */
     public static EntityManagerProvider clear(){
         em().clear();
         return instance;
     }
 
+    /**
+     * @param puName
+     * @return transaction of entityManager represented by given puName
+     */
+    public static EntityTransaction tx(String puName) {
+        return em(puName).getTransaction();
+    }
 
+    /**
+     *
+     * @return transaction of entityManager of current instance of this provider
+     */
     public static EntityTransaction tx() {
         checkInstance();
         return instance.tx;
@@ -145,6 +186,12 @@ public class EntityManagerProvider implements TestRule {
             return true;
         } catch (ClassNotFoundException e) {
             return false;
+        }
+    }
+
+    private static void checkInstance() {
+        if(instance == null){
+            throw new IllegalStateException("Call instance('PU_NAME') before calling em()");
         }
     }
 }
