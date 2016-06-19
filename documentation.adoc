@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|001ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|03s 533ms
+|03s 304ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -105,7 +105,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |003ms
 |[green]#*passed*#
 12+^|*Totals*
-|9|0|9|33|0|0|0|0|0|33 2+|03s 542ms
+|9|0|9|33|0|0|0|0|0|33 2+|03s 315ms
 |===
 
 == *Features*
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 533ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 304ms)#
 ******
 
 [discrete]
@@ -560,6 +560,8 @@ The following test is executed: icon:thumbs-up[role="green",title="Passed"] [sma
 ----
 include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.java[tags=expectedDeclaration;expected]
 ----
+[discrete]
+<1> Clear database before to avoid conflict with other tests.
 
 
 ******
