@@ -73,8 +73,8 @@ public class DataSetProcessor {
         return connection;
     }
 
-    public IDataSet process(DataSetModel dataSetModel) {
-        return dataSetExecutor.createDataSet(dataSetModel);
+    public void process(DataSetModel dataSetModel) {
+        dataSetExecutor.createDataSet(dataSetModel);
     }
 
 
