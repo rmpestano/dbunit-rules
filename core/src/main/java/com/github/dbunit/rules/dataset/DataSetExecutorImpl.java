@@ -108,7 +108,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     }
                 }
 
-                if(dataSetModel.getName() != null){
+                if(dataSetModel.getName() != null && !"".equals(dataSetModel.getName())){
                     IDataSet resultingDataSet = loadDataSet(dataSetModel.getName());
 
                     resultingDataSet = performSequenceFiltering(dataSetModel, resultingDataSet);
