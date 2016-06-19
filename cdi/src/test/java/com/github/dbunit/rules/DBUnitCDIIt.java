@@ -2,6 +2,7 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
@@ -29,40 +30,40 @@ public class DBUnitCDIIt {
 
     @Test
     @UsingDataSet(value = "",cleanBefore = true)
-    public void shouldNotSeedDBWhenUsingEmptyDataSet() {
+    public void shouldSeedDBWhenUsingEmptyDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test
+    @Test(expected = DataBaseSeedingException.class)
     @UsingDataSet(value="ymlzzz/users.yml",cleanBefore = true)
     public void shouldFailToSeedInexistentYMLDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test
+    @Test(expected = DataBaseSeedingException.class)
     @UsingDataSet(value = "jsonzzz/users.json",cleanBefore = true)
     public void shouldFailToSeedInexistentJSONDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test
+    @Test(expected = DataBaseSeedingException.class)
     @UsingDataSet(value="zzz/users.xml",cleanBefore = true)
     public void shouldFailToSeedInexistentXMLDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test
+    @Test(expected = DataBaseSeedingException.class)
     @UsingDataSet(value="users",cleanBefore = true)
     public void shouldFailToSeedDataSetWithoutExtension() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
-    @Test
+    @Test(expected = DataBaseSeedingException.class)
     @UsingDataSet(value = "users.doc",cleanBefore = true)
     public void shouldNotFailToSeedUnknownDataSetFormat() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
