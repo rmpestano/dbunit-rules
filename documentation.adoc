@@ -10,7 +10,7 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
-:revnumber: 0.8.0
+:revnumber: 0.7.1-SNAPSHOT
 :hardbreaks:
 
 = *Living Documentation*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|03s 990ms
+|03s 811ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|002ms
+|001ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,24 +88,24 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|005ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
-|3
-|1
 |4
-|12
-|1
+|0
+|4
+|13
+|0
 |0
 |0
 |0
 |0
 |13
-|02s 365ms
-|[red]#*failed*#
+|068ms
+|[green]#*passed*#
 12+^|*Totals*
-|8|1|9|32|1|0|0|0|0|33 2+|06s 365ms
+|9|0|9|33|0|0|0|0|0|33 2+|03s 885ms
 |===
 
 == *Features*
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 990ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 811ms)#
 ******
 
 [discrete]
@@ -425,7 +425,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -537,7 +537,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 [discrete]
@@ -567,7 +567,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(005ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
@@ -606,7 +606,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(009ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
@@ -664,7 +664,7 @@ Test must pass because database state is as in expected dataset. icon:thumbs-up[
 =====
 ****
 
-==== Scenario: Failling database assertion icon:thumbs-down[role="red",title="Failed"]
+==== Scenario: Failling database assertion
 
 ****
 Given ::
@@ -699,21 +699,14 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail showing what it was expecting as database state. icon:thumbs-down[role="red",title="Failed"] [small right]#(02s 347ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(063ms)#
 ******
 
 [discrete]
-NOTE: This step is purposely failing to show the error message below.
+IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name) expected:<[]expected user1> but was:<[non ]expected user1>  at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39) at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97) at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223) at ...
 
 
 ******
-
-IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name) expected:<[]expected user1> but was:<[non ]expected user1>
-	at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39)
-	at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97)
-	at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223)
-	at ...
-
 
 =====
 ****
