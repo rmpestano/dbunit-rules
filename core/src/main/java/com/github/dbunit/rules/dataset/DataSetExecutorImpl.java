@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.dbunit.rules.api.dataset.*;
 import com.github.dbunit.rules.assertion.DataSetAssertion;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.replacer.ScriptReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
@@ -81,14 +82,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
 
     @Override
-    public IDataSet createDataSet(DataSetModel dataSetModel) {
+    public void createDataSet(DataSetModel dataSetModel) {
 
-        if (dataSetModel != null && dataSetModel.getName() != null) {
-            if (!dataSetModel.getName().contains(".")) {
-                log.error("Dataset " + dataSetModel.getName() + "does not have extension");
-            }
-            DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
-
+        if (dataSetModel != null) {
             try {
                 initDatabaseConnection();
                 if (dataSetModel.isDisableConstraints()) {
@@ -112,24 +108,26 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     }
                 }
 
-                IDataSet resultingDataSet = loadDataSet(dataSetModel.getName());
+                if(dataSetModel.getName() != null){
+                    IDataSet resultingDataSet = loadDataSet(dataSetModel.getName());
 
-                resultingDataSet = performSequenceFiltering(dataSetModel, resultingDataSet);
+                    resultingDataSet = performSequenceFiltering(dataSetModel, resultingDataSet);
 
-                resultingDataSet = performTableOrdering(dataSetModel, resultingDataSet);
+                    resultingDataSet = performTableOrdering(dataSetModel, resultingDataSet);
 
-                resultingDataSet = performReplacements(resultingDataSet);
+                    resultingDataSet = performReplacements(resultingDataSet);
 
-                operation.execute(databaseConnection, resultingDataSet);
+                    DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
+
+                    operation.execute(databaseConnection, resultingDataSet);
+                }
 
             } catch (Exception e) {
-                log.error("Could not initialize dataset:" + e.getMessage(), e);
+                throw new DataBaseSeedingException("Could not initialize dataset: "+dataSetModel, e);
             }
 
 
         }
-        //no dataset created
-        return null;
     }
 
     /**
@@ -319,7 +317,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             connection.createStatement().execute("TRUNCATE SCHEMA public AND COMMIT;");
         } else {
 
-            if (dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
+            if (dataset != null && dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
                 for (String table : dataset.getTableOrdering()) {
                     connection.createStatement().executeUpdate("DELETE FROM " + table + " where 1=1");
                     connection.commit();

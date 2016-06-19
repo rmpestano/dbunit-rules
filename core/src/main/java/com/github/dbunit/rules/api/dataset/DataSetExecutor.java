@@ -16,10 +16,8 @@ public interface DataSetExecutor{
     /**
      * creates a dataset into executor's database connection using given dataSetModel
      * @param dataSetModel
-     *
-     * @return created IDataSet or null if none is created
      */
-    IDataSet createDataSet(DataSetModel dataSetModel);
+    void createDataSet(DataSetModel dataSetModel);
 
     IDataSet loadDataSet(String name) throws DataSetException, IOException;
 

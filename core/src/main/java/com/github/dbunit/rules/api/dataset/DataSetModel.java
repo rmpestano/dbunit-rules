@@ -163,4 +163,9 @@ public class DataSetModel {
     public boolean isCleanAfter() {
         return cleanAfter;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

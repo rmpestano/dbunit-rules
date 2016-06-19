@@ -138,7 +138,7 @@ public class EntityManagerProvider implements TestRule {
      */
     public static EntityManagerProvider clear(String puName){
         em(puName).clear();
-        return instance;
+        return providers.get(puName);
     }
 
     /**

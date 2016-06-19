@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -81,9 +82,11 @@ public class MultipleExecutorsIt {
             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
                 useSequenceFiltering(false).
                 executeStatementsAfter(new String[] { "DELETE FROM User" });//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-            executor.createDataSet(dataSetModel);
-            List<User> users =  EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u").getResultList();
-            assertThat(users).isEmpty();
+            try{
+                executor.createDataSet(dataSetModel);
+            }catch (DataBaseSeedingException e){
+                assertThat(e.getMessage()).isEqualTo("Could not initialize dataset: datasets/yml/users.yml");
+            }
         }
 
     }

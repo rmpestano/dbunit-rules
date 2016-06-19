@@ -14,7 +14,7 @@ public class ScriptReplacer {
 
     private static ScriptReplacer instance;
 
-    private Pattern scriptEnginePattern = Pattern.compile(".*\\D.*:.+");//any non digit char followed by ':' followed by 1 or more chars (eg: js: new Date().toString()
+    private Pattern scriptEnginePattern = Pattern.compile("^[a-zA-Z]+:.+");//any non digit char followed by ':' followed by 1 or more chars (eg: js: new Date().toString()
 
     private static Logger log = Logger.getLogger(ScriptReplacer.class.getName());
 

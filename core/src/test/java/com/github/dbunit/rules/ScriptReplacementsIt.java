@@ -20,10 +20,10 @@ public class ScriptReplacementsIt {
     Calendar now;
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.connection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("rules-it",emProvider.connection());
 
     @Before
     public void setup(){
@@ -31,7 +31,7 @@ public class ScriptReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/js-with-date-replacements.yml",cleanBefore = true ,disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/js-with-date-replacements.yml",cleanBefore = true ,disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateUsingJavaScriptInDataset() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -41,7 +41,7 @@ public class ScriptReplacementsIt {
 
 // tag::javascript-likes[]
     @Test
-    @DataSet(value = "datasets/yml/js-with-calc-replacements.yml",cleanBefore = true ,disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/js-with-calc-replacements.yml",cleanBefore = true ,disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceLikesUsingJavaScriptInDataset() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -52,7 +52,7 @@ public class ScriptReplacementsIt {
 
 // tag::groovy[]
     @Test
-    @DataSet(value = "datasets/yml/groovy-with-date-replacements.yml",cleanBefore = true, disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/groovy-with-date-replacements.yml",cleanBefore = true, disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateUsingGroovyInDataset() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
         assertThat(tweet).isNotNull();

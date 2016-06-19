@@ -25,14 +25,14 @@ import static org.assertj.core.api.Assertions.fail;
 public class ScriptsIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.connection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("rules-it",emProvider.connection());
 
     @BeforeClass
     public static void before() {
-        EntityManagerProvider.newInstance("scripts-it");
+        EntityManagerProvider provider = EntityManagerProvider.instance("rules-it");
         tx().begin();
         em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
         em().flush();
@@ -42,7 +42,7 @@ public class ScriptsIt {
     }
 
     @Test
-    @DataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"}, executorId = "scripts-it",
+    @DataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"}, executorId = "rules-it",
             executeScriptsAfter = "after.sql", strategy = SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
     public void shouldExecuteScriptsBefore() {
         User userFromSqlScript = new User(10);
@@ -54,7 +54,7 @@ public class ScriptsIt {
     }
 
     private List<User> listUsers(String sql) {
-        return EntityManagerProvider.newInstance("scripts-it").em().createQuery(sql).getResultList();
+        return EntityManagerProvider.newInstance("rules-it").em().createQuery(sql).getResultList();
     }
 
     @AfterClass

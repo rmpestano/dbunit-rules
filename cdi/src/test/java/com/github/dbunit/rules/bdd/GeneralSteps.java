@@ -3,6 +3,7 @@ package com.github.dbunit.rules.bdd;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.model.User;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
@@ -36,7 +37,7 @@ public class GeneralSteps {
         // Express the Regexp above with the code you wish you had
     }
 
-    @Then("^Test must fail showing what it was expecting as database state.$")
+    /*@Then("^Test must fail with following error:$")
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     @UsingDataSet//needed to activate dbunit cdi interceptor
     public void Test_must_fail_showing_what_it_was_expecting_as_database_state(String docstring) throws Throwable {
@@ -48,5 +49,10 @@ public class GeneralSteps {
         em.persist(u);
         em.persist(u2);
         em.getTransaction().commit();
+    }*/
+
+    @Then("^Test must fail with following error:$")
+    public void Test_must_fail_with_following_error(String docstring) throws Throwable {
+        assertNotNull(docstring);
     }
 }

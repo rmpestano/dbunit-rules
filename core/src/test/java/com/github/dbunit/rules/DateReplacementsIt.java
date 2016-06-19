@@ -19,10 +19,10 @@ public class DateReplacementsIt {
     Calendar now;
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("scripts-it");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance("scripts-it",emProvider.connection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("rules-it",emProvider.connection());
 
     @Before
     public void setup(){
@@ -30,7 +30,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithNowPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '1'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -39,7 +39,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithYesterdayPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '2'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -49,7 +49,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithTomorrowPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '3'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -59,7 +59,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithYearAfterPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '4'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -69,7 +69,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithYearBeforePlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '5'").getSingleResult();
         assertThat(tweet).isNotNull();
@@ -79,7 +79,7 @@ public class DateReplacementsIt {
     }
 
     @Test
-    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "scripts-it")
+    @DataSet(value = "datasets/yml/date-replacements.yml",disableConstraints = true, executorId = "rules-it")
     public void shouldReplaceDateWithHourPlaceHolder() {
         Tweet tweet = (Tweet) emProvider.em().createQuery("select t from Tweet t where t.id = '6'").getSingleResult();
         assertThat(tweet).isNotNull();

@@ -59,16 +59,6 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(value = "datasets/yml/users.yml",
             useSequenceFiltering = false,
-            executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-    )
-    public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        List<User> users =  em().createQuery("select u from User u join fetch u.tweets join fetch u.followers").getResultList();
-        assertThat(users).isEmpty();
-    }
-
-    @Test
-    @DataSet(value = "datasets/yml/users.yml",
-            useSequenceFiltering = false,
             tableOrdering = {"USER","TWEET","FOLLOWER"},
             executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}//needed because other tests created user dataset
     )
@@ -136,7 +126,7 @@ public class DBUnitRulesIt {
     @Test
     @DataSet(strategy = SeedStrategy.INSERT, value = "yml/user.yml, yml/tweet.yml, yml/follower.yml",  executeStatementsBefore = {"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"})
     public void shouldLoadDataFromMultipleDataSets(){
-        User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em("rules-it").createQuery("select u from User u join fetch u.tweets join fetch u.followers left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);

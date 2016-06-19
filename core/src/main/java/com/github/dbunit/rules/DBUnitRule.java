@@ -5,19 +5,20 @@ import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.assertion.DataSetAssert;
-import com.github.dbunit.rules.assertion.DataSetAssertion;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.IDataSet;
+import org.junit.Assert;
+import org.junit.internal.runners.statements.ExpectException;
+import org.junit.internal.runners.statements.Fail;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -65,25 +66,22 @@ public class DBUnitRule implements MethodRule {
       final String datasetExecutorId = model.getExecutorId();
       boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
       if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
-        return new Statement() {
-          @Override
-          public void evaluate() throws Throwable {
-            //intentional cause we can have multiple @Rule so multiple executors on top of same dataset
-            LoggerFactory.getLogger(getClass().getName()).warn("Dataset executor: '" + datasetExecutorId + "' for method " + currentMethod + "() - does not match current executor id -> '" + executor.getId());
-          }
-        };
+        //we can have multiple @Rule so multiple executors on top of same dataset
+        return statement;
       } else if (executorNameIsProvided) {
         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
       }
-
-      final IDataSet actual = executor.createDataSet(model);
-
+      try {
+        executor.createDataSet(model);
+      }catch (final Exception e){
+        return new Fail(e);
+      }
       return new Statement() {
 
         @Override
         public void evaluate() throws Throwable {
           try {
-            Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
+            //Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
             statement.evaluate();
             performDataSetComparison(frameworkMethod);
           } finally {
@@ -146,6 +144,10 @@ public class DBUnitRule implements MethodRule {
     }
     executor = instance;
 
+  }
+
+  public DataSetExecutor getDataSetExecutor(){
+      return executor;
   }
 
 

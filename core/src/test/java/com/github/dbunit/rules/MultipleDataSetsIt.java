@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Rule;
@@ -26,13 +27,13 @@ import com.github.dbunit.rules.model.User;
 public class MultipleDataSetsIt {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("dataset-pu");
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("executor1-pu");
 
     @Rule
-    public EntityManagerProvider emProvider1 = EntityManagerProvider.instance("dataset1-pu");
+    public EntityManagerProvider emProvider1 = EntityManagerProvider.instance("executor2-pu");
 
     @Rule
-    public EntityManagerProvider emProvider2 = EntityManagerProvider.instance("dataset2-pu");
+    public EntityManagerProvider emProvider2 = EntityManagerProvider.instance("executor3-pu");
 
     @Rule
     public DBUnitRule exec1Rule = DBUnitRule.instance("exec1",emProvider1.connection());
@@ -71,42 +72,6 @@ public class MultipleDataSetsIt {
         User user = (User) emProvider2.em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
-    }
-
-
-
-
-    @Test
-    @DataSet(value = "datasets/yml/users.yml",
-            useSequenceFiltering = false,
-            executorId = "exec1",
-            executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-    )
-    public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        List<User> users =  emProvider1.em().createQuery("select u from User u").getResultList();
-        assertThat(users).isEmpty();
-    }
-
-
-    @Test
-    @DataSet(value = "datasets/yml/users.yml",
-        useSequenceFiltering = false,
-        executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-    )
-    public void shouldNotSeedDataSetWithoutSequenceFilterUsingDefaultExecutor() {
-        List<User> users =  emProvider.em().createQuery("select u from User u").getResultList();
-        assertThat(users).isEmpty();
-    }
-
-    @Test
-    @DataSet(value = "datasets/yml/users.yml",
-        useSequenceFiltering = false,
-        executorId = "exec2",
-        executeStatementsBefore = "DELETE FROM User"//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
-    )
-    public void shouldNotSeedDataSetWithoutSequenceFilter2() {
-        List<User> users =  emProvider2.em().createQuery("select u from User u").getResultList();
-        assertThat(users).isEmpty();
     }
 
     @Test

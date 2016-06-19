@@ -4,11 +4,14 @@ import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import java.sql.SQLException;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
@@ -33,14 +36,15 @@ public class ExpectedDataSetIt {
     @Test
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     public void shouldMatchExpectedDataSet() {
+        EntityManagerProvider instance = EntityManagerProvider.newInstance("rules-it");
         User u = new User();
         u.setName("expected user1");
         User u2 = new User();
         u2.setName("expected user2");
-        tx().begin();
-        em().persist(u);
-        em().persist(u2);
-        tx().commit();
+        instance.tx().begin();
+        instance.em().persist(u);
+        instance.em().persist(u2);
+        instance.tx().commit();
     }
     // end::expected[]
 
@@ -64,6 +68,7 @@ public class ExpectedDataSetIt {
     @Test
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldMatchExpectedDataSetUsingRegex() {
+        EntityManagerProvider.newInstance("rules-it");
         User u = new User();
         u.setName("expected user1");
         User u2 = new User();
@@ -77,7 +82,7 @@ public class ExpectedDataSetIt {
 
     // tag::expectedWithSeeding[]
     @Test
-    @DataSet(value = "yml/user.yml", disableConstraints = true,cleanAfter = true)
+    @DataSet(value = "yml/user.yml", disableConstraints = true, cleanAfter = true)
     @ExpectedDataSet(value = "yml/expectedUser.yml", ignoreCols = "id")
     public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
         tx().begin();
