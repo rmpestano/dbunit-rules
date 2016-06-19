@@ -27,6 +27,7 @@ include::../../../core/src/test/resources/datasets/yml/expectedUsers.yml[]
 ----
 include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.java[tags=expectedDeclaration;expected]
 ----
+<1> Clear database before to avoid conflict with other tests.
 """
     Then Test must pass because database state is as in expected dataset.
 

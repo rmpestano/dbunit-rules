@@ -34,6 +34,7 @@ public class ExpectedDataSetIt {
 
     // tag::expected[]
     @Test
+    @DataSet(cleanBefore = true)//<1>
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     public void shouldMatchExpectedDataSet() {
         EntityManagerProvider instance = EntityManagerProvider.newInstance("rules-it");
@@ -47,6 +48,21 @@ public class ExpectedDataSetIt {
         instance.tx().commit();
     }
     // end::expected[]
+
+    @Test
+    @DataSet(cleanBefore = true)
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
+    public void shouldMatchExpectedDataSetClearingDataBaseBefore() {
+        EntityManagerProvider instance = EntityManagerProvider.newInstance("rules-it");
+        User u = new User();
+        u.setName("expected user1");
+        User u2 = new User();
+        u2.setName("expected user2");
+        instance.tx().begin();
+        instance.em().persist(u);
+        instance.em().persist(u2);
+        instance.tx().commit();
+    }
 
     @Ignore(value = "How to test failled comparisons?")
     // tag::faillingExpected[]
@@ -66,6 +82,7 @@ public class ExpectedDataSetIt {
 
     // tag::expectedRegex[]
     @Test
+    @DataSet(cleanBefore = true)
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldMatchExpectedDataSetUsingRegex() {
         EntityManagerProvider.newInstance("rules-it");
@@ -82,7 +99,7 @@ public class ExpectedDataSetIt {
 
     // tag::expectedWithSeeding[]
     @Test
-    @DataSet(value = "yml/user.yml", disableConstraints = true, cleanAfter = true)
+    @DataSet(value = "yml/user.yml", disableConstraints = true)
     @ExpectedDataSet(value = "yml/expectedUser.yml", ignoreCols = "id")
     public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
         tx().begin();

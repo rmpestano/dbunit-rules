@@ -16,7 +16,7 @@ public @interface DataSet {
   /**
    * @return dataset file name using resources folder as root directory
    */
-  String value();
+  String value() default "";
 
   /**
    *
