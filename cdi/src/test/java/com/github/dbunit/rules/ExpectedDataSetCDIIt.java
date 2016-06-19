@@ -24,7 +24,7 @@ public class ExpectedDataSetCDIIt {
 
     // tag::expectedCDI[]
     @Test
-    @UsingDataSet(cleanBefore = true) //needed to activate interceptor (can be at class level)
+    @UsingDataSet //needed to activate interceptor (can be at class level)
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     public void shouldMatchExpectedDataSet() {
         User u = new User();

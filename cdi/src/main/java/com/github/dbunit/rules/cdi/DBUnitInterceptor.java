@@ -26,7 +26,7 @@ public class DBUnitInterceptor implements Serializable {
 
         Object proceed = null;
         UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
-        if (usingDataSet != null ) {
+        if (usingDataSet != null) {
             DataSetModel dataSetModel = new DataSetModel(usingDataSet.value()).
                     cleanAfter(usingDataSet.cleanAfter()).
                     cleanBefore(usingDataSet.cleanBefore()).
