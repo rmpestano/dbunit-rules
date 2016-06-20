@@ -145,10 +145,9 @@ NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/co
 
 == Documentation
 
-Living documentation of this project is based on its https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules/bdd[BDD tests^], access it here: http://rmpestano.github.io/dbunit-rules/documentation.html.
-
 A getting started guide can be found here http://rmpestano.github.io/dbunit-rules-sample/dbunit-rules.html.
 
+For main features overview see project living documentation: http://rmpestano.github.io/dbunit-rules/documentation.html.
 
 
 == Core module
@@ -163,7 +162,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.7.0</version>
+      <version>0.8.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -548,7 +547,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -605,7 +604,7 @@ NOTE: If you don't use CDI just use cucumber 'official' runner and you should be
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <scope>test</scope>
 </dependency>
 ----
