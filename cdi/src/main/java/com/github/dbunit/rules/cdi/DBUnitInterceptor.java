@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.persistence.EntityManager;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,9 @@ public class DBUnitInterceptor implements Serializable {
 
     @Inject
     DataSetProcessor dataSetProcessor;
+
+    @Inject
+    private EntityManager em;
 
     @AroundInvoke
     public Object intercept(InvocationContext invocationContext)
@@ -36,10 +40,25 @@ public class DBUnitInterceptor implements Serializable {
                     executeStatementsAfter(usingDataSet.executeCommandsAfter()).
                     executeStatementsBefore(usingDataSet.executeCommandsBefore()).
                     seedStrategy(usingDataSet.seedStrategy()).
+                    transactional(usingDataSet.transactional()).
                     tableOrdering(usingDataSet.tableOrdering()).
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
             dataSetProcessor.process(dataSetModel);
-            proceed = invocationContext.proceed();
+            boolean isTransactionalTest = dataSetModel.isTransactional();
+            if(isTransactionalTest){
+                em.getTransaction().begin();
+            }
+            try {
+                proceed = invocationContext.proceed();
+                if(isTransactionalTest){
+                    em.getTransaction().commit();
+                }
+            }catch (Exception e){
+                if(isTransactionalTest){
+                    em.getTransaction().rollback();
+                }
+                throw e;
+            }
             ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
             if(expectedDataSet != null){
                 dataSetProcessor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());

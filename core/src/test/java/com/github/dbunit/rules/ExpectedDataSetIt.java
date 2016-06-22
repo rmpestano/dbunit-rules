@@ -85,7 +85,6 @@ public class ExpectedDataSetIt {
     @DataSet(cleanBefore = true)
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldMatchExpectedDataSetUsingRegex() {
-        EntityManagerProvider.newInstance("rules-it");
         User u = new User();
         u.setName("expected user1");
         User u2 = new User();

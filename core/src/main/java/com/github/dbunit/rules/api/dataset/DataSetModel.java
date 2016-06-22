@@ -14,6 +14,7 @@ public class DataSetModel {
     private boolean disableConstraints = false;
     private boolean cleanBefore = false;
     private boolean cleanAfter = false;
+    private boolean transactional = false;
     private String[] tableOrdering = {};
     private String[] executeStatementsBefore = {};
     private String[] executeStatementsAfter = {};
@@ -94,6 +95,11 @@ public class DataSetModel {
         return this;
     }
 
+    public DataSetModel transactional(boolean transactional){
+        this.transactional = transactional;
+        return this;
+    }
+
 
     public DataSetModel from(DataSet dataSet) {
         if(dataSet != null){
@@ -106,6 +112,7 @@ public class DataSetModel {
                     executeScripsBefore(dataSet.executeScriptsBefore()).
                     cleanBefore(dataSet.cleanBefore()).
                     cleanAfter(dataSet.cleanAfter()).
+                    transactional(dataSet.transactional()).
                     executeStatementsAfter(dataSet.executeStatementsAfter()).
                     executeScriptsAfter(dataSet.executeScriptsAfter());
         } else{
@@ -130,6 +137,10 @@ public class DataSetModel {
 
     public boolean isDisableConstraints() {
         return disableConstraints;
+    }
+
+    public boolean isTransactional() {
+       return transactional;
     }
 
     public String[] getTableOrdering() {

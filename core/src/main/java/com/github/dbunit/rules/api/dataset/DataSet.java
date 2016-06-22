@@ -76,4 +76,10 @@ public @interface DataSet {
    */
   boolean cleanAfter() default false;
 
+  /**
+   *
+   * @return if true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive().
+   *
+   */
+  boolean transactional() default false;
 }

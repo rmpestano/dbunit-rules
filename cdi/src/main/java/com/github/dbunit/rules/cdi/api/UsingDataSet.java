@@ -81,6 +81,13 @@ public @interface UsingDataSet {
   @Nonbinding
   String[] executeScriptsAfter() default {};
 
+  /**
+   *
+   * @return if true a transaction will be started before test and committed after test execution.
+   *
+   */
+  @Nonbinding
+  boolean transactional() default false;
 
 
 

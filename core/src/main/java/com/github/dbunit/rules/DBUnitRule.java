@@ -8,6 +8,7 @@ import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.exception.DataBaseSeedingException;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.IDataSet;
 import org.junit.Assert;
@@ -20,6 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.util.logging.Logger;
+
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
 
 /**
  * Created by rafael-pestano on 22/07/2015.
@@ -80,10 +84,22 @@ public class DBUnitRule implements MethodRule {
 
         @Override
         public void evaluate() throws Throwable {
+          boolean isTransactional = false;
           try {
-            //Logger.getLogger(getClass().getSimpleName()).info("Evaluate - "+currentMethod+" - Executor:"+executor);
+            isTransactional = model.isTransactional() && isEntityManagerActive();
+            if (isTransactional) {
+              em().getTransaction().begin();
+            }
             statement.evaluate();
+            if (isTransactional) {
+              em().getTransaction().commit();
+            }
             performDataSetComparison(frameworkMethod);
+          }catch (Exception e){
+            if(isTransactional){
+              em().getTransaction().rollback();
+              throw e;
+            }
           } finally {
 
             if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {

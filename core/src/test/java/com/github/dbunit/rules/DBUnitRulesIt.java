@@ -46,11 +46,21 @@ public class DBUnitRulesIt {
     }
 
     @Test
+    @DataSet(value = "datasets/yml/user.yml")
+    public void shouldSeedDatabase() {
+        List<User> users = em().createQuery("select u from User u ").getResultList();
+        assertThat(users).
+                isNotNull().
+                isNotEmpty().
+                hasSize(2);
+    }
+
+    @Test
     @DataSet(value = "datasets/yml/users.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;")
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
         User user = (User) em().createQuery("select u from User u join fetch u.tweets join fetch u.followers join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
-        assertThat(user.getId()).isEqualTo(1); 
+        assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
     }
 

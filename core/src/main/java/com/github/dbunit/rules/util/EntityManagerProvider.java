@@ -194,4 +194,7 @@ public class EntityManagerProvider implements TestRule {
             throw new IllegalStateException("Call instance('PU_NAME') before calling em()");
         }
     }
+    public static boolean isEntityManagerActive(){
+        return instance != null && em().isOpen();
+    }
 }
