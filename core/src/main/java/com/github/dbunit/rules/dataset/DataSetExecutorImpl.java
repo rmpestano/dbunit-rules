@@ -370,18 +370,18 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             URL resource = getClass().getResource(scriptPath.trim());
             String absolutePath = "";
             if (resource != null) {
-                absolutePath = resource.getPath();
+                absolutePath = resource.getFile();
             } else {
                 resource = getClass().getResource("/scripts" + scriptPath.trim());
                 if (resource != null) {
-                    absolutePath = resource.getPath();
+                    absolutePath = resource.getFile();
                 }
             }
             if (resource == null) {
-                log.error(String.format("Could not find script %s in classpath", scriptPath));
+                throw new RuntimeException(String.format("Could not find script %s in classpath", scriptPath));
             }
 
-            File scriptFile = new File(Paths.get(absolutePath).toUri());
+            File scriptFile = new File(absolutePath);
 
             String[] scriptsStatements = readScriptStatements(scriptFile);
             if (scriptsStatements != null && scriptsStatements.length > 0) {
