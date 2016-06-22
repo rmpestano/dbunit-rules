@@ -143,10 +143,50 @@ public class UserIt {
 
 NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
 
+== Documentation
+
+A getting started guide can be found here http://rmpestano.github.io/dbunit-rules-sample/dbunit-rules.html.
+
+For main features overview see project living documentation: http://rmpestano.github.io/dbunit-rules/documentation.html.
+
 
 == Core module
 
 This module is the basis for subsequent modules. It contains a JUnit rule (shown above) to configure its main component, the *DataSet executor*.
+
+=== Adding DBUnit Rules core to your project
+
+
+[source, xml]
+----
+<dependency>
+      <groupId>com.github.dbunit-rules</groupId>
+      <artifactId>core</artifactId>
+      <version>0.8.0</version>
+      <scope>test</scope>
+</dependency>
+----
+
+[NOTE]
+====
+It will bring the following (transitive) dependencies to your project:
+
+[source,xml]
+----
+<dependency>
+      <groupId>org.dbunit</groupId>
+      <artifactId>dbunit</artifactId>
+</dependency>
+<dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+</dependency>
+<dependency>
+      <groupId>org.codehaus.jackson</groupId>
+      <artifactId>jackson-mapper-lgpl</artifactId>
+</dependency>
+----
+====
 
 === DataSet executor
 A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in textual files like csv, xml, yaml, json, https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[see examples here^].
@@ -494,39 +534,7 @@ NOTE: A hibernate entity manager config sample can be https://github.com/rmpesta
 
 TIP: EntityManager provider utility also can be used in other contexts like a CDI producer, https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/EntityManagerProducer.java#L21[see here].
 
-=== Adding DBUnit Rules core to your project
 
-
-[source, xml]
-----
-<dependency>
-      <groupId>com.github.dbunit-rules</groupId>
-      <artifactId>core</artifactId>
-      <version>0.7.0</version>
-      <scope>test</scope>
-</dependency>
-----
-
-[NOTE]
-====
-It will bring the following (transitive) dependencies to your project:
-
-[source,xml]
-----
-<dependency>
-      <groupId>org.dbunit</groupId>
-      <artifactId>dbunit</artifactId>
-</dependency>
-<dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-</dependency>
-<dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-lgpl</artifactId>
-</dependency>
-----
-====
 
 
 
@@ -539,7 +547,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -596,7 +604,7 @@ NOTE: If you don't use CDI just use cucumber 'official' runner and you should be
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -714,10 +722,6 @@ public class ContactSteps {
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
 <2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
-
-== Documentation
-
-Documentation of this projects is based on its https://github.com/rmpestano/dbunit-rules/tree/master/cdi/src/test/java/com/github/dbunit/rules/bdd[BDD tests^], access it here: http://rmpestano.github.io/dbunit-rules/documentation.html.
 
 
 == Snapshots
