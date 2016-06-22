@@ -19,7 +19,6 @@
         <module>examples</module>
         <module>cdi</module>
         <module>cucumber</module>
-        <module>../dbunit-rules-sample</module>
     </modules>
 
     <name>dbunit-rules</name>
