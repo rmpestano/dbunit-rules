@@ -27,6 +27,7 @@ public class CleanBeforeAfterIt {
     public static void before(){
         EntityManager em = EntityManagerProvider.instance("rules-it").em();
         em.getTransaction().begin();
+        em.createNativeQuery("DELETE FROM USER").executeUpdate();
         em.createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
         em.flush();
         em.getTransaction().commit();
