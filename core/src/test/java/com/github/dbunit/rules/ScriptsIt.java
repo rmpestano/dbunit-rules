@@ -34,6 +34,7 @@ public class ScriptsIt {
     public static void before() {
         EntityManagerProvider provider = EntityManagerProvider.instance("rules-it");
         tx().begin();
+        em().createNativeQuery("DELETE FROM USER").executeUpdate();
         em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
         em().flush();
         tx().commit();
