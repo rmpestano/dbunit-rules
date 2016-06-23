@@ -38,10 +38,10 @@ public class DBUnitCrudCDIIt {
 		User user = new User();
 		user.setName("user");
 		user.setName("@rmpestano");
-		//em.getTransaction().begin();
+		em.getTransaction().begin();
 		em.persist(user);
-		//em.getTransaction().commit(); //no needed because of first level cache 
-		User insertedUser = getUser(1);
+		em.getTransaction().commit(); 
+		User insertedUser = (User)em.createQuery("select u from User u where u.name = '@rmpestano'").getSingleResult();
 		assertThat(insertedUser).isNotNull();
 		assertThat(insertedUser.getId()).isNotNull();
 	}

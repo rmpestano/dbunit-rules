@@ -37,10 +37,10 @@ public class DBUnitRulesCrudIt {
 		User user = new User();
 		user.setName("user");
 		user.setName("@rmpestano");
-		//tx().begin(); 
+		tx().begin(); 
 		em().persist(user);
-		//tx().commit(); //no needed because of first level cache 
-		User insertedUser = getUser(1);
+		tx().commit();  
+		User insertedUser = (User)em().createQuery("select u from User u where u.name = '@rmpestano'").getSingleResult();
 		assertThat(insertedUser).isNotNull();
 		assertThat(insertedUser.getId()).isNotNull();
 	}
