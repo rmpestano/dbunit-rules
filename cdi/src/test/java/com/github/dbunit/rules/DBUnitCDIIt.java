@@ -26,8 +26,6 @@ public class DBUnitCDIIt {
 
     @Inject
     EntityManager em;
-
-
     @Test
     @UsingDataSet(value = "",cleanBefore = true)
     public void shouldSeedDBWhenUsingEmptyDataSet() {
@@ -115,6 +113,8 @@ public class DBUnitCDIIt {
         assertThat(user.getId()).isEqualTo(3);
         assertThat(user.getName()).isEqualTo("user3");
     }
+
+
 
 
     //TODO replacer test

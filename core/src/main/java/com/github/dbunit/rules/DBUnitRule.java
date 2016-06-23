@@ -98,8 +98,8 @@ public class DBUnitRule implements MethodRule {
           }catch (Exception e){
             if(isTransactional){
               em().getTransaction().rollback();
-              throw e;
             }
+            throw e;
           } finally {
 
             if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {
