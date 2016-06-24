@@ -460,6 +460,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <li><a href="#_scenario_database_assertion_with_regular_expression_in_expected_dataset">3.5.2. Scenario: Database assertion with regular expression in expected dataset</a></li> 
          <li><a href="#_scenario_database_assertion_with_seeding_before_test_execution">3.5.3. Scenario: Database assertion with seeding before test execution</a></li> 
          <li><a href="#_scenario_failling_database_assertion">3.5.4. Scenario: Failling database assertion</a></li> 
+         <li><a href="#_scenario_database_assertion_using_automatic_transaction">3.5.5. Scenario: Database assertion using automatic transaction</a></li> 
         </ul> </li> 
       </ul> </li> 
     </ul> 
@@ -547,17 +548,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
       </thead> 
       <tfoot> 
        <tr> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>9</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>10</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>9</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>33</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>10</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>36</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>33</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>04s 232ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>36</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>05s 210ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -589,7 +590,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -606,7 +607,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>04s 217ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>05s 192ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -623,7 +624,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>001ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -647,17 +648,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top" colspan="12"><p class="tableblock"><code><strong><a href="#Database-assertion-using-expected-datasets">Database assertion using expected datasets</a></strong></code></p></td> 
        </tr> 
        <tr> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>13</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>16</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>13</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>007ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>16</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>006ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -706,7 +707,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(002ms)</span></p> 
+            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(003ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -904,7 +905,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(04s 217ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(05s 192ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1253,7 +1254,7 @@ public class DBUnitRulesBdd {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(002ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -2065,7 +2066,7 @@ public void shouldNotMatchExpectedDataSet() {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Test must fail with following error: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(003ms)</span></p> 
+            <p>Test must fail with following error: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(002ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -2086,6 +2087,100 @@ public void shouldNotMatchExpectedDataSet() {
         </div> 
        </div> 
       </div> 
+      <div class="sect3"> 
+       <h4 id="_scenario_database_assertion_using_automatic_transaction"><a class="anchor" href="#_scenario_database_assertion_using_automatic_transaction"></a>3.5.5. Scenario: Database assertion using automatic transaction</h4> 
+       <div class="sidebarblock"> 
+        <div class="content"> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Given 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="title">
+                expectedUsersRegex.yml 
+              </div> 
+              <div class="content"> 
+               <pre>user:
+  - id: "regex:\\d+"
+    name: regex:^expected user.* #expected user1
+  - id: "regex:\\d+"
+    name: regex:.*user2$ #expected user2</pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             When 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>The following test is executed: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+           <div class="sidebarblock"> 
+            <div class="content"> 
+             <div class="listingblock"> 
+              <div class="content"> 
+               <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@Test
+@DataSet(cleanBefore = true, transactional = true)
+@ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
+public void shouldManageTransactionAutomatically() {
+    User u = new User();
+    u.setName("expected user1");
+    User u2 = new User();
+    u2.setName("expected user2");
+    em().persist(u);
+    em().persist(u2);
+}</code></pre> 
+              </div> 
+             </div> 
+            </div> 
+           </div> 
+           <div class="admonitionblock note"> 
+            <table> 
+             <tbody> 
+              <tr> 
+               <td class="icon"> <i class="fa icon-note" title="Note"></i> </td> 
+               <td class="content"> <code>Transactional</code> attribute will make DBUnit Rules start a transaction before test and commit the transaction <strong>after</strong> test execution but <strong>before</strong> expected dataset comparison. </td> 
+              </tr> 
+             </tbody> 
+            </table> 
+           </div> 
+          </div> 
+         </div> 
+         <div class="dlist"> 
+          <dl> 
+           <dt class="hdlist1">
+             Then 
+           </dt> 
+          </dl> 
+         </div> 
+         <div class="exampleblock"> 
+          <div class="content"> 
+           <div class="paragraph"> 
+            <p>Test must pass because inserted users are commited to database and database state matches expected dataset. <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+           </div> 
+          </div> 
+         </div> 
+        </div> 
+       </div> 
+      </div> 
      </div> 
     </div> 
    </div> 
@@ -2099,8 +2194,8 @@ public void shouldNotMatchExpectedDataSet() {
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - Jun 23, 2016 11:06:24 PM 
-   <span style="float:right;font-size:11px"> Execution time: 8.855 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.2</a> - Jun 24, 2016 12:36:09 AM 
+   <span style="float:right;font-size:11px"> Execution time: 7.261 seconds</span> 
   </div> 
   <style>  
 
