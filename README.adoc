@@ -257,13 +257,12 @@ Each executor has a JDBC connection so multiple databases can be handled by usin
 public class MultipleExecutorsIt {
 
 
-    private static List<DataSetExecutorImpl> executors = new ArrayList<>(3);
+    private static List<DataSetExecutorImpl> executors = new ArrayList<>(2);
 
     @BeforeClass
     public static void setup() { <1>
         executors.add(DataSetExecutorImpl.instance("executor1", new ConnectionHolderImpl(instance("executor1-pu").getConnection())));
         executors.add(DataSetExecutorImpl.instance("executor2", new ConnectionHolderImpl(instance("executor2-pu").getConnection())));
-        executors.add(DataSetExecutorImpl.instance("executor3", new ConnectionHolderImpl(instance("executor3-pu").getConnection())));
     }
 
     @Test
@@ -326,24 +325,6 @@ here is persistence.xml for the example above:
 
     </persistence-unit>
 
-    <persistence-unit name="executor3-pu" transaction-type="RESOURCE_LOCAL">
-
-        <class>com.github.dbunit.rules.model.User</class>
-        <class>com.github.dbunit.rules.model.Tweet</class>
-        <class>com.github.dbunit.rules.model.Follower</class>
-
-        <properties>
-            <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:exec3;DB_CLOSE_DELAY=-1"/>
-            <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver"/>
-            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
-            <property name="javax.persistence.jdbc.user" value="sa"/>
-            <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="eclipselink.logging.level" value="INFO"/>
-            <property name="eclipselink.logging.level.sql" value="FINE"/>
-            <property name="eclipselink.logging.parameters" value="false"/>
-        </properties>
-
-    </persistence-unit>
 </persistence>
 ----
 
@@ -458,7 +439,25 @@ user:
 The test remains the same as above but without the need to `ignore id column`.
 ====
 
+=== Transactional Tests
 
+In case of `ExpectedDataSet` you'll usually nned a transaction to modify database in order to match expected dataset. In such case you can use a *transactional* test:
+
+[source, java, subs="quotes"]
+----
+    @Test
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id", *transactional=true*)
+    public void shouldMatchExpectedDataSet() {
+        User u = new User();
+        u.setName("non expected user1");
+        User u2 = new User();
+        u2.setName("non expected user2");
+        emProvider.em().persist(u);
+        emProvider.em().persist(u2);
+    }
+----
+
+Note that DBUnit Rules will start a transaction before test and commit the transaction *after* test execution but *before* expected dataset comparison.
 
 === EntityManagerProvider
 
