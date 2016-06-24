@@ -11,7 +11,6 @@ import org.junit.runners.JUnit4;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by rmpestano on 6/21/16.
@@ -40,6 +39,7 @@ public class TransactionIt {
         tx().commit();
     }
 
+    //tag::transaction[]
     @Test
     @DataSet(cleanBefore = true, transactional = true)
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
@@ -51,6 +51,7 @@ public class TransactionIt {
         em().persist(u);
         em().persist(u2);
     }
+    //end::transaction[]
 
 
 }

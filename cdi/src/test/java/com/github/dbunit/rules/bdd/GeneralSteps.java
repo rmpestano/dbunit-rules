@@ -1,9 +1,5 @@
 package com.github.dbunit.rules.bdd;
 
-import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
-import com.github.dbunit.rules.model.User;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 
@@ -54,5 +50,9 @@ public class GeneralSteps {
     @Then("^Test must fail with following error:$")
     public void Test_must_fail_with_following_error(String docstring) throws Throwable {
         assertNotNull(docstring);
+    }
+
+    @Then("^Test must pass because inserted users are commited to database and database state matches expected dataset.$")
+    public void Test_must_pass_because_inserted_users_are_commited_to_database_and_database_state_matches_in_expected_dataset() throws Throwable {
     }
 }

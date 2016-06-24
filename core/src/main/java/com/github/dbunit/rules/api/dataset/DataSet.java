@@ -29,7 +29,7 @@ public @interface DataSet {
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
   /**
-   * @return a boolean looks at constraints and dataset and tries to determine the correct ordering for the SQL statements
+   * @return if true dbunit will look at constraints and dataset to try to determine the correct ordering for the SQL statements
    */
   boolean useSequenceFiltering() default true;
 
@@ -78,7 +78,7 @@ public @interface DataSet {
 
   /**
    *
-   * @return if true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive().
+   * @return if true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive() must be true.
    *
    */
   boolean transactional() default false;

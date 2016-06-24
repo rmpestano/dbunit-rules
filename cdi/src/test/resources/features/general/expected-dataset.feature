@@ -106,3 +106,25 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 """
 IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name) expected:<[]expected user1> but was:<[non ]expected user1>  at org.dbunit.assertion.JUnitFailureFactory.createFailure(JUnitFailureFactory.java:39) at org.dbunit.assertion.DefaultFailureHandler.createFailure(DefaultFailureHandler.java:97) at org.dbunit.assertion.DefaultFailureHandler.handle(DefaultFailureHandler.java:223) at ...
 """
+
+  Scenario: Database assertion using automatic transaction
+
+   #cukedoctor-discrete
+    Given The following dataset
+"""
+.expectedUsersRegex.yml
+----
+include::../../../core/src/test/resources/datasets/yml/expectedUsersRegex.yml[]
+----
+"""
+
+#cukedoctor-discrete
+    #{NOTE: `Transactional` attribute will make DBUnit Rules start a transaction before test and commit the transaction *after* test execution but *before* expected dataset comparison.}
+    When The following test is executed:
+"""
+[source,java,indent=0,linenums]
+----
+include::../../../core/src/test/java/com/github/dbunit/rules/TransactionIt.java[tags=transaction]
+----
+"""
+    Then Test must pass because inserted users are commited to database and database state matches expected dataset.
