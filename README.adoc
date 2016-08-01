@@ -724,7 +724,7 @@ public class ContactSteps {
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
 <2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
 
-=== Programmatically creating DataSets
+== Programmatically creating DataSets
 
 You can create datasets without JUnit Rule or CDI as we saw above, here is a pure cucumber example (for the same feature above):
 
