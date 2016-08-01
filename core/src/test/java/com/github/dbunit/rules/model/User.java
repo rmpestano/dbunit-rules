@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,17 @@ public class User {
 
     public User(long id) {
         this.id = id;
+    }
+
+    public User(long id, String name, String tweetId, String tweetContent, Integer tweetLikes) {
+        this.id = id;
+        this.name = name;
+        this.tweets = new ArrayList<>();
+        Tweet tweet = new Tweet();
+        tweet.setId(tweetId);
+        tweet.setContent(tweetContent);
+        tweet.setLikes(tweetLikes);
+        tweets.add(tweet);
     }
 
     public String getName() {
@@ -76,6 +88,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return name != null ? name.hashCode() : (int) id;
     }
 }

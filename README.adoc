@@ -162,7 +162,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.8.0</version>
+      <version>0.9.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -476,6 +476,7 @@ public class DBUnitRulesIt {
 <1> It will retrieve the entity manager based on a test persistence.xml and store in into EntityManagerProvider which can hold multiple entity managers.
 
 NOTE: You can use @BeforeClass instead of junit rule to instantiate the provider.
+IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests.
 
 Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 
@@ -546,7 +547,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -595,7 +596,7 @@ public class DeltaspikeUsingInterceptorIt {
 
 this module brings a Cucumber runner which is CDI aware. 
 
-NOTE: If you don't use CDI just use cucumber 'official' runner and you should be ok.
+NOTE: If you don't use CDI you need to <<Programmatically creating DataSets, create datasets Programmatically>> because Cucumber `official` runner https://github.com/cucumber/cucumber-jvm/issues/393[doesn't support JUnit rules^].
 
 
 [source,xml]
@@ -603,7 +604,7 @@ NOTE: If you don't use CDI just use cucumber 'official' runner and you should be
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.8.0</version>
+    <version>0.9.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -721,6 +722,80 @@ public class ContactSteps {
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
 <2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
+
+=== Programmatically creating DataSets
+
+You can create datasets without JUnit Rule or CDI as we saw above, here is a pure cucumber example (for the same feature above):
+
+[source,java,linenums]
+----
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = {"src/test/resources/features/contacts-without-cdi.feature"},
+        plugin = {"json:target/cucumber.json"}
+        //glue = "com.github.dbunit.rules.examples.glues"
+)
+public class ContactFeatureWithoutCDI {
+}
+----
+
+And here are the step definitions:
+
+[source,java,linenums]
+----
+public class ContactStepsWithoutCDI {
+
+
+    EntityManagerProvider entityManagerProvider = EntityManagerProvider.newInstance("customerDB");
+
+    DataSetExecutor dbunitExecutor;
+
+    Long count;
+
+
+    @Before
+    public void setUp(){
+        dbunitExecutor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(entityManagerProvider.connection()));
+        em().clear();//important to clear JPA first level cache between scenarios
+    }
+
+
+    @Given("^we have a list of contacts2$")
+    public void given() {
+        dbunitExecutor.createDataSet(new DataSetModel("contacts.yml"));
+        assertEquals(em().createQuery("select count(c.id) from Contact c").getSingleResult(), new Long(3));
+    }
+
+    @When("^^we search contacts by name \"([^\"]*)\"2$")
+    public void we_search_contacts_by_name_(String name) throws Throwable {
+        Contact contact = new Contact();
+        contact.setName(name);
+        Query query =  em().createQuery("select count(c.id) from Contact c where UPPER(c.name) like :name");
+        query.setParameter("name","%"+name.toUpperCase()+"%");
+        count = (Long) query.getSingleResult();
+    }
+
+
+    @Then("^we should find (\\d+) contacts2$")
+    public void we_should_find_result_contacts(Long result) throws Throwable {
+        assertEquals(result,count);
+    }
+
+
+
+    @When("^we delete contact by id (\\d+) 2$")
+    public void we_delete_contact_by_id(long id) throws Throwable {
+        tx().begin();
+        em().remove(em().find(Contact.class,id));
+        tx().commit();
+    }
+
+    @Then("^we should not find contact (\\d+) 2$")
+    public void we_should_not_find_contacts_in_database(long id) throws Throwable {
+        assertNull(em().find(Contact.class,id));
+    }
+}
+----
 
 
 == Snapshots

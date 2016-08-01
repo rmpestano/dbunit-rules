@@ -33,7 +33,7 @@ public class ContactSteps {
         assertEquals(result,count);
     }
 
-    @Given("^we have a list of contacts")
+    @Given("^we have a list of contacts$")
     @UsingDataSet("datasets/contacts.yml") //<2>
     public void given() {
         assertEquals(contactRepository.count(), new Long(3));

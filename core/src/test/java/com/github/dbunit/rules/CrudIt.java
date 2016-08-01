@@ -88,7 +88,7 @@ public class CrudIt {
 		assertThat(users).hasSize(1);
 	}
 
-	
+
 	public User getUser(Integer id){
 		return (User) em().createQuery("select u from User u where u.id = :id").
 				setParameter("id", id).getSingleResult();

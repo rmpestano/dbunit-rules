@@ -20,6 +20,7 @@ package cucumber.runtime;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.deltaspike.core.api.provider.BeanProvider;
 
@@ -55,7 +56,18 @@ public class CucumberObjectFactory implements ObjectFactory
     {
         if (definitions.get(clazz) == null)
         {
-            definitions.put(clazz, BeanProvider.getContextualReference(clazz, false));
+            try {
+                definitions.put(clazz, BeanProvider.getContextualReference(clazz, false));
+            }catch (Exception e){
+                Logger.getLogger(CucumberObjectFactory.class.getName()).warning(String.format("Could not get reference of %s using BeanManager, message: %s. Falling back to newInstance()",clazz.getName(),e.getMessage()));
+                try {
+                    definitions.put(clazz,clazz.newInstance());
+                } catch (InstantiationException e1) {
+                    e1.printStackTrace();
+                } catch (IllegalAccessException e1) {
+                    e1.printStackTrace();
+                }
+            }
         }
         return (T) definitions.get(clazz);
     }
