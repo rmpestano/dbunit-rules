@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|002ms
+|003ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|03s 899ms
+|04s 004ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|001ms
+|003ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -102,10 +102,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|010ms
+|007ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|03s 915ms
+|10|0|10|36|0|0|0|0|0|36 2+|04s 021ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(03s 899ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 004ms)#
 ******
 
 [discrete]
@@ -353,7 +353,7 @@ include::../../../examples/src/test/resources/features/contacts.feature[]
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -425,7 +425,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 ----
@@ -537,7 +537,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -662,7 +662,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 =====
 ****
 
@@ -701,7 +701,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
