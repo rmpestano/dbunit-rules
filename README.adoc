@@ -476,6 +476,7 @@ public class DBUnitRulesIt {
 <1> It will retrieve the entity manager based on a test persistence.xml and store in into EntityManagerProvider which can hold multiple entity managers.
 
 NOTE: You can use @BeforeClass instead of junit rule to instantiate the provider.
+
 IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests.
 
 Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
