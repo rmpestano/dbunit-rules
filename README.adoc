@@ -441,7 +441,7 @@ The test remains the same as above but without the need to `ignore id column`.
 
 === Transactional Tests
 
-In case of `ExpectedDataSet` you'll usually nned a transaction to modify database in order to match expected dataset. In such case you can use a *transactional* test:
+In case of `ExpectedDataSet` you'll usually need a transaction to modify database in order to match expected dataset. In such case you can use a *transactional* test:
 
 [source, java, subs="quotes"]
 ----
@@ -477,7 +477,7 @@ public class DBUnitRulesIt {
 
 NOTE: You can use @BeforeClass instead of junit rule to instantiate the provider.
 
-IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests.
+IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests (DBUnit Rule and <<DBUnit Interceptor,CDI interceptor>> clears first level cache before each test).
 
 Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 
@@ -726,7 +726,7 @@ public class ContactSteps {
 
 == Programmatically creating datasets 
 
-You can create datasets without JUnit Rule or CDI as we saw above, here is a pure cucumber example (for the same feature above):
+You can create datasets without JUnit Rule or CDI as we saw above, here is a pure cucumber example (for the same <<Examples,feature above>>):
 
 [source,java,linenums]
 ----
