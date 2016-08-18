@@ -17,3 +17,4 @@ before_script:
 script:
 - mvn clean install jacoco:report coveralls:report -Pcoverage
 - cd cdi && mvn -U -q cukedoctor:execute scm-publish:publish-scm -Pdocs
+- mvn deploy --settings settings.xml -DskipTests=true
