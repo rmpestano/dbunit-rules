@@ -53,30 +53,30 @@ public class DBUnitRule implements TestRule {
 
     @Override
     public Statement apply(final Statement statement, final Description description) {
-        currentMethod = description.getMethodName();
-        DataSet dataSet = description.getAnnotation(DataSet.class);
-        if (dataSet == null) {
-            dataSet = description.getTestClass().getAnnotation(DataSet.class);
-        }
-        if (dataSet != null) {
-            final DataSetModel model = new DataSetModel().from(dataSet);
-            final String datasetExecutorId = model.getExecutorId();
-            boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
-            if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
-                //we can have multiple @Rule so multiple executors on top of same dataset
-                return statement;
-            } else if (executorNameIsProvided) {
-                executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
-            }
-            try {
-                executor.createDataSet(model);
-            } catch (final Exception e) {
-                return new Fail(e);
-            }
-            return new Statement() {
+        return new Statement() {
 
-                @Override
-                public void evaluate() throws Throwable {
+            @Override
+            public void evaluate() throws Throwable {
+                currentMethod = description.getMethodName();
+                DataSet dataSet = description.getAnnotation(DataSet.class);
+                if (dataSet == null) {
+                    dataSet = description.getTestClass().getAnnotation(DataSet.class);
+                }
+                if (dataSet != null) {
+                    final DataSetModel model = new DataSetModel().from(dataSet);
+                    final String datasetExecutorId = model.getExecutorId();
+                    boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
+                    if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
+                        //we can have multiple @Rule so multiple executors on top of same dataset
+                        return;
+                    } else if (executorNameIsProvided) {
+                        executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
+                    }
+                    try {
+                        executor.createDataSet(model);
+                    } catch (final Exception e) {
+                        throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
+                    }
                     boolean isTransactional = false;
                     try {
                         isTransactional = model.isTransactional() && isEntityManagerActive();
@@ -119,45 +119,40 @@ public class DBUnitRule implements TestRule {
                             executor.clearDatabase(model);
                         }
                     }
-                }
-
-            };
-        } //end if dataSet != null
-        else {
-            return new Statement() {
-                @Override
-                public void evaluate() throws Throwable {
+                } else {
                     statement.evaluate();
                     performDataSetComparison(description);
+
                 }
-            };
-        }
+
+            }
+        };
     }
 
-    private void performDataSetComparison(Description description) throws DatabaseUnitException {
-        ExpectedDataSet expectedDataSet = description.getAnnotation(ExpectedDataSet.class);
-        if (expectedDataSet == null) {
-            //try to infer from class level annotation
-            expectedDataSet = description.getTestClass().getAnnotation(ExpectedDataSet.class);
+            private void performDataSetComparison(Description description) throws DatabaseUnitException {
+                ExpectedDataSet expectedDataSet = description.getAnnotation(ExpectedDataSet.class);
+                if (expectedDataSet == null) {
+                    //try to infer from class level annotation
+                    expectedDataSet = description.getTestClass().getAnnotation(ExpectedDataSet.class);
+                }
+                if (expectedDataSet != null) {
+                    executor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
+                }
+            }
+
+            private void init(String name, ConnectionHolder connectionHolder) {
+                DataSetExecutorImpl instance = DataSetExecutorImpl.getExecutorById(name);
+                if (instance == null) {
+                    instance = DataSetExecutorImpl.instance(name, connectionHolder);
+                    DataSetExecutorImpl.getExecutors().put(name, instance);
+                }
+                executor = instance;
+
+            }
+
+            public DataSetExecutor getDataSetExecutor() {
+                return executor;
+            }
+
+
         }
-        if (expectedDataSet != null) {
-            executor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
-        }
-    }
-
-    private void init(String name, ConnectionHolder connectionHolder) {
-        DataSetExecutorImpl instance = DataSetExecutorImpl.getExecutorById(name);
-        if (instance == null) {
-            instance = DataSetExecutorImpl.instance(name, connectionHolder);
-            DataSetExecutorImpl.getExecutors().put(name, instance);
-        }
-        executor = instance;
-
-    }
-
-    public DataSetExecutor getDataSetExecutor() {
-        return executor;
-    }
-
-
-}
