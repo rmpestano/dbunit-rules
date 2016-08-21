@@ -151,12 +151,14 @@ public class JSONDataSet extends AbstractDataSet {
 		private void fillRow(DefaultTable table, Map<String, Object> row,
 				int rowIndex) {
 			try {
-				table.addRow();
-				// set the column values for the current row
-				for (Map.Entry<String, Object> column : row.entrySet()) {
-					table.setValue(rowIndex, column.getKey(), column.getValue());
-
+				if(!row.entrySet().isEmpty()){
+					table.addRow();
+					// set the column values for the current row
+					for (Map.Entry<String, Object> column : row.entrySet()) {
+						table.setValue(rowIndex, column.getKey(), column.getValue());
+					}
 				}
+
 			} catch (Exception e) {
 				throw new RuntimeException(e.getMessage(), e);
 			}

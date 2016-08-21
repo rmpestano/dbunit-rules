@@ -106,4 +106,44 @@ public class ExpectedDataSetIt {
         tx().commit();
     }
     // end::expectedWithSeeding[]
+
+    @Test
+    @DataSet(value = "yml/user.yml", disableConstraints = true)
+    @ExpectedDataSet(value = "yml/empty.yml")
+    public void shouldMatchEmptyYmlDataSet() {
+        tx().begin();
+        em().remove(em().find(User.class,1L));
+        em().remove(em().find(User.class,2L));
+        tx().commit();
+    }
+
+    @Test
+    @DataSet(value = "yml/user.yml", disableConstraints = true, transactional = true)
+    @ExpectedDataSet(value = "yml/empty.yml")
+    public void shouldMatchEmptyYmlDataSetWithTransaction() {
+        em().remove(em().find(User.class,1L));
+        em().remove(em().find(User.class,2L));
+    }
+
+
+    @Test
+    @DataSet(value = "json/user.json", disableConstraints = true)
+    @ExpectedDataSet(value = "json/empty.json")
+    public void shouldMatchEmptyJsonDataSet() {
+        tx().begin();
+        em().remove(em().find(User.class,1L));
+        em().remove(em().find(User.class,2L));
+        tx().commit();
+        em().createQuery("select u from User u").getResultList();
+    }
+
+    @Test
+    @DataSet(value = "xml/user.xml", disableConstraints = true)
+    @ExpectedDataSet(value = "xml/empty.xml")
+    public void shouldMatchEmptyXmlDataSet() {
+        tx().begin();
+        em().remove(em().find(User.class,1L));
+        em().remove(em().find(User.class,2L));
+        tx().commit();
+    }
 }

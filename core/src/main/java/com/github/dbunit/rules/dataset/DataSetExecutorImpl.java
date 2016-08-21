@@ -436,7 +436,6 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 initDatabaseConnection();
             }
             current = databaseConnection.createDataSet();
-            current.getTable("user");
             expected = loadDataSet(expectedDataSetModel.getName());
         } catch (Exception e) {
             throw new RuntimeException("Could not create dataset to compare.", e);
@@ -448,14 +447,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             throw new RuntimeException("Could extract dataset table names.", e);
         }
 
-        for (String tableName : tableNames) {
+        for (String tableName : expected.getTableNames()) {
             ITable expectedTable = null;
             ITable actualTable = null;
             try {
                 expectedTable = expected.getTable(tableName);
                 actualTable = current.getTable(tableName);
             } catch (DataSetException e) {
-                throw new RuntimeException("Could extract dataset table.", e);
+                throw new RuntimeException("DataSet comparison failed due to following exception: ", e);
             }
             ITable filteredActualTable = DefaultColumnFilter.includedColumnsTable(actualTable, expectedTable.getTableMetaData().getColumns());
             DataSetAssertion.assertEqualsIgnoreCols(expectedTable, filteredActualTable, excludeCols);

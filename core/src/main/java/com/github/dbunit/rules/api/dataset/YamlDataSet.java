@@ -21,11 +21,14 @@ public class YamlDataSet implements IDataSet {
   public YamlDataSet(InputStream source) {
     @SuppressWarnings("unchecked")
     Map<String, List<Map<String, Object>>> data = (Map<String, List<Map<String, Object>>>) new Yaml().load(source);
-    for (Map.Entry<String, List<Map<String, Object>>> ent : data.entrySet()) {
-      String tableName = ent.getKey();
-      List<Map<String, Object>> rows = ent.getValue();
-      createTable(tableName.toUpperCase(), rows);
+    if(data != null){
+      for (Map.Entry<String, List<Map<String, Object>>> ent : data.entrySet()) {
+        String tableName = ent.getKey();
+        List<Map<String, Object>> rows = ent.getValue();
+        createTable(tableName.toUpperCase(), rows);
+      }
     }
+
   }
 
   class MyTable implements ITable {
@@ -47,6 +50,8 @@ public class YamlDataSet implements IDataSet {
         columns = new Column[columnNames.size()];
         for (int i = 0; i < columnNames.size(); i++)
           columns[i] = new Column(columnNames.get(i), DataType.UNKNOWN);
+      } else{
+        columns = new Column[0];
       }
       return new DefaultTableMetaData(name, columns);
     }
@@ -80,9 +85,11 @@ public class YamlDataSet implements IDataSet {
   }
 
   MyTable createTable(String name, List<Map<String, Object>> rows) {
-    MyTable table = new MyTable(name, rows.size() > 0 ? new ArrayList<String>(rows.get(0).keySet()) : null);
-    for (Map<String, Object> values : rows)
-      table.addRow(values);
+    MyTable table = new MyTable(name, (rows != null && rows.size() > 0) ? new ArrayList<String>(rows.get(0).keySet()) : null);
+    if(rows != null){
+      for (Map<String, Object> values : rows)
+        table.addRow(values);
+    }
     tables.put(name.toUpperCase(), table);
     return table;
   }
