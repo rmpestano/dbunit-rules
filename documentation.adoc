@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|011ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|05s 804ms
+|05s 835ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|009ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -102,10 +102,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|010ms
+|021ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|05s 838ms
+|10|0|10|36|0|0|0|0|0|36 2+|05s 864ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 804ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 835ms)#
 ******
 
 [discrete]
@@ -353,7 +353,7 @@ include::../../../examples/src/test/resources/features/contacts.feature[]
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -718,7 +718,7 @@ IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(004ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(014ms)#
 ******
 
 [discrete]
