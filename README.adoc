@@ -127,6 +127,14 @@ public class UserIt {
    @Rule
    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
+  /* both rules can be chained
+   public EntityManagerProvider emProvider = EntityManagerProvider.instance("rulesDB");
+
+   @Rule
+   public TestRule theRule = RuleChain.outerRule(emProvider).
+            around(DBUnitRule.instance(emProvider.connection()));
+   */
+
    @Test
    @DataSet(value = "datasets/yml/users.yml")
    public void shouldLoadUserFollowers() {
@@ -142,6 +150,8 @@ public class UserIt {
 ----
 
 NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
+
+
 
 == Documentation
 
@@ -162,7 +172,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.9.0</version>
+      <version>0.10.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -548,7 +558,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.9.0</version>
+    <version>0.10.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -605,7 +615,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.9.0</version>
+    <version>0.10.0</version>
     <scope>test</scope>
 </dependency>
 ----

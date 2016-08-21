@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
+import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -18,11 +20,13 @@ import com.github.dbunit.rules.util.EntityManagerProvider;
 @RunWith(JUnit4.class)
 public class CrudIt {
 
-	@Rule
+
 	public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
 	@Rule
-	public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
+	public TestRule theRule = RuleChain.outerRule(emProvider).
+			around(DBUnitRule.instance(emProvider.connection()));
+
 
 	@Test
 	@DataSet("yml/users.yml")
