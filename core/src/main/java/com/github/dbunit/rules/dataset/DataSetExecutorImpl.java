@@ -75,6 +75,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             instance = new DataSetExecutorImpl(executorId, connectionHolder);
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
+        } else{
+            instance.setConnectionHolder(connectionHolder);
         }
         return instance;
     }

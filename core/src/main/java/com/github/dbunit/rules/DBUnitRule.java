@@ -145,6 +145,8 @@ public class DBUnitRule implements TestRule {
                 if (instance == null) {
                     instance = DataSetExecutorImpl.instance(name, connectionHolder);
                     DataSetExecutorImpl.getExecutors().put(name, instance);
+                } else{
+                    instance.setConnectionHolder(connectionHolder);
                 }
                 executor = instance;
 
