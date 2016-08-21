@@ -127,14 +127,6 @@ public class UserIt {
    @Rule
    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.getConnection());
 
-  /* both rules can be chained
-   public EntityManagerProvider emProvider = EntityManagerProvider.instance("rulesDB");
-
-   @Rule
-   public TestRule theRule = RuleChain.outerRule(emProvider).
-            around(DBUnitRule.instance(emProvider.connection()));
-   */
-
    @Test
    @DataSet(value = "datasets/yml/users.yml")
    public void shouldLoadUserFollowers() {
@@ -149,8 +141,21 @@ public class UserIt {
    }
 ----
 
-NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
+NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/util/EntityManagerProvider.java[EntityManagerProvider^] is a simple JUnit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
 
+[TIP]
+====
+You can https://github.com/junit-team/junit4/wiki/rules#rulechain[chain^] both rules to guarantee execution order:
+
+[source,java]
+----
+   EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+   @Rule
+   public TestRule theRule = RuleChain.outerRule(emProvider).
+            around(DBUnitRule.instance(emProvider.connection()));
+----
+====
 
 
 == Documentation
