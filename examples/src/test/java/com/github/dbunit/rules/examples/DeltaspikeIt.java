@@ -67,17 +67,11 @@ public class DeltaspikeIt {
 
     @Test
     @UsingDataSet("datasets/contacts.yml")
-    public void shouldQueryAllCompaniesUsingInjectedExecutor() {
+    public void shouldQueryAllCompaniesUsingInterceptor() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
     }
 
-    @Test
-    @UsingDataSet("datasets/contacts.yml")
-    public void shouldQueryAllCompaniesUsingInjectedExecutor2() {
-        assertNotNull(contactService);
-        assertThat(contactService.findCompanies()).hasSize(4);
-    }
 
     @Test
     @DataSet("datasets/contacts.json")
@@ -101,7 +95,7 @@ public class DeltaspikeIt {
 
     @Test
     @UsingDataSet("contacts.yml")
-    public void shouldFindCompanyByNameUsingInjectedExecutor() {
+    public void shouldFindCompanyByNameUsingInterceptor() {
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);
         assertThat(companyRepository.findByName("Google")).
