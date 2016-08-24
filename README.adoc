@@ -190,9 +190,9 @@ It will bring the following (transitive) dependencies to your test classpath:
 ====
 
 === DataSet executor
-A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in textual files like csv, xml, yaml, json, https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[see examples here^].
+A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represent the *state of the database*. DataSets are defined as textual files in csv, xml, yaml or json format, https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[see examples here^].
 
-As in DBUnit Rule, dataset executor just needs a JDBC connection to be instantiated::
+As in DBUnit Rule, `dataset executor` just needs a JDBC connection to be instantiated::
 
 
 [source,java]
@@ -209,11 +209,11 @@ public class DataSetExecutorIt {
 
     @BeforeClass
     public static void setup() {
-        executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(EntityManagerProvider.instance("unitName").getConnection()));
+        executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.getConnection()));
     }
 
     @Test
-    public void shouldSeedUserDataSet() {
+    public void shouldSeedUserDataSetUsingExecutor() {
          DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");<1>
          executor.createDataSet(dataSetModel);<2>
          User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
@@ -223,7 +223,7 @@ public class DataSetExecutorIt {
 }
 ----
 <1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetModel* so executor can create the dataset.
-<2> this is done implicitly by *@Rule DBUnitRule* in other tests we saw till now.
+<2> this is done implicitly by *@Rule DBUnitRule*.
 
 DataSet executor setup and logic is `hidden` by *DBUnit @Rule* and *@DataSet annotation*:
 
