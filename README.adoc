@@ -141,7 +141,7 @@ public class UserIt {
    }
 ----
 
-NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/util/EntityManagerProvider.java[EntityManagerProvider^] is a simple JUnit rule that creates a JPA entityManager (and caches it) for each test. DBunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
+NOTE: <<EntityManagerProvider>> is a simple JUnit rule that creates a JPA entityManager (and caches it) for each test. DBunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
 
 
 == Documentation
@@ -251,7 +251,7 @@ public class ConnectionHolderIt {
 
 DBUnit Rule can be https://github.com/junit-team/junit4/wiki/rules#rulechain[chained with other rules^] so you can define execution order among rules.
 
-In example below `EntityManagerProvider rule` executes *before* `DBUnit rule`:
+In example below <<EntityManagerProvider rule>> executes *before* `DBUnit rule`:
 
 [source,java,linenums]
 ----
@@ -495,7 +495,7 @@ IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid cre
 
 Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 
-*PU-NAME* refers to test persistence.xml persistence unit name:
+*PU-NAME* refers to test persistence.xml unit name:
 
 .src/test/resources/META-INF/persistence.xml
 [source,java]
