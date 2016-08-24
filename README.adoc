@@ -141,7 +141,7 @@ public class UserIt {
    }
 ----
 
-NOTE: <<EntityManagerProvider>> is a simple JUnit rule that creates a JPA entityManager (and caches it) for each test. DBunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
+NOTE: <<EntityManagerProvider>> is a simple JUnit rule that creates a JPA entityManager (and caches it) for each test. DBunit rule don't depend on EntityManagerProvider, it only needs a *JDBC connection*;
 
 
 == Documentation
