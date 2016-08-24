@@ -11,6 +11,7 @@ import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import com.github.dbunit.rules.replacer.ScriptReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
+import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
 import org.dbunit.dataset.*;
@@ -20,6 +21,11 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.filter.SequenceTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
+import org.dbunit.ext.oracle.Oracle10DataTypeFactory;
+import org.dbunit.ext.oracle.OracleDataTypeFactory;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,25 +211,63 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return target;
     }
 
+    private void configureDataTypeFactory(){
+        String driverName = getDriverName(connectionHolder);
+        DatabaseConfig config = databaseConnection.getConfig();
+        if(isInMemoryDb(driverName)){
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
+        } else if(isMysqlDb(driverName)){
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
+        } else if(isPostgre(driverName)){
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
+        } else if(isOracle(driverName)){
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new Oracle10DataTypeFactory());
+        }
+
+    }
+
     private void disableConstraints() throws SQLException {
 
-        String driverName = connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
-        boolean isH2 = driverName.contains("hsql");
-        if (isH2) {
+        String driverName = getDriverName(connectionHolder);
+        if (isInMemoryDb(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
         }
 
-        boolean isMysql = driverName.contains("mysql");
-        if (isMysql) {
+        if (isMysqlDb(driverName)) {
             connectionHolder.getConnection().createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
         }
 
-        boolean isPostgres = driverName.contains("postgre");
-        if (isPostgres) {
+        if (isPostgre(driverName) || isOracle(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
         }
 
+    }
 
+    private String getDriverName(ConnectionHolder connectionHolder) {
+        if(connectionHolder != null && connectionHolder.getConnection() != null){
+            try {
+                return connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private boolean isInMemoryDb(String driverName) {
+        return driverName != null && (driverName.contains("hsql") || driverName.contains("h2"));
+    }
+
+    private boolean isMysqlDb(String driverName) {
+        return driverName != null && driverName.contains("mysql");
+    }
+
+    private boolean isPostgre(String driverName) {
+        return driverName != null && driverName.contains("postgre");
+    }
+
+    private boolean isOracle(String driverName) {
+        return driverName != null && driverName.contains("oracle");
     }
 
     public void executeStatements(String[] statements) {
@@ -255,6 +299,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private void initDatabaseConnection() throws DatabaseUnitException {
         databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
+        configureDataTypeFactory();
     }
 
 
@@ -319,6 +364,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
      */
     public void clearDatabase(DataSetModel dataset) throws SQLException {
         Connection connection = connectionHolder.getConnection();
+
         if (dataset != null && dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
             for (String table : dataset.getTableOrdering()) {
                 if (table.toUpperCase().contains("SEQ")) {
@@ -424,10 +470,6 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
 
-    public boolean isHSqlDB() throws SQLException {
-
-        return connectionHolder.getConnection() != null && connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase().contains("hsql");
-    }
 
     public void compareCurrentDataSetWith(DataSetModel expectedDataSetModel, String[] excludeCols) throws DatabaseUnitException {
         IDataSet current = null;
