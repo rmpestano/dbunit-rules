@@ -550,9 +550,6 @@ NOTE: A hibernate entity manager config sample can be https://github.com/rmpesta
 TIP: EntityManager provider utility also can be used in other contexts like a CDI producer, https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/EntityManagerProducer.java#L21[see here].
 
 
-
-
-
 == CDI module
 
 If you use CDI in your tests then you should give a try in DBUnit rules https://github.com/rmpestano/dbunit-rules/tree/master/cdi[CDI module^]:
@@ -606,6 +603,15 @@ public class DeltaspikeUsingInterceptorIt {
     }
 }
 ----
+
+[IMPORTANT]
+====
+Make sure the test class itself is a CDI bean so it can be intercepted by `DBUnitInterceptor`. If you're using https://deltaspike.apache.org/documentation/test-control.html[Deltaspike test control^] just enable the following
+property in test/resources/META-INF/apache-deltaspike.properties:
+----
+   deltaspike.testcontrol.use_test_class_as_cdi_bean=true
+----
+====
 
 == Cucumber module
 
