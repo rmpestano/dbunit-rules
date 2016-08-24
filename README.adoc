@@ -225,7 +225,7 @@ public class DataSetExecutorIt {
 <1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetModel* so executor can create the dataset.
 <2> this is done implicitly by *@Rule DBUnitRule*.
 
-DataSet executor setup and logic is `hidden` by *DBUnit @Rule* and *@DataSet annotation*:
+DataSet executor setup and logic is `hidden` by DBUnit @Rule and @DataSet annotation:
 
 [source, java]
 ----
