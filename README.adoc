@@ -141,21 +141,7 @@ public class UserIt {
    }
 ----
 
-NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/util/EntityManagerProvider.java[EntityManagerProvider^] is a simple JUnit rule that creates a JPA entityManager for each test. Dbunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
-
-[TIP]
-====
-You can https://github.com/junit-team/junit4/wiki/rules#rulechain[chain^] both rules to guarantee execution order:
-
-[source,java]
-----
-   EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
-
-   @Rule
-   public TestRule theRule = RuleChain.outerRule(emProvider).
-            around(DBUnitRule.instance(emProvider.connection()));
-----
-====
+NOTE: https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/util/EntityManagerProvider.java[EntityManagerProvider^] is a simple JUnit rule that creates a JPA entityManager (and caches it) for each test. DBunit rule don't depend on EntityManagerProvider, it only needs a JDBC connection;
 
 
 == Documentation
@@ -184,7 +170,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 
 [NOTE]
 ====
-It will bring the following (transitive) dependencies to your project:
+It will bring the following (transitive) dependencies to your test classpath:
 
 [source,xml]
 ----
@@ -206,36 +192,14 @@ It will bring the following (transitive) dependencies to your project:
 === DataSet executor
 A DataSet executor is a component which creates DBUnit datasets. Datasets are "sets" of data (tables and rows) that represents the *state of the database*. DataSets can be represented in textual files like csv, xml, yaml, json, https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/resources/datasets/[see examples here^].
 
-The dataset executor needs a JDBC connection to be instantiated. The connection can be provided at declaration level (as in example before) or via https://github.com/rmpestano/dbunit-rules/blob/master/core/src/main/java/com/github/dbunit/rules/connection/ConnectionHolder.java[ConnectionHolder interface^]:
+As in DBUnit Rule, dataset executor just needs a JDBC connection to be instantiated::
 
-[source, java]
-----
-@RunWith(JUnit4.class)
-public class ConnectionHolderIt {
-
-    @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
-
-    @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolder() {
-        @Override
-        public Connection getConnection() {
-            return initConnection();
-        }
-    });
-
-    private Connection initConnection() {
-        return emProvider.getConnection();
-    }
-
-    ...
-}
-----
-
-Until now you didn't needed DataSet executor object because *@Rule annotation* hides its logic but you can use it without JUnit rules:
 
 [source,java]
 ----
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
+
 @RunWith(JUnit4.class)
 public class DataSetExecutorIt {
 
@@ -252,7 +216,7 @@ public class DataSetExecutorIt {
     public void shouldSeedUserDataSet() {
          DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");<1>
          executor.createDataSet(dataSetModel);<2>
-         User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+         User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
          assertThat(user).isNotNull();
          assertThat(user.getId()).isEqualTo(1);
       }
@@ -261,7 +225,42 @@ public class DataSetExecutorIt {
 <1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetModel* so executor can create the dataset.
 <2> this is done implicitly by *@Rule DBUnitRule* in other tests we saw till now.
 
+DataSet executor setup and logic is `hidden` by *DBUnit @Rule* and *@DataSet annotation*:
 
+[source, java]
+----
+@RunWith(JUnit4.class)
+public class ConnectionHolderIt {
+
+    @Rule
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolder() {
+        @Override
+        public Connection getConnection() {
+            return emProvider.getConnection();
+        }
+    });
+
+    ...
+}
+----
+
+=== Rule chaining
+
+DBUnit Rule can be https://github.com/junit-team/junit4/wiki/rules#rulechain[chained with other rules^] so you can define execution order among rules.
+
+In example below `EntityManagerProvider rule` executes *before* `DBUnit rule`:
+
+[source,java,linenums]
+----
+ EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
+
+   @Rule
+   public TestRule theRule = RuleChain.outerRule(emProvider).
+            around(DBUnitRule.instance(emProvider.connection()));
+----
 
 === Multiple Databases
 Each executor has a JDBC connection so multiple databases can be handled by using multiple dataset executors:
@@ -492,7 +491,7 @@ public class DBUnitRulesIt {
 
 NOTE: You can use @BeforeClass instead of junit rule to instantiate the provider.
 
-IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests (DBUnit Rule and <<DBUnit Interceptor,CDI interceptor>> clears first level cache before each test).
+IMPORTANT: EntityManagerProvider will cache entity manager instance to avoid creating database multiple times, you just need to be careful with JPA first level cache between tests (EntityManagerProvider Rule and <<DBUnit Interceptor,CDI interceptor>> clears first level cache before each test).
 
 Now you can use emProvider.getConnection() to retrieve jdbc connection and emProvider.em() to retrieve underlying entityManager.
 

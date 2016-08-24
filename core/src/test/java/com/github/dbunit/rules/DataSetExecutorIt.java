@@ -1,12 +1,12 @@
 package com.github.dbunit.rules;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
@@ -49,7 +49,7 @@ public class DataSetExecutorIt {
     public void shouldSeedDataSetDisablingContraints() {
         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").disableConstraints(true);
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
     }
@@ -58,7 +58,7 @@ public class DataSetExecutorIt {
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
     }
@@ -83,7 +83,7 @@ public class DataSetExecutorIt {
             executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
            useSequenceFiltering(false);
         DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.connection())).createDataSet(dataSetModel);
-        List<User> users =  emProvider.em().createQuery("select u from User u").getResultList();
+        List<User> users =  em().createQuery("select u from User u").getResultList();
         assertThat(users).hasSize(2);
     }
 
@@ -92,7 +92,7 @@ public class DataSetExecutorIt {
         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
             useSequenceFiltering(true);
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
     }
@@ -101,7 +101,7 @@ public class DataSetExecutorIt {
     public void shouldLoadUserFollowers() {
         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
         executor.createDataSet(dataSetModel);
-        User user = (User) emProvider.em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+        User user = (User) em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
