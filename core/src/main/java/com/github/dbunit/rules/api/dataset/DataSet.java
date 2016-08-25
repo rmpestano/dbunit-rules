@@ -14,7 +14,8 @@ import java.lang.annotation.*;
 public @interface DataSet {
 
   /**
-   * @return dataset file name using resources folder as root directory
+   * @return dataset file name using resources folder as root directory.
+   * Multiple, comma separated, dataset file names can be provided.
    */
   String value() default "";
 

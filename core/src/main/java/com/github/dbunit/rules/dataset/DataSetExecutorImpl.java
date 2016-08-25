@@ -21,10 +21,10 @@ import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.filter.SequenceTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import org.dbunit.ext.h2.H2DataTypeFactory;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import org.dbunit.ext.oracle.Oracle10DataTypeFactory;
-import org.dbunit.ext.oracle.OracleDataTypeFactory;
 import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
@@ -81,7 +81,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             instance = new DataSetExecutorImpl(executorId, connectionHolder);
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
-        } else{
+        } else {
             instance.setConnectionHolder(connectionHolder);
         }
         return instance;
@@ -211,16 +211,27 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return target;
     }
 
-    private void configureDataTypeFactory(){
-        String driverName = getDriverName(connectionHolder);
+
+    private void configDatabaseProperties() throws SQLException {
         DatabaseConfig config = databaseConnection.getConfig();
-        if(isInMemoryDb(driverName)){
+
+        //FEATURE_QUALIFIED_TABLE_NAMES
+        String qualifiedTableNames = System.getProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES);
+        if (qualifiedTableNames != null) {
+            config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, Boolean.valueOf(qualifiedTableNames));
+        }
+
+        //PROPERTY_DATATYPE_FACTORY
+        String driverName = getDriverName(connectionHolder);
+        if (isHsql(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
-        } else if(isMysqlDb(driverName)){
+        } else if (isH2(driverName)) {
+            config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new H2DataTypeFactory());
+        } else if (isMysql(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
-        } else if(isPostgre(driverName)){
+        } else if (isPostgre(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
-        } else if(isOracle(driverName)){
+        } else if (isOracle(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new Oracle10DataTypeFactory());
         }
 
@@ -229,11 +240,15 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     private void disableConstraints() throws SQLException {
 
         String driverName = getDriverName(connectionHolder);
-        if (isInMemoryDb(driverName)) {
+        if (isHsql(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
         }
 
-        if (isMysqlDb(driverName)) {
+        if (isH2(driverName)) {
+            connectionHolder.getConnection().createStatement().execute("SET foreign_key_checks = 0;");
+        }
+
+        if (isMysql(driverName)) {
             connectionHolder.getConnection().createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
         }
 
@@ -243,8 +258,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     }
 
-    private String getDriverName(ConnectionHolder connectionHolder) {
-        if(connectionHolder != null && connectionHolder.getConnection() != null){
+    private String getDriverName(ConnectionHolder connectionHolder) throws SQLException {
+        if (connectionHolder != null && connectionHolder.getConnection() != null) {
             try {
                 return connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
             } catch (SQLException e) {
@@ -254,11 +269,15 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return null;
     }
 
-    private boolean isInMemoryDb(String driverName) {
-        return driverName != null && (driverName.contains("hsql") || driverName.contains("h2"));
+    private boolean isHsql(String driverName) {
+        return driverName != null && driverName.contains("hsql");
     }
 
-    private boolean isMysqlDb(String driverName) {
+    private boolean isH2(String driverName) {
+        return driverName != null && driverName.contains("h2");
+    }
+
+    private boolean isMysql(String driverName) {
         return driverName != null && driverName.contains("mysql");
     }
 
@@ -297,9 +316,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
 
-    private void initDatabaseConnection() throws DatabaseUnitException {
+    private void initDatabaseConnection() throws DatabaseUnitException, SQLException {
         databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
-        configureDataTypeFactory();
+        configDatabaseProperties();
     }
 
 
@@ -308,7 +327,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     public Connection getConnection() {
-        return connectionHolder.getConnection();
+        try {
+            return connectionHolder.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Map<String, DataSetExecutorImpl> getExecutors() {
@@ -382,8 +405,12 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 //tables containing 'SEQ' will NOT be cleared see https://github.com/rmpestano/dbunit-rules/issues/26
                 continue;
             }
-            connection.createStatement().executeUpdate("DELETE FROM " + tableName + " where 1=1");
-            connection.commit();
+            try {
+                connection.createStatement().executeUpdate("DELETE FROM " + tableName + " where 1=1");
+                connection.commit();
+            } catch (Exception e) {
+                log.warn("Could not clear table " + tableName, e);
+            }
         }
 
     }
@@ -398,7 +425,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             result = metaData.getTables(null, null, "%", new String[]{"TABLE"});
 
             while (result.next()) {
-                tables.add(result.getString("TABLE_NAME"));
+                String schema = resolveSchema(result);
+                String name = result.getString("TABLE_NAME");
+                tables.add(schema != null ? schema + "." + name : name);
             }
 
             return tables;
@@ -407,6 +436,15 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     + "analyse the database.", ex);
             return new ArrayList<String>();
         }
+    }
+
+    private String resolveSchema(ResultSet result) {
+        try {
+            return result.getString("TABLE_SCHEMA");
+        } catch (Exception e) {
+
+        }
+        return null;
     }
 
     public void executeScript(String scriptPath) {
@@ -468,7 +506,6 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         }
 
     }
-
 
 
     public void compareCurrentDataSetWith(DataSetModel expectedDataSetModel, String[] excludeCols) throws DatabaseUnitException {
