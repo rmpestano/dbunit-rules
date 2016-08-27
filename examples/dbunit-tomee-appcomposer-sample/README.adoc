@@ -1,0 +1,3 @@
+= DBUnit / ApplicationComposer Sample
+
+This sample shows how to mix `ApplicationComposer` and `DBUnit Rules` to test efficiently and quickly your persistence layer.
