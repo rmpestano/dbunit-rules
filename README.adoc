@@ -839,8 +839,10 @@ Snapshots are available in maven central, to use it just add the following snipp
 </repositories>
 ----
 
-== Other examples
+== Examples
 
-. DBUnit Rules https://github.com/rmpestano/dbunit-rules/tree/master/examples[examples module^]
-. https://github.com/rmpestano/dbunit-tomee-appcomposer-sample[DBUnit Rules Application Composer^]
-. https://github.com/rmpestano/jOOQ-DBUnit-flyway-example/[jOOQ Flyway DBUnit^]
+Take a look at examples module which contains:
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/jpa-productivity-boosters[JPA productivity boosters^]
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/dbunit-tomee-appcomposer-sample[DBUnit Rules Application Composer^]
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples//jOOQ-DBUnit-flyway-example/[jOOQ Flyway DBUnit^]
+* Each module contain a lot of tests that you can use as examples

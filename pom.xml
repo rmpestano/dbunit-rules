@@ -16,9 +16,9 @@
 
     <modules>
         <module>core</module>
-        <module>examples</module>
         <module>cdi</module>
         <module>cucumber</module>
+        <module>examples</module>
     </modules>
 
     <name>dbunit-rules</name>
@@ -254,5 +254,6 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+
 
 </project>

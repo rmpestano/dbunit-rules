@@ -1,3 +1,0 @@
-= DBUnit rules Examples
-
-DBUnit rules integration tests for https://jaxenter.com/top-3-jpa-productivity-boosters-for-java-ee-developers-deltaspike-data-116136.html[top 3 jpa productivity boosters^] project.
