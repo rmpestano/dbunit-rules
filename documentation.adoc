@@ -10,7 +10,7 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
-:revnumber: 0.11.1-SNAPSHOT
+:revnumber: 0.11.0
 :hardbreaks:
 
 = *Living Documentation*
@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|004ms
+|013ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|04s 831ms
+|05s 711ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|002ms
+|001ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|004ms
+|019ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -105,7 +105,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |003ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|04s 846ms
+|10|0|10|36|0|0|0|0|0|36 2+|05s 749ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(013ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 831ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 711ms)#
 ******
 
 [discrete]
@@ -425,7 +425,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(019ms)#
 ******
 
 ----
@@ -537,7 +537,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
