@@ -211,6 +211,17 @@
                                 <exclude>**/*Contact*</exclude>
                                 <exclude>**/*Company*</exclude>
                                 <exclude>**/*AbstractEntity*</exclude>
+                                <exclude>**/*CdiConfig*</exclude>
+                                <exclude>**/*CompanyRepository*</exclude>
+                                <exclude>**/*Author.*</exclude>
+                                <exclude>**/*Book.*</exclude>
+                                <exclude>**/*AuthorRecord.*</exclude>
+                                <exclude>**/*BookRecord.*</exclude>
+                                <exclude>**/*Sequences.*</exclude>
+                                <exclude>**/*Keys.*</exclude>
+                                <exclude>**/*Flyway.*</exclude>
+                                <exclude>**/*DefaultCatalog.*</exclude>
+                                <exclude>**/*Tables.*</exclude>
                             </excludes>
                         </configuration>
 
