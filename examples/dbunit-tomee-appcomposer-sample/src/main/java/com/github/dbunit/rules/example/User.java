@@ -1,4 +1,4 @@
-package com.github.rmannibucau.sample;
+package com.github.dbunit.rules.example;
 
 
 import javax.persistence.Entity;

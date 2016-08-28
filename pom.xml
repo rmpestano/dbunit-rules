@@ -19,6 +19,7 @@
         <module>cdi</module>
         <module>cucumber</module>
         <module>examples</module>
+        <module>junit5</module>
     </modules>
 
     <name>dbunit-rules</name>

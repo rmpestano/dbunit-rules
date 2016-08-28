@@ -7,7 +7,7 @@
     <persistence-unit name="user">
         <jta-data-source>jdbc/user</jta-data-source>
         <non-jta-data-source>jdbc/user-unmanaged</non-jta-data-source>
-        <class>com.github.rmannibucau.sample.User</class>
+        <class>com.github.dbunit.rules.example.User</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)"/>

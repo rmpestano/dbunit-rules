@@ -477,6 +477,8 @@ In case of `ExpectedDataSet` you'll usually need a transaction to modify databas
 
 Note that DBUnit Rules will start a transaction before test and commit the transaction *after* test execution but *before* expected dataset comparison.
 
+IMPORTANT: It will only work for tests that use *EntityManagerProvider* component.
+
 === EntityManagerProvider
 
 It is a component which holds JPA entity managers for your tests. To activate it just use the EntityManagerProvider rule in your test use:
@@ -822,6 +824,37 @@ public class ContactStepsWithoutCDI {
 }
 ----
 
+== JUnit 5
+
+http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a new extension model, so instead of *rules* you will use extensions in your tests. See example below:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.github.dbunit-rules</groupId>
+    <artifactId>junit5</artifactId>
+    <version>0.11.0</version>
+    <scope>test</scope>
+</dependency>
+----
+
+
+[source,java,linenums]
+----
+@ExtendWith(DBUnitExtension.class)
+@RunWith(JUnitPlatform.class)
+public class DBUnitJUnit5Test {
+
+    private ConnectionHolder connectionHolder = () -> instance("junit5-pu").connection(); <1>
+
+    @Test
+    @DataSet("users.yml")
+    public void shouldListUsers() {
+        List<User> users = em().createQuery("select u from User u").getResultList();
+        assertThat(users).isNotNull().isNotEmpty().hasSize(2);
+    }
+----
+<1> DBUnit extension will get JDBC connection by reflection so you need to declare a *field* or *method* with `ConnectionHolder` as return type.
 
 == Snapshots
 

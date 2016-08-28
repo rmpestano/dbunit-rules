@@ -92,6 +92,7 @@ public class EntityManagerProvider implements TestRule {
 
         }
         emf.getCache().evictAll();
+        em.clear();
     }
 
 
