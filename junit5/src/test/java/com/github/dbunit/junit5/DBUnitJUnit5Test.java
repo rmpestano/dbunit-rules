@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitPlatform.class)
 public class DBUnitJUnit5Test {
 
+    //DBUnitExtension will get connection by reflection so either declare a field or a method with ConncetionHolder as return typr
     private ConnectionHolder connectionHolder = () -> instance("junit5-pu").connection();
 
     @Test
@@ -60,27 +61,13 @@ public class DBUnitJUnit5Test {
     }
 
     @Test
-    @DataSet(value = "users.yml", disableConstraints=true, transactional = true)//disable constraints because User 1 has one tweet and a follower
+    @DataSet(value = "users.yml", transactional = true)//disable constraints because User 1 has one tweet and a follower
     @ExpectedDataSet("expectedUser.yml")
     public void shouldDeleteUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getName()).isEqualTo("@realpestano");
         em().remove(user);
-    }
-
-    @DataSet("users.yml")
-    public void shouldDeleteUserWithoutDisablingConstraints() {
-        User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
-        assertThat(user).isNotNull();
-        assertThat(user.getName()).isEqualTo("@realpestano");
-        em().getTransaction().begin();
-        em().createQuery("Delete from Tweet t where t.user.id = 1 ").executeUpdate();
-        em().createQuery("Delete from Follower f where f.followedUser.id = 1 ").executeUpdate();
-        em().remove(user);
-        em().getTransaction().commit();
-        List<User> users = em().createQuery("select u from User u ").getResultList();
-        assertThat(users).hasSize(1);
     }
 
 
