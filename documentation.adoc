@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|04s 300ms
+|04s 995ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|009ms
+|003ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|002ms
+|004ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -102,10 +102,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|003ms
+|017ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|04s 319ms
+|10|0|10|36|0|0|0|0|0|36 2+|05s 024ms
 |===
 
 == *Features*
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 300ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(04s 994ms)#
 ******
 
 [discrete]
@@ -353,7 +353,7 @@ include::../../../examples/src/test/resources/features/contacts.feature[]
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(009ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 ----
@@ -514,7 +514,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsI
 =====
 Then ::
 =====
-Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 =====
 ****
 
@@ -662,7 +662,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(013ms)#
 =====
 ****
 
