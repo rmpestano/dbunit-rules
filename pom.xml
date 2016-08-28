@@ -218,8 +218,8 @@
                                 <exclude>**/*AuthorRecord.*</exclude>
                                 <exclude>**/*BookRecord.*</exclude>
                                 <exclude>**/*Sequences.*</exclude>
-                                <exclude>**/*Keys.*</exclude>
-                                <exclude>**/*Flyway.*</exclude>
+                                <exclude>**/*Keys*.*</exclude>
+                                <exclude>**/*Flyway*.*</exclude>
                                 <exclude>**/*DefaultCatalog.*</exclude>
                                 <exclude>**/*Tables.*</exclude>
                             </excludes>
