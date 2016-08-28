@@ -109,7 +109,7 @@
             <dependency>
                 <groupId>org.dbunit</groupId>
                 <artifactId>dbunit</artifactId>
-                <version>2.5.1</version>
+                <version>2.5.3</version>
             </dependency>
 
             <dependency>
@@ -235,6 +235,30 @@
                         <version>4.1.0</version>
                         <configuration>
                             <repoToken>FyLUCzLpMxNyRwV6c3iyYGLnKb68PLAYW</repoToken>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*It.java</include>
+                                <include>**/*Test.java</include>
+                                <include>**/*Feature.java</include>
+                                <include>**/*Bdd.java</include>
+                            </includes>
+                            <excludes>
+                                <!-- conflict with open ejb/jpa and jacoco
+                                Caused by: org.apache.openejb.OpenEJBException: org.apache.openejb.OpenEJBRuntimeException: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null
+                                Caused by: org.apache.openejb.OpenEJBRuntimeException: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null
+                                -->
+                                <exclude>**/*UserRepositoryTest.java</exclude>
+                            </excludes>
+                            <systemPropertyVariables>
+                                <java.util.logging.config.file>
+                                    src/test/resources/logging.properties
+                                </java.util.logging.config.file>
+                            </systemPropertyVariables>
                         </configuration>
                     </plugin>
                 </plugins>
