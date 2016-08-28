@@ -28,6 +28,9 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             return;
         }
 
+        if(isEntityManagerActive()){
+            em().clear();
+        }
 
         ConnectionHolder connectionHolder = findTestConnection(testExtensionContext);
 

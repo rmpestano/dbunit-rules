@@ -61,7 +61,7 @@ public class DBUnitJUnit5Test {
     }
 
     @Test
-    @DataSet(value = "users.yml", transactional = true)//disable constraints because User 1 has one tweet and a follower
+    @DataSet(value = "users.yml", transactional = true)
     @ExpectedDataSet("expectedUser.yml")
     public void shouldDeleteUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();

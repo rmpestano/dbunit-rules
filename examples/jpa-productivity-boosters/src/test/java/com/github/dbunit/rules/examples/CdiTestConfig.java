@@ -13,8 +13,6 @@ import javax.persistence.EntityManager;
 @ApplicationScoped
 public class CdiTestConfig extends CdiConfig {
 
-    private EntityManager em;
-
 
     @Produces
     public EntityManager produce() {
