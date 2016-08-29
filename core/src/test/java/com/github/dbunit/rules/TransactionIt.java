@@ -23,7 +23,7 @@ public class TransactionIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(TransactionIt.class.getName(),emProvider.connection());
 
     @Test
     @DataSet(cleanBefore = true)

@@ -1,10 +1,9 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.util.EntityManagerProvider;
-import org.junit.Before;
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,9 +12,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.model.User;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 
 /**
  * Created by rmpestano on 8/21/16.
@@ -27,7 +27,7 @@ public class EmptyDataSetIt {
 
     @Rule
     public TestRule theRule = RuleChain.outerRule(emProvider).
-            around(DBUnitRule.instance(emProvider.connection()));
+            around(DBUnitRule.instance(emProvider.connection()).cacheConnection(true));
 
 
     @BeforeClass

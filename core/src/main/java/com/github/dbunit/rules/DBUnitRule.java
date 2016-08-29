@@ -156,5 +156,10 @@ public class DBUnitRule implements TestRule {
                 return executor;
             }
 
+            public DBUnitRule cacheConnection(boolean cacheConnection) {
+                executor.cacheConnection(cacheConnection);
+                return this;
+            }
+
 
         }

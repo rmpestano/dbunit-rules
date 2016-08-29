@@ -37,4 +37,10 @@ public interface DataSetExecutor{
      * @throws DatabaseUnitException if current dataset is not equal current dataset
      */
     void compareCurrentDataSetWith(DataSetModel expected, String[] ignoreCols) throws DatabaseUnitException;
+
+
+    /**
+     * @param cacheConnection if true database connection will be reused among multiple executions of same executor.
+     */
+    DataSetExecutor cacheConnection(boolean cacheConnection);
 }

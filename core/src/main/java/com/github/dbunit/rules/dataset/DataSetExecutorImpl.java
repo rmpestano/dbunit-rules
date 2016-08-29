@@ -50,7 +50,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataSetExecutorImpl implements DataSetExecutor {
 
     public static final String DEFAULT_EXECUTOR_ID = "default";
-
+    
+    private static String SEQUENCE_TABLE_NAME;
+    
     private static Map<String, DataSetExecutorImpl> executors = new ConcurrentHashMap<>();
 
     private DatabaseConnection databaseConnection;
@@ -58,8 +60,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     private ConnectionHolder connectionHolder;
 
     private String id;
+    
+    private boolean cacheConnection = false;
 
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
+    
+    static {
+        SEQUENCE_TABLE_NAME = System.getProperty("SEQUENCE_TABLE_NAME") == null ? "SEQ" : System.getProperty("SEQUENCE_TABLE_NAME");
+    }
 
 
     public static DataSetExecutorImpl instance(ConnectionHolder connectionHolder) {
@@ -98,7 +106,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
         if (dataSetModel != null) {
             try {
-                initDatabaseConnection();
+                if(databaseConnection == null || !cacheConnection){
+                    initDatabaseConnection();
+                }
                 if (dataSetModel.isDisableConstraints()) {
                     disableConstraints();
                 }
@@ -317,8 +327,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
 
     private void initDatabaseConnection() throws DatabaseUnitException, SQLException {
-        databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
-        configDatabaseProperties();
+         databaseConnection = new DatabaseConnection(connectionHolder.getConnection());
+         configDatabaseProperties();
     }
 
 
@@ -390,7 +400,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
         if (dataset != null && dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
             for (String table : dataset.getTableOrdering()) {
-                if (table.toUpperCase().contains("SEQ")) {
+                if (table.toUpperCase().contains(SEQUENCE_TABLE_NAME)) {
                     //tables containing 'SEQ'will NOT be cleared see https://github.com/rmpestano/dbunit-rules/issues/26
                     continue;
                 }
@@ -541,6 +551,12 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             DataSetAssertion.assertEqualsIgnoreCols(expectedTable, filteredActualTable, excludeCols);
         }
 
+    }
+
+    @Override
+    public DataSetExecutor cacheConnection(boolean cacheConnection) {
+          this.cacheConnection = cacheConnection;  
+          return this;
     }
 
 }
