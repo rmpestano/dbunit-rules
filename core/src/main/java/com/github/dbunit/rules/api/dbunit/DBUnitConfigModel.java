@@ -30,7 +30,7 @@ public class DBUnitConfigModel {
         DBUnitConfigModel dbUnitConfigModel = new DBUnitConfigModel(dbUnitConfig.executor());
         
         dbUnitConfigModel.cacheConnection(dbUnitConfig.cacheConnection()).
-            cacheTables(dbUnitConfig.cacheTables()).
+            cacheTables(dbUnitConfig.cacheTableNames()).
             addDBUnitProperty(DatabaseConfig.FEATURE_BATCHED_STATEMENTS, dbUnitConfig.batchedStatements()).
             addDBUnitProperty(DatabaseConfig.PROPERTY_BATCH_SIZE, dbUnitConfig.batchSize()).
             addDBUnitProperty(DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS, dbUnitConfig.allowEmptyFields()).
