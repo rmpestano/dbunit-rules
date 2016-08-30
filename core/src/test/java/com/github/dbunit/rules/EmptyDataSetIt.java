@@ -27,7 +27,7 @@ public class EmptyDataSetIt {
 
     @Rule
     public TestRule theRule = RuleChain.outerRule(emProvider).
-            around(DBUnitRule.instance(emProvider.connection()).cacheConnection(true));
+            around(DBUnitRule.instance(emProvider.connection()));
 
 
     @BeforeClass

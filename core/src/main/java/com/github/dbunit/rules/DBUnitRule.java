@@ -5,6 +5,8 @@ import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfigModel;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.dbunit.DatabaseUnitException;
@@ -58,10 +60,7 @@ public class DBUnitRule implements TestRule {
             @Override
             public void evaluate() throws Throwable {
                 currentMethod = description.getMethodName();
-                DataSet dataSet = description.getAnnotation(DataSet.class);
-                if (dataSet == null) {
-                    dataSet = description.getTestClass().getAnnotation(DataSet.class);
-                }
+                DataSet dataSet = resolveDataSet(description);
                 if (dataSet != null) {
                     final DataSetModel model = new DataSetModel().from(dataSet);
                     final String datasetExecutorId = model.getExecutorId();
@@ -73,6 +72,10 @@ public class DBUnitRule implements TestRule {
                         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
                     }
                     try {
+                        DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
+                        if(dbUnitConfig != null && dbUnitConfig.executor().equals(executor.getId())){
+                            executor.setDbUnitConfig(DBUnitConfigModel.from(dbUnitConfig));
+                        }
                         executor.createDataSet(model);
                     } catch (final Exception e) {
                         throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
@@ -126,7 +129,25 @@ public class DBUnitRule implements TestRule {
                 }
 
             }
+
+           
         };
+    }
+    
+    private DataSet resolveDataSet(Description description) {
+        DataSet dataSet = description.getAnnotation(DataSet.class);
+        if (dataSet == null) {
+            dataSet = description.getTestClass().getAnnotation(DataSet.class);
+        }
+        return dataSet;
+    }
+    
+    private DBUnitConfig resolveDBUnitConfig(Description description) {
+        DBUnitConfig dbUnitConfig = description.getAnnotation(DBUnitConfig.class);
+        if (dbUnitConfig == null) {
+            dbUnitConfig = description.getTestClass().getAnnotation(DBUnitConfig.class);
+        }
+        return dbUnitConfig;
     }
 
             private void performDataSetComparison(Description description) throws DatabaseUnitException {
@@ -154,11 +175,6 @@ public class DBUnitRule implements TestRule {
 
             public DataSetExecutor getDataSetExecutor() {
                 return executor;
-            }
-
-            public DBUnitRule cacheConnection(boolean cacheConnection) {
-                executor.cacheConnection(cacheConnection);
-                return this;
             }
 
 

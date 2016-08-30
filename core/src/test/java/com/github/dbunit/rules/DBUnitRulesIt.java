@@ -2,6 +2,7 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.Tweet;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(JUnit4.class)
+@DBUnitConfig(cacheConnection = true, cacheTables = true)
 public class DBUnitRulesIt {
 
     // tag::rules[]
@@ -34,7 +36,7 @@ public class DBUnitRulesIt {
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it"); //<1>
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection()).cacheConnection(true); //<2>
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection()); //<2>
    // end::rules[]
 
     @Test

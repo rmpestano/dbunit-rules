@@ -1,20 +1,30 @@
 package com.github.dbunit.rules.dataset;
 
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
-import com.github.dbunit.rules.api.dataset.JSONDataSet;
-import com.github.dbunit.rules.api.dataset.YamlDataSet;
-import com.github.dbunit.rules.assertion.DataSetAssertion;
-import com.github.dbunit.rules.exception.DataBaseSeedingException;
-import com.github.dbunit.rules.replacer.DateTimeReplacer;
-import com.github.dbunit.rules.replacer.ScriptReplacer;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.dataset.*;
+import org.dbunit.dataset.CompositeDataSet;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.FilteredDataSet;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
@@ -30,19 +40,16 @@ import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.dataset.JSONDataSet;
+import com.github.dbunit.rules.api.dataset.YamlDataSet;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfigModel;
+import com.github.dbunit.rules.assertion.DataSetAssertion;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
+import com.github.dbunit.rules.replacer.DateTimeReplacer;
+import com.github.dbunit.rules.replacer.ScriptReplacer;
 
 /**
  * Created by pestano on 26/07/15.
@@ -51,9 +58,13 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     public static final String DEFAULT_EXECUTOR_ID = "default";
     
-    private static String SEQUENCE_TABLE_NAME;
+    private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
     
     private static Map<String, DataSetExecutorImpl> executors = new ConcurrentHashMap<>();
+    
+    private DBUnitConfigModel dbUnitConfig;
+    
+    private static String SEQUENCE_TABLE_NAME;
 
     private DatabaseConnection databaseConnection;
 
@@ -61,9 +72,10 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private String id;
     
-    private boolean cacheConnection = false;
+    private List<String> tableNames;
 
-    private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
+    private String driverName;
+    
     
     static {
         SEQUENCE_TABLE_NAME = System.getProperty("SEQUENCE_TABLE_NAME") == null ? "SEQ" : System.getProperty("SEQUENCE_TABLE_NAME");
@@ -86,7 +98,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         }
         DataSetExecutorImpl instance = executors.get(executorId);
         if (instance == null) {
-            instance = new DataSetExecutorImpl(executorId, connectionHolder);
+            instance = new DataSetExecutorImpl(executorId, connectionHolder, new DBUnitConfigModel(executorId));
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
         } else {
@@ -95,9 +107,10 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return instance;
     }
 
-    private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder) {
+    private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder, DBUnitConfigModel dbUnitConfigModel) {
         this.connectionHolder = connectionHolder;
         this.id = executorId;
+        this.dbUnitConfig = dbUnitConfigModel;
     }
 
 
@@ -106,7 +119,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
         if (dataSetModel != null) {
             try {
-                if(databaseConnection == null || !cacheConnection){
+                if(databaseConnection == null || !dbUnitConfig.isCacheConnection()){
                     initDatabaseConnection();
                 }
                 if (dataSetModel.isDisableConstraints()) {
@@ -224,12 +237,10 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private void configDatabaseProperties() throws SQLException {
         DatabaseConfig config = databaseConnection.getConfig();
-
-        //FEATURE_QUALIFIED_TABLE_NAMES
-        String qualifiedTableNames = System.getProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES);
-        if (qualifiedTableNames != null) {
-            config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, Boolean.valueOf(qualifiedTableNames));
+        for (Entry<String, Object> p : dbUnitConfig.getDbunitProperties().entrySet()) {
+            config.setProperty(p.getKey(),p.getValue());
         }
+
 
         //PROPERTY_DATATYPE_FACTORY
         String driverName = getDriverName(connectionHolder);
@@ -269,14 +280,19 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     private String getDriverName(ConnectionHolder connectionHolder) throws SQLException {
+        
+        if(driverName != null){
+            return driverName;
+        }
         if (connectionHolder != null && connectionHolder.getConnection() != null) {
             try {
-                return connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
+                driverName = connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
             } catch (SQLException e) {
                 e.printStackTrace();
+                driverName = null;
             }
         }
-        return null;
+        return driverName;
     }
 
     private boolean isHsql(String driverName) {
@@ -428,6 +444,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     private List<String> getTableNames(Connection con) {
 
         List<String> tables = new ArrayList<String>();
+        
+        if(tableNames != null && dbUnitConfig.isCacheTables()){
+            return tables;
+        }
+        
         ResultSet result = null;
         try {
             DatabaseMetaData metaData = con.getMetaData();
@@ -438,6 +459,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 String schema = resolveSchema(result);
                 String name = result.getString("TABLE_NAME");
                 tables.add(schema != null ? schema + "." + name : name);
+            }
+            
+            if(tableNames == null){
+                this.tableNames = new ArrayList<>();
+                this.tableNames.addAll(tables);    
             }
 
             return tables;
@@ -553,10 +579,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     }
 
-    @Override
-    public DataSetExecutor cacheConnection(boolean cacheConnection) {
-          this.cacheConnection = cacheConnection;  
-          return this;
+    public void setDbUnitConfig(DBUnitConfigModel dbUnitConfig) {
+        this.dbUnitConfig = dbUnitConfig;
     }
+
+
+     
 
 }

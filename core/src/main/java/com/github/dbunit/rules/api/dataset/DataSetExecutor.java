@@ -1,6 +1,8 @@
 package com.github.dbunit.rules.api.dataset;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfigModel;
+
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -39,8 +41,7 @@ public interface DataSetExecutor{
     void compareCurrentDataSetWith(DataSetModel expected, String[] ignoreCols) throws DatabaseUnitException;
 
 
-    /**
-     * @param cacheConnection if true database connection will be reused among multiple executions of same executor.
-     */
-    DataSetExecutor cacheConnection(boolean cacheConnection);
+    void setDbUnitConfig(DBUnitConfigModel dbUnitConfig);
+    
+    
 }
