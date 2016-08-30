@@ -1,6 +1,8 @@
 import com.github.dbunit.rules.DBUnitRule;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+
 import org.dbunit.database.DatabaseConfig;
 import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;
@@ -23,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Lukas on 23.06.2014.
  */
+@DBUnitConfig(qualifiedTableNames = true)
 public class JooqDBUnitTest {
 
     private static String DB_URL = "jdbc:h2:" + Paths.get("target").toAbsolutePath().toString() +
@@ -53,8 +56,6 @@ public class JooqDBUnitTest {
             int[] result = stmt.executeBatch();
             assertEquals(result.length, 2);
         }
-        //adds support for schema in datasets
-        System.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, Boolean.TRUE.toString());
     }
 
     @AfterClass
