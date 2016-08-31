@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by pestano on 15/02/16.
  */
+@DBUnitConfig(cacheConnection = true)
 public class DateReplacementsIt {
 
     Calendar now;

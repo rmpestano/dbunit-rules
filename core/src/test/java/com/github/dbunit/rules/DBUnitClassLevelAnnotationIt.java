@@ -1,6 +1,7 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(JUnit4.class)
 @DataSet(value = "datasets/yml/users.yml")
+@DBUnitConfig(cacheConnection = true)
 public class DBUnitClassLevelAnnotationIt {
 
     @Rule
