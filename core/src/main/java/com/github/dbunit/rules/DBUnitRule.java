@@ -7,7 +7,6 @@ import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.configuration.GlobaConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.dbunit.DatabaseUnitException;
@@ -65,10 +64,7 @@ public class DBUnitRule implements TestRule {
                     final DataSetConfig model = new DataSetConfig().from(dataSet);
                     final String datasetExecutorId = model.getExecutorId();
                     boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
-                    if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
-                        //we can have multiple @Rule so multiple executors on top of same dataset
-                        return;
-                    } else if (executorNameIsProvided) {
+                    if (executorNameIsProvided) {
                         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
                     }
                     try {

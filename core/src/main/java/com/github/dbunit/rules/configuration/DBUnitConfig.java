@@ -37,7 +37,7 @@ public class DBUnitConfig {
         DBUnitConfig dbUnitConfig = new DBUnitConfig(dbUnit.executor());
 
         dbUnitConfig.cacheConnection(dbUnit.cacheConnection()).
-                cacheTables(dbUnit.cacheTableNames()).
+                cacheTableNames(dbUnit.cacheTableNames()).
                 addDBUnitProperty("batchedStatements", dbUnit.batchedStatements()).
                 addDBUnitProperty("batchSize", dbUnit.batchSize()).
                 addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).
@@ -73,8 +73,13 @@ public class DBUnitConfig {
         return this;
     }
 
+    public DBUnitConfig executorId(String executorId){
+        this.executorId = executorId;
+        return this;
+    }
 
-    public DBUnitConfig cacheTables(boolean cacheTables) {
+
+    public DBUnitConfig cacheTableNames(boolean cacheTables) {
         this.cacheTableNames = cacheTables;
         return this;
     }

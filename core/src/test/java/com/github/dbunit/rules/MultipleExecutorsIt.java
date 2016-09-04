@@ -56,7 +56,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").disableConstraints(true);
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -68,7 +68,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -99,7 +99,7 @@ public class MultipleExecutorsIt {
                 executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
                 useSequenceFiltering(false);
             executor.createDataSet(DataSetConfig);
-            List<User> users =  EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u").getResultList();
+            List<User> users =  EntityManagerProvider.instance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u").getResultList();
             assertThat(users).hasSize(2);
         }
 
@@ -111,7 +111,7 @@ public class MultipleExecutorsIt {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").
                 useSequenceFiltering(true);
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.instance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
         }
@@ -123,7 +123,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml");
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -140,7 +140,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/json/users.json");
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);
@@ -157,7 +157,7 @@ public class MultipleExecutorsIt {
         for (DataSetExecutorImpl executor : executors) {
             DataSetConfig DataSetConfig = new DataSetConfig("datasets/xml/users.xml");
             executor.createDataSet(DataSetConfig);
-            User user = (User) EntityManagerProvider.newInstance(executor.getId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
+            User user = (User) EntityManagerProvider.newInstance(executor.getExecutorId() + "-pu").em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
             assertThat(user).isNotNull();
             assertThat(user.getId()).isEqualTo(1);
             assertThat(user.getTweets()).hasSize(1);

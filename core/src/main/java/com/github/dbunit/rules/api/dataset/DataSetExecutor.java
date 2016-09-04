@@ -32,7 +32,7 @@ public interface DataSetExecutor{
 
     void executeScript(String scriptPath);
 
-    String getId();
+    String getExecutorId();
 
     /**
      * compares dataset from executor's databse connection with a given dataset

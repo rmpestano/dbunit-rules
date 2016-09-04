@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by pestano on 26/07/15.
@@ -52,21 +53,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataSetExecutorImpl implements DataSetExecutor {
 
     public static final String DEFAULT_EXECUTOR_ID = "default";
-    
+
     private static final Logger log = LoggerFactory.getLogger(DataSetExecutorImpl.class);
-    
+
     private static Map<String, DataSetExecutorImpl> executors = new ConcurrentHashMap<>();
-    
+
+    private AtomicBoolean printDBUnitConfig = new AtomicBoolean(true);
+
     private DBUnitConfig dbUnitConfig;
-    
+
     private static String SEQUENCE_TABLE_NAME;
 
     private DatabaseConnection databaseConnection;
 
     private ConnectionHolder connectionHolder;
 
-    private String id;
-    
+    private String executorId;
+
     private List<String> tableNames;
 
     private String driverName;
@@ -93,7 +96,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         }
         DataSetExecutorImpl instance = executors.get(executorId);
         if (instance == null) {
-            instance = new DataSetExecutorImpl(executorId, connectionHolder, new DBUnitConfig(executorId));
+            instance = new DataSetExecutorImpl(executorId, connectionHolder, DBUnitConfig.fromGlobalConfig().executorId(executorId));
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
         } else if(!instance.dbUnitConfig.isCacheConnection()) {
@@ -104,13 +107,23 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder, DBUnitConfig dbUnitConfig) {
         this.connectionHolder = connectionHolder;
-        this.id = executorId;
+        this.executorId = executorId;
         this.dbUnitConfig = dbUnitConfig;
     }
 
 
     @Override
     public void createDataSet(DataSetConfig dataSetConfig) {
+        if(printDBUnitConfig.compareAndSet(true,false)){
+            StringBuilder sb = new StringBuilder(150);
+            sb.append("cacheConnection: ").append("" + dbUnitConfig.isCacheConnection()).append("\n").
+                    append("cacheTableNames: ").append(dbUnitConfig.isCacheTableNames()).append("\n");
+
+            for (Entry<String, Object> entry : dbUnitConfig.getProperties().entrySet()) {
+                sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
+            log.info(String.format("DBUnit configuration for dataset executor '%s':\n"+sb.toString(),this.executorId));
+        }
 
         if (dataSetConfig != null) {
             try {
@@ -384,8 +397,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return true;
     }
 
-    public String getId() {
-        return id;
+    public String getExecutorId() {
+        return executorId;
     }
 
     public static DataSetExecutorImpl getExecutorById(String id) {
