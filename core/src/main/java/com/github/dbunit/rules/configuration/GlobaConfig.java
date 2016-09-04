@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 /**
  * Created by pestano on 03/09/16.
- *
+ * <p/>
  * pojo which represents dbunit.yml, used for global which can be overrided via @DataSet annotation
  * at class or method level and with @DBUnit at class or method level
  */
@@ -29,13 +29,6 @@ public class GlobaConfig {
         if (instance == null) {
             createInstance();
         }
-        if(instance.getDbUnitConfig().getProperties().containsKey("escapePattern")){
-            if (instance.getDbUnitConfig().getProperties().get("escapePattern").equals("")){
-                //avoid Caused by: org.dbunit.DatabaseUnitRuntimeException: Empty string is an invalid escape pattern!
-                // because @DBUnit annotation and dbunit.yml global config have escapePattern defaults to ""
-                instance.getDbUnitConfig().getProperties().remove("escapePattern");
-            }
-        }
         return instance;
     }
 
@@ -45,14 +38,25 @@ public class GlobaConfig {
     }
 
     private static void createInstance() {
+        instance = new GlobaConfig();
+        DBUnitConfig dbUnitConfig;
         //try to instance user provided dbunit.yml
         InputStream customConfiguration = Thread.currentThread().getContextClassLoader().getResourceAsStream("dbunit.yml");
-        if(customConfiguration != null){
-           instance = new Yaml().loadAs(customConfiguration, GlobaConfig.class);
-        } else{
-           //default config
-           instance = new Yaml().loadAs(GlobaConfig.class.getResourceAsStream("/default/dbunit.yml"), GlobaConfig.class);
+        if (customConfiguration != null) {
+            dbUnitConfig = new Yaml().loadAs(customConfiguration, DBUnitConfig.class);
+        } else {
+            //default config
+            dbUnitConfig = new Yaml().loadAs(GlobaConfig.class.getResourceAsStream("/default/dbunit.yml"), DBUnitConfig.class);
         }
+
+        if (dbUnitConfig.getProperties().containsKey("escapePattern")) {
+            if (dbUnitConfig.getProperties().get("escapePattern").equals("")) {
+                //avoid Caused by: org.dbunit.DatabaseUnitRuntimeException: Empty string is an invalid escape pattern!
+                // because @DBUnit annotation and dbunit.yml global config have escapePattern defaults to ""
+                dbUnitConfig.getProperties().remove("escapePattern");
+            }
+        }
+        instance.setDbUnitConfig(dbUnitConfig);
 
     }
 
