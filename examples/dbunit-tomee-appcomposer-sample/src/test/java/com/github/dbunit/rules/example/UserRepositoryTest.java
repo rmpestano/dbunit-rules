@@ -1,6 +1,7 @@
 package com.github.dbunit.rules.example;
 
 import com.github.dbunit.rules.DBUnitRule;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import org.apache.openejb.junit.ApplicationComposerRule;
 import org.apache.openejb.testing.*;

@@ -18,17 +18,17 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
  */
 
 @RunWith(JUnit4.class)
-@DBUnit(cacheConnection = true)
+@DBUnit(cacheConnection = false)
 public class TransactionIt {
 
     @Rule
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
-    public DBUnitRule dbUnitRule = DBUnitRule.instance(TransactionIt.class.getName(),emProvider.connection());
+    public DBUnitRule dbUnitRule = DBUnitRule.instance("TransactionIt",emProvider.connection());
 
     @Test
-    @DataSet(cleanBefore = true)
+    @DataSet(cleanBefore = true,executorId = "TransactionIt")
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldManageTransactionInsideTest() {
         User u = new User();
@@ -43,8 +43,9 @@ public class TransactionIt {
 
     //tag::transaction[]
     @Test
-    @DataSet(cleanBefore = true, transactional = true)
+    @DataSet(cleanBefore = true, transactional = true,executorId = "TransactionIt")
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
+    @DBUnit(cacheConnection = true)
     public void shouldManageTransactionAutomatically() {
         User u = new User();
         u.setName("expected user1");

@@ -27,10 +27,10 @@ public @interface DBUnit {
     String executor() default DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
     
     
-    boolean cacheConnection() default false;
+    boolean cacheConnection() default true;
     
     
-    boolean cacheTableNames() default false;
+    boolean cacheTableNames() default true;
     
 
     /**
