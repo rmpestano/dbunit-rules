@@ -7,9 +7,11 @@ In order to manage database state in http://junit.org/junit5/[JUnit 5^] integrat
 As a developer
 I want to use DBUnit along side my JUnit 5 tests.
 ____
+====
 
 DBUnit is enabled in JUnit 5 tests through an http://junit.org/junit5/docs/current/user-guide/#extensions[extension^] named *DBUnitExtension*.
 
+[discrete]
 === *Dependencies*
 
 To use the extension just add the following maven dependency:
@@ -24,7 +26,7 @@ include::../../../junit5/pom.xml[tags=version]
 </dependency>
 ----
 
-====
+
 
 Scenario: Seed database using DBUnit rules in JUnit5 tests
 

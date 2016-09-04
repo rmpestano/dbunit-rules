@@ -11,7 +11,7 @@ ____
 
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 
-
+[discrete]
 === *Dependencies*
 
 To use it just add the following maven dependency:

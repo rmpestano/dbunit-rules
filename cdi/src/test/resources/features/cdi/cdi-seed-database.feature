@@ -23,8 +23,9 @@ public class DBUnitCDITest {
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+=====
 
-
+[discrete]
 === *Dependencies*
 
 To use this module just add the following maven dependency:
@@ -38,7 +39,7 @@ include::../../../cdi/pom.xml[tags=version]
      <scope>test</scope>
 </dependency>
 ----
-=====
+
 
 Scenario: Seed database using yml dataset
 
