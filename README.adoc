@@ -270,7 +270,7 @@ In example below <<EntityManagerProvider rule>> executes *before* `DBUnit rule`:
 
 There are two types of configuration in DBUnit Rules: `DataSet` and `DBUnit`.
 
-DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* or *@UsingDataSet (in case of CDI) annotation.
+DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* or *@UsingDataSet* (in case of CDI) annotation.
 +
 It can be used at *class* or *method* level:
 +
