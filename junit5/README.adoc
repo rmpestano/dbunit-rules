@@ -5,5 +5,5 @@
 :caution-caption: :fire:
 :warning-caption: :warning:
 
-DBUnit extension for JUnit 5
+DBUnit extension for JUnit 5, more details here: https://github.com/rmpestano/dbunit-rules#junit-5.
 

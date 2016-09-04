@@ -163,7 +163,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.10.0</version>
+      <version>0.12.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -289,7 +289,7 @@ Here are possible values:
 |===
 |Name | Description | Default
 |value| Dataset file name using test resources folder as root directory. Multiple, comma separated, dataset file names can be provided.| ""
-|executorId| Nname of dataset executor for the given dataset.| DataSetExecutorImpl.DEFAULT_EXECUTOR_ID
+|executorId| Name of dataset executor for the given dataset.| DataSetExecutorImpl.DEFAULT_EXECUTOR_ID
 |strategy| DataSet seed strategy. Possible values are: CLEAN_INSERT, INSERT, REFRESH and UPDATE.| CLEAN_INSERT, meaning that DBUnit will clean and then insert data in tables present in provided dataset.
 |useSequenceFiltering| If true dbunit will look at constraints and dataset to try to determine the correct ordering for the SQL statements.| true
 |tableOrdering| A list of table names used to reorder DELETE operations to prevent failures due to circular dependencies.| ""
@@ -330,6 +330,9 @@ properties:
 ----
 +
 NOTE: `@DBUnit` annotation takes precedence over `dbunit.yml` global configuration which will be used only if the annotation is not present.
+
+
+TIP: Both configuration mechanisms work for all DBUnit Rules modules.
 
 === Multiple Databases
 Each executor has a JDBC connection so multiple databases can be handled by using multiple dataset executors:
@@ -630,7 +633,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.10.0</version>
+    <version>0.12.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -696,7 +699,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.10.0</version>
+    <version>0.12.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -898,7 +901,7 @@ http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a n
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>junit5</artifactId>
-    <version>0.11.0</version>
+    <version>0.12.0</version>
     <scope>test</scope>
 </dependency>
 ----
