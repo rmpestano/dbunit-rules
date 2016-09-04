@@ -277,7 +277,8 @@ It can be used at *class* or *method* level:
 [source,java]
 ----
      @Test
-     @DataSet(value ="users.yml", strategy = SeedStrategy.UPDATE,disableConstraints = true,cleanAfter = true,transactional = true)
+     @DataSet(value ="users.yml", strategy = SeedStrategy.UPDATE,
+            disableConstraints = true,cleanAfter = true,transactional = true)
      public void shouldLoadDataSetConfigFromAnnotation(){
 
       }
@@ -339,6 +340,8 @@ Each executor has a JDBC connection so multiple databases can be handled by usin
 
 [source, java]
 ----
+import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
+
 @RunWith(JUnit4.class)
 public class MultipleExecutorsIt {
 
