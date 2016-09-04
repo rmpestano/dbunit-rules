@@ -46,7 +46,7 @@ public class DBUnitInterceptor implements Serializable {
                     transactional(usingDataSet.transactional()).
                     tableOrdering(usingDataSet.tableOrdering()).
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
-            dataSetProcessor.process(DataSetConfig,resolveDBUnitConfig(invocationContext));
+            dataSetProcessor.process(DataSetConfig,DBUnitConfig.from(invocationContext.getMethod()));
             boolean isTransactionalTest = DataSetConfig.isTransactional();
             if(isTransactionalTest){
                 em.getTransaction().begin();
@@ -89,19 +89,6 @@ public class DBUnitInterceptor implements Serializable {
 
 
         return proceed;
-    }
-
-    private DBUnitConfig resolveDBUnitConfig(InvocationContext invocationContext) {
-        DBUnit dbUnitConfig = invocationContext.getMethod().getAnnotation(DBUnit.class);
-        if (dbUnitConfig == null) {
-            dbUnitConfig = invocationContext.getMethod().getDeclaringClass().getAnnotation(DBUnit.class);
-        }
-
-        if (dbUnitConfig != null) {
-            return DBUnitConfig.from(dbUnitConfig);
-        } else {
-            return GlobaConfig.instance().getDbUnitConfig();
-        }
     }
 
 

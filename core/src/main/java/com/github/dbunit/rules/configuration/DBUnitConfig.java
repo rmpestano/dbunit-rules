@@ -2,24 +2,23 @@ package com.github.dbunit.rules.configuration;
 
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import org.dbunit.database.DatabaseConfig;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * represents DBUnit configuration of a dataset executor.
  */
 public class DBUnitConfig {
-    
+
     private String executorId;
-    
+
     private boolean cacheConnection = false;
-    
+
     private boolean cacheTables = false;
-    
-    private Map<String,Object> properties;
+
+    private Map<String, Object> properties;
 
     public DBUnitConfig() {
         this.executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
@@ -28,43 +27,59 @@ public class DBUnitConfig {
     public DBUnitConfig(String executor) {
         properties = new HashMap<>();
         this.executorId = executor;
-        if("".equals(this.executorId)){
+        if ("".equals(this.executorId)) {
             this.executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
         }
-    } 
-    
-    
-    public static DBUnitConfig from(DBUnit dbUnit){
-        DBUnitConfig dbUnitConfig = new DBUnitConfig(dbUnit.executor());
-        
-        dbUnitConfig.cacheConnection(dbUnit.cacheConnection()).
-            cacheTables(dbUnit.cacheTableNames()).
-            addDBUnitProperty("batchedStatements", dbUnit.batchedStatements()).
-            addDBUnitProperty("batchSize", dbUnit.batchSize()).
-            addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).
-            addDBUnitProperty("fetchSize", dbUnit.fetchSize()).
-            addDBUnitProperty("qualifiedTableNames", dbUnit.qualifiedTableNames());
+    }
 
-        if(!"".equals(dbUnit.escapePattern())){
+
+    public static DBUnitConfig from(DBUnit dbUnit) {
+        DBUnitConfig dbUnitConfig = new DBUnitConfig(dbUnit.executor());
+
+        dbUnitConfig.cacheConnection(dbUnit.cacheConnection()).
+                cacheTables(dbUnit.cacheTableNames()).
+                addDBUnitProperty("batchedStatements", dbUnit.batchedStatements()).
+                addDBUnitProperty("batchSize", dbUnit.batchSize()).
+                addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).
+                addDBUnitProperty("fetchSize", dbUnit.fetchSize()).
+                addDBUnitProperty("qualifiedTableNames", dbUnit.qualifiedTableNames());
+
+        if (!"".equals(dbUnit.escapePattern())) {
             dbUnitConfig.addDBUnitProperty("escapePattern", dbUnit.escapePattern());
         }
 
         return dbUnitConfig;
     }
-    
-    
-    public DBUnitConfig cacheConnection(boolean cacheConnection){
+
+    public static DBUnitConfig fromGlobalConfig() {
+        return GlobaConfig.instance().getDbUnitConfig();
+    }
+
+    public static DBUnitConfig from(Method method) {
+        DBUnit dbUnitConfig = method.getAnnotation(DBUnit.class);
+        if (dbUnitConfig == null) {
+            dbUnitConfig = method.getDeclaringClass().getAnnotation(DBUnit.class);
+        }
+        if (dbUnitConfig != null) {
+            return from(dbUnitConfig);
+        } else {
+            return fromGlobalConfig();
+        }
+    }
+
+
+    public DBUnitConfig cacheConnection(boolean cacheConnection) {
         this.cacheConnection = cacheConnection;
         return this;
     }
-    
-    
-    public DBUnitConfig cacheTables(boolean cacheTables){
+
+
+    public DBUnitConfig cacheTables(boolean cacheTables) {
         this.cacheTables = cacheTables;
         return this;
     }
-    
-    public DBUnitConfig addDBUnitProperty(String name, Object value){
+
+    public DBUnitConfig addDBUnitProperty(String name, Object value) {
         properties.put(name, value);
         return this;
     }
@@ -94,7 +109,7 @@ public class DBUnitConfig {
     public Map<String, Object> getProperties() {
         return properties;
     }
-    
+
     public String getExecutorId() {
         return executorId;
     }

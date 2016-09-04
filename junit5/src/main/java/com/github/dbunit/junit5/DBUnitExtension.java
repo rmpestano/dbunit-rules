@@ -53,7 +53,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
         final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
         DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
-        executor.setDbUnitConfig(resolveDBUnitConfig(testExtensionContext));
+        executor.setDbUnitConfig(DBUnitConfig.from(testExtensionContext.getTestMethod().get()));
 
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
@@ -73,18 +73,6 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
     }
 
-    private DBUnitConfig resolveDBUnitConfig(TestExtensionContext testExtensionContext) {
-        DBUnit dbUnitConfig = testExtensionContext.getTestMethod().get().getAnnotation(DBUnit.class);
-        if (dbUnitConfig == null) {
-            dbUnitConfig = testExtensionContext.getTestClass().get().getAnnotation(DBUnit.class);
-        }
-
-        if (dbUnitConfig != null) {
-            return DBUnitConfig.from(dbUnitConfig);
-        } else {
-            return GlobaConfig.instance().getDbUnitConfig();
-        }
-    }
 
     private boolean shouldCreateDataSet(TestExtensionContext testExtensionContext) {
         return testExtensionContext.getTestMethod().get().isAnnotationPresent(DataSet.class) || testExtensionContext.getTestClass().get().isAnnotationPresent(DataSet.class);

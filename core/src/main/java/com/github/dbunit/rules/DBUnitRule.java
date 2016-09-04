@@ -148,7 +148,7 @@ public class DBUnitRule implements TestRule {
         if (dbUnitConfig != null) {
             return DBUnitConfig.from(dbUnitConfig);
         } else {
-            return GlobaConfig.instance().getDbUnitConfig();
+            return DBUnitConfig.fromGlobalConfig();
         }
     }
 

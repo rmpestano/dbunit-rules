@@ -18,11 +18,6 @@ public class GlobaConfig {
 
 
     private GlobaConfig() {
-
-    }
-
-    public void setDbUnitConfig(DBUnitConfig dbUnitConfig) {
-        this.dbUnitConfig = dbUnitConfig;
     }
 
     public static GlobaConfig instance() {
@@ -56,7 +51,7 @@ public class GlobaConfig {
                 dbUnitConfig.getProperties().remove("escapePattern");
             }
         }
-        instance.setDbUnitConfig(dbUnitConfig);
+        instance.dbUnitConfig = dbUnitConfig;
 
     }
 
