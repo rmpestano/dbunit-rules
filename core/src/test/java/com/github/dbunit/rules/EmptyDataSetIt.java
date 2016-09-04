@@ -4,7 +4,7 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import com.github.dbunit.rules.util.EntityManagerProvider;
  * Created by rmpestano on 8/21/16.
  */
 @RunWith(JUnit4.class)
-@DBUnitConfig(cacheConnection = true)
+@DBUnit(cacheConnection = true)
 public class EmptyDataSetIt {
 
     EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");

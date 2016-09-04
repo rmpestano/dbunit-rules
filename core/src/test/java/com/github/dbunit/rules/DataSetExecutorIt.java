@@ -11,7 +11,7 @@ import java.util.List;
 
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.*;
@@ -47,8 +47,8 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldSeedDataSetDisablingContraints() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").disableConstraints(true);
-        executor.createDataSet(dataSetModel);
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").disableConstraints(true);
+        executor.createDataSet(DataSetConfig);
         User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
@@ -56,8 +56,8 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldSeedDataSetDisablingContraintsViaStatement() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
-        executor.createDataSet(dataSetModel);
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").executeStatementsAfter(new String[]{"SET DATABASE REFERENTIAL INTEGRITY FALSE;"});
+        executor.createDataSet(DataSetConfig);
         User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
@@ -66,11 +66,11 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldNotSeedDataSetWithoutSequenceFilter() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").
             useSequenceFiltering(false).
             executeStatementsAfter(new String[] { "DELETE FROM User" });//needed because other tests creates users and as the dataset is not created in this test the CLEAN is not performed
         try {
-            executor.createDataSet(dataSetModel);
+            executor.createDataSet(DataSetConfig);
         }catch (DataBaseSeedingException e){
             assertThat(e.getMessage()).isEqualTo("Could not initialize dataset: datasets/yml/users.yml");
         }
@@ -78,20 +78,20 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldSeedDataSetUsingTableCreationOrder() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").
             tableOrdering(new String[]{"USER","TWEET","FOLLOWER"}).
             executeStatementsBefore(new String[]{"DELETE FROM FOLLOWER","DELETE FROM TWEET","DELETE FROM USER"}).//needed because other tests created user dataset
            useSequenceFiltering(false);
-        DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.connection())).createDataSet(dataSetModel);
+        DataSetExecutorImpl.instance(new ConnectionHolderImpl(emProvider.connection())).createDataSet(DataSetConfig);
         List<User> users =  em().createQuery("select u from User u").getResultList();
         assertThat(users).hasSize(2);
     }
 
     @Test
     public void shouldSeedUserDataSet() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml").
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml").
             useSequenceFiltering(true);
-        executor.createDataSet(dataSetModel);
+        executor.createDataSet(DataSetConfig);
         User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
@@ -99,8 +99,8 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldLoadUserFollowers() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
-        executor.createDataSet(dataSetModel);
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/yml/users.yml");
+        executor.createDataSet(DataSetConfig);
         User user = (User) em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
@@ -113,8 +113,8 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldLoadUsersFromJsonDataset() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/json/users.json");
-        executor.createDataSet(dataSetModel);
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/json/users.json");
+        executor.createDataSet(DataSetConfig);
         User user = (User) emProvider.clear().em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
@@ -127,8 +127,8 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldLoadUsersFromXmlDataset() {
-        DataSetModel dataSetModel = new DataSetModel("datasets/xml/users.xml");
-        executor.createDataSet(dataSetModel);
+        DataSetConfig DataSetConfig = new DataSetConfig("datasets/xml/users.xml");
+        executor.createDataSet(DataSetConfig);
         User user = (User) emProvider.clear().em().createQuery("select u from User u left join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);

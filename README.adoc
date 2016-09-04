@@ -214,15 +214,15 @@ public class DataSetExecutorIt {
 
     @Test
     public void shouldSeedUserDataSetUsingExecutor() {
-         DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");<1>
-         executor.createDataSet(dataSetModel);<2>
+         DataSetConfig dataSetConfig = new DataSetConfig("datasets/yml/users.yml");<1>
+         executor.createDataSet(dataSetConfig);<2>
          User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
          assertThat(user).isNotNull();
          assertThat(user.getId()).isEqualTo(1);
       }
 }
 ----
-<1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetModel* so executor can create the dataset.
+<1> As we are not using @Rule, which is responsible for reading @DataSet annotation, we have to provide *DataSetConfig* so executor can create the dataset.
 <2> this is done implicitly by *@Rule DBUnitRule*.
 
 DataSet executor setup and logic is `hidden` by DBUnit @Rule and @DataSet annotation:
@@ -286,8 +286,8 @@ public class MultipleExecutorsIt {
     @Test
     public void shouldSeedUserDataSet() {
          for (DataSetExecutorImpl executor : executors) {
-             DataSetModel dataSetModel = new DataSetModel("datasets/yml/users.yml");
-             executor.createDataSet(dataSetModel);
+             DataSetConfig dataSetConfig = new DataSetConfig("datasets/yml/users.yml");
+             executor.createDataSet(dataSetConfig);
                 User user = (User) EntityManagerProvider.instance(executor.getId() + "-pu").em().createQuery("select u from User u where u.id = 1").getSingleResult();
                 assertThat(user).isNotNull();
                 assertThat(user.getId()).isEqualTo(1);
@@ -789,7 +789,7 @@ public class ContactStepsWithoutCDI {
 
     @Given("^we have a list of contacts2$")
     public void given() {
-        dbunitExecutor.createDataSet(new DataSetModel("contacts.yml"));
+        dbunitExecutor.createDataSet(new DataSetConfig("contacts.yml"));
         assertEquals(em().createQuery("select count(c.id) from Contact c").getSingleResult(), new Long(3));
     }
 

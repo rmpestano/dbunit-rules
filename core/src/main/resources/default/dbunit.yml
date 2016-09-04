@@ -1,0 +1,10 @@
+dbUnitConfig:
+  cacheConnection: false
+  cacheTables: false
+  properties:
+    batchedStatements:  false
+    qualifiedTableNames: false
+    batchSize: 100
+    fetchSize: 100
+    allowEmptyFields: false
+    escapePattern: ""

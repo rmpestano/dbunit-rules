@@ -1,30 +1,21 @@
 package com.github.dbunit.rules.dataset;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.github.dbunit.rules.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.api.dataset.JSONDataSet;
+import com.github.dbunit.rules.api.dataset.YamlDataSet;
+import com.github.dbunit.rules.assertion.DataSetAssertion;
+import com.github.dbunit.rules.configuration.DBUnitConfig;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
+import com.github.dbunit.rules.replacer.DateTimeReplacer;
+import com.github.dbunit.rules.replacer.ScriptReplacer;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.dataset.CompositeDataSet;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.*;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.excel.XlsDataSet;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
@@ -40,16 +31,20 @@ import org.dbunit.operation.DatabaseOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
-import com.github.dbunit.rules.api.dataset.JSONDataSet;
-import com.github.dbunit.rules.api.dataset.YamlDataSet;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfigModel;
-import com.github.dbunit.rules.assertion.DataSetAssertion;
-import com.github.dbunit.rules.exception.DataBaseSeedingException;
-import com.github.dbunit.rules.replacer.DateTimeReplacer;
-import com.github.dbunit.rules.replacer.ScriptReplacer;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by pestano on 26/07/15.
@@ -62,7 +57,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     
     private static Map<String, DataSetExecutorImpl> executors = new ConcurrentHashMap<>();
     
-    private DBUnitConfigModel dbUnitConfig;
+    private DBUnitConfig dbUnitConfig;
     
     private static String SEQUENCE_TABLE_NAME;
 
@@ -98,7 +93,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         }
         DataSetExecutorImpl instance = executors.get(executorId);
         if (instance == null) {
-            instance = new DataSetExecutorImpl(executorId, connectionHolder, new DBUnitConfigModel(executorId));
+            instance = new DataSetExecutorImpl(executorId, connectionHolder, new DBUnitConfig(executorId));
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
         } else {
@@ -107,58 +102,58 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return instance;
     }
 
-    private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder, DBUnitConfigModel dbUnitConfigModel) {
+    private DataSetExecutorImpl(String executorId, ConnectionHolder connectionHolder, DBUnitConfig dbUnitConfig) {
         this.connectionHolder = connectionHolder;
         this.id = executorId;
-        this.dbUnitConfig = dbUnitConfigModel;
+        this.dbUnitConfig = dbUnitConfig;
     }
 
 
     @Override
-    public void createDataSet(DataSetModel dataSetModel) {
+    public void createDataSet(DataSetConfig dataSetConfig) {
 
-        if (dataSetModel != null) {
+        if (dataSetConfig != null) {
             try {
                 if(databaseConnection == null || !dbUnitConfig.isCacheConnection()){
                     initDatabaseConnection();
                 }
-                if (dataSetModel.isDisableConstraints()) {
+                if (dataSetConfig.isDisableConstraints()) {
                     disableConstraints();
                 }
-                if (dataSetModel.isCleanBefore()) {
+                if (dataSetConfig.isCleanBefore()) {
                     try {
-                        clearDatabase(dataSetModel);
+                        clearDatabase(dataSetConfig);
                     } catch (SQLException e) {
                         LoggerFactory.getLogger(DataSetExecutorImpl.class.getName()).warn("Could not clean database before test.", e);
                     }
                 }
 
-                if (dataSetModel.getExecuteStatementsBefore() != null && dataSetModel.getExecuteStatementsBefore().length > 0) {
-                    executeStatements(dataSetModel.getExecuteStatementsBefore());
+                if (dataSetConfig.getExecuteStatementsBefore() != null && dataSetConfig.getExecuteStatementsBefore().length > 0) {
+                    executeStatements(dataSetConfig.getExecuteStatementsBefore());
                 }
 
-                if (dataSetModel.getExecuteScriptsBefore() != null && dataSetModel.getExecuteScriptsBefore().length > 0) {
-                    for (int i = 0; i < dataSetModel.getExecuteScriptsBefore().length; i++) {
-                        executeScript(dataSetModel.getExecuteScriptsBefore()[i]);
+                if (dataSetConfig.getExecuteScriptsBefore() != null && dataSetConfig.getExecuteScriptsBefore().length > 0) {
+                    for (int i = 0; i < dataSetConfig.getExecuteScriptsBefore().length; i++) {
+                        executeScript(dataSetConfig.getExecuteScriptsBefore()[i]);
                     }
                 }
 
-                if (dataSetModel.getName() != null && !"".equals(dataSetModel.getName())) {
-                    IDataSet resultingDataSet = loadDataSet(dataSetModel.getName());
+                if (dataSetConfig.getName() != null && !"".equals(dataSetConfig.getName())) {
+                    IDataSet resultingDataSet = loadDataSet(dataSetConfig.getName());
 
-                    resultingDataSet = performSequenceFiltering(dataSetModel, resultingDataSet);
+                    resultingDataSet = performSequenceFiltering(dataSetConfig, resultingDataSet);
 
-                    resultingDataSet = performTableOrdering(dataSetModel, resultingDataSet);
+                    resultingDataSet = performTableOrdering(dataSetConfig, resultingDataSet);
 
                     resultingDataSet = performReplacements(resultingDataSet);
 
-                    DatabaseOperation operation = dataSetModel.getSeedStrategy().getOperation();
+                    DatabaseOperation operation = dataSetConfig.getSeedStrategy().getOperation();
 
                     operation.execute(databaseConnection, resultingDataSet);
                 }
 
             } catch (Exception e) {
-                throw new DataBaseSeedingException("Could not initialize dataset: " + dataSetModel, e);
+                throw new DataBaseSeedingException("Could not initialize dataset: " + dataSetConfig, e);
             }
 
 
@@ -166,7 +161,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
     /**
-     * @param name one or more (comma separated) dataset names to load
+     * @param name one or more (comma separated) dataset names to instance
      * @return loaded dataset (in case of multiple dataSets they will be merged in one using composite dataset)
      */
     public IDataSet loadDataSet(String name) throws DataSetException, IOException {
@@ -219,14 +214,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         return connectionHolder;
     }
 
-    private IDataSet performTableOrdering(DataSetModel dataSet, IDataSet target) throws AmbiguousTableNameException {
+    private IDataSet performTableOrdering(DataSetConfig dataSet, IDataSet target) throws AmbiguousTableNameException {
         if (dataSet.getTableOrdering().length > 0) {
             target = new FilteredDataSet(new SequenceTableFilter(dataSet.getTableOrdering()), target);
         }
         return target;
     }
 
-    private IDataSet performSequenceFiltering(DataSetModel dataSet, IDataSet target) throws DataSetException, SQLException {
+    private IDataSet performSequenceFiltering(DataSetConfig dataSet, IDataSet target) throws DataSetException, SQLException {
         if (dataSet.isUseSequenceFiltering()) {
             ITableFilter filteredTable = new DatabaseSequenceFilter(databaseConnection, target.getTableNames());
             target = new FilteredDataSet(filteredTable, target);
@@ -237,8 +232,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     private void configDatabaseProperties() throws SQLException {
         DatabaseConfig config = databaseConnection.getConfig();
-        for (Entry<String, Object> p : dbUnitConfig.getDbunitProperties().entrySet()) {
-            config.setProperty(p.getKey(),p.getValue());
+        for (Entry<String, Object> p : dbUnitConfig.getProperties().entrySet()) {
+            config.setProperty(DatabaseConfig.findByShortName(p.getKey()).getProperty(),p.getValue());
         }
 
 
@@ -411,7 +406,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     /**
      * @throws SQLException
      */
-    public void clearDatabase(DataSetModel dataset) throws SQLException {
+    public void clearDatabase(DataSetConfig dataset) throws SQLException {
         Connection connection = connectionHolder.getConnection();
 
         if (dataset != null && dataset.getTableOrdering() != null && dataset.getTableOrdering().length > 0) {
@@ -544,7 +539,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
 
-    public void compareCurrentDataSetWith(DataSetModel expectedDataSetModel, String[] excludeCols) throws DatabaseUnitException {
+    public void compareCurrentDataSetWith(DataSetConfig expectedDataSetConfig, String[] excludeCols) throws DatabaseUnitException {
         IDataSet current = null;
         IDataSet expected = null;
         try {
@@ -553,7 +548,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 initDatabaseConnection();
             }
             current = databaseConnection.createDataSet();
-            expected = loadDataSet(expectedDataSetModel.getName());
+            expected = loadDataSet(expectedDataSetConfig.getName());
         } catch (Exception e) {
             throw new RuntimeException("Could not create dataset to compare.", e);
         }
@@ -579,7 +574,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     }
 
-    public void setDbUnitConfig(DBUnitConfigModel dbUnitConfig) {
+    public void setDbUnitConfig(DBUnitConfig dbUnitConfig) {
         this.dbUnitConfig = dbUnitConfig;
     }
 

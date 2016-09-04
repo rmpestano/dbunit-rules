@@ -1,4 +1,4 @@
-package com.github.dbunit.rules.api.dbunit;
+package com.github.dbunit.rules.api.configuration;
 
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 
@@ -18,7 +18,7 @@ import org.dbunit.database.DatabaseConfig;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface DBUnitConfig {
+public @interface DBUnit {
 
     /**
      * 

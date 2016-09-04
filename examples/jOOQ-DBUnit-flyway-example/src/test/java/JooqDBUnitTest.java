@@ -1,9 +1,8 @@
 import com.github.dbunit.rules.DBUnitRule;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 
-import org.dbunit.database.DatabaseConfig;
 import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;
 import org.jooq.Result;
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Lukas on 23.06.2014.
  */
-@DBUnitConfig(qualifiedTableNames = true)
+@DBUnit(qualifiedTableNames = true)
 public class JooqDBUnitTest {
 
     private static String DB_URL = "jdbc:h2:" + Paths.get("target").toAbsolutePath().toString() +

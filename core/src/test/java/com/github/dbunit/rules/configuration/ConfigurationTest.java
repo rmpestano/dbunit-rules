@@ -1,0 +1,106 @@
+package com.github.dbunit.rules.configuration;
+
+import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+/**
+ * Created by pestano on 03/09/16.
+ */
+@RunWith(JUnit4.class)
+public class ConfigurationTest {
+
+
+    @Test
+    public void shouldLoadDBUnitConfigViaGlobalFile(){
+        GlobaConfig globaConfig = GlobaConfig.newInstance();
+        assertThat(globaConfig).isNotNull()
+        .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTables")
+        .contains(false,false);
+
+        assertThat(globaConfig.getDbUnitConfig().getProperties()).
+                containsEntry("allowEmptyFields", false).
+                containsEntry("batchedStatements", false).
+                containsEntry("qualifiedTableNames", false).
+                containsEntry("batchSize", 100).
+                containsEntry("fetchSize",100).
+                doesNotContainKey("escapePattern");
+    }
+
+    @Test
+    public void shouldLoadDBUnitConfigViaCustomGlobalFile() throws IOException {
+        File customConfig = new File("target/test-classes/dbunit.yml");
+        FileOutputStream fos = new FileOutputStream(customConfig);
+        fos.write(Files.readAllBytes(Paths.get(getClass().getResource("/config/sample-dbunit.yml").getPath())));
+        fos.flush();
+        fos.close();
+
+        GlobaConfig globaConfig = GlobaConfig.newInstance();
+        assertThat(globaConfig).isNotNull()
+                .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTables")
+                .contains(true,true);
+
+        assertThat(globaConfig.getDbUnitConfig().getProperties()).
+                containsEntry("allowEmptyFields", true).
+                containsEntry("batchedStatements", true).
+                containsEntry("qualifiedTableNames", true).
+                containsEntry("batchSize", 200).
+                containsEntry("fetchSize",200).
+                containsEntry("escapePattern","[?]");
+
+        customConfig.delete();
+    }
+
+
+
+    @Test
+    @DataSet(strategy = SeedStrategy.UPDATE,disableConstraints = true,cleanAfter = true,transactional = true)
+    public void shouldLoadDataSetConfigFromAnnotation() throws NoSuchMethodException {
+        Method method = getClass().getMethod("shouldLoadDataSetConfigFromAnnotation");
+        assertThat(method).isNotNull();
+        DataSet dataSet = method.getAnnotation(DataSet.class);
+        assertThat(dataSet).isNotNull();
+
+        DataSetConfig dataSetConfig = new DataSetConfig().from(dataSet);
+        assertThat(dataSetConfig).isNotNull().
+                extracting("seedStrategy","useSequenceFiltering","disableConstraints","cleanBefore","cleanAfter","transactional").
+                contains(SeedStrategy.UPDATE, true, true, false,true,true);
+
+    }
+
+
+    @Test
+    @DBUnit(cacheConnection = true, cacheTableNames = false, allowEmptyFields = true,batchSize = 50)
+    public void shouldLoadDBUnitConfigViaAnnotation() throws NoSuchMethodException {
+        Method method = getClass().getMethod("shouldLoadDBUnitConfigViaAnnotation");
+        assertThat(method).isNotNull();
+        DBUnit dbUnit = method.getAnnotation(DBUnit.class);
+        assertThat(dbUnit).isNotNull();
+        DBUnitConfig dbUnitConfig = DBUnitConfig.from(dbUnit);
+        assertThat(dbUnitConfig).isNotNull()
+                    .extracting("cacheConnection","cacheTables")
+                    .contains(true,false);
+
+        assertThat(dbUnitConfig.getProperties()).
+                    containsEntry("allowEmptyFields", true).
+                    containsEntry("batchedStatements", false).
+                    containsEntry("qualifiedTableNames", false).
+                    containsEntry("batchSize", 50).
+                    containsEntry("fetchSize",100).
+                    doesNotContainKey("escapePattern");
+    }
+
+
+}

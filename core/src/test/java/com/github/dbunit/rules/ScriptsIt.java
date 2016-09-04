@@ -2,7 +2,7 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.fail;
  * Created by pestano on 27/02/16.
  */
 @RunWith(JUnit4.class)
-@DBUnitConfig(cacheConnection = true)
+@DBUnit(cacheConnection = true)
 public class ScriptsIt {
 
     @Rule

@@ -1,7 +1,7 @@
 package com.github.dbunit.rules.examples.cucumber.withoutcdi;
 
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.util.EntityManagerProvider;
@@ -37,7 +37,7 @@ public class ContactStepsWithoutCDI {
 
     @Given("^we have a list of contacts2$")
     public void given() {
-        dbunitExecutor.createDataSet(new DataSetModel("contacts.yml"));
+        dbunitExecutor.createDataSet(new DataSetConfig("contacts.yml"));
         assertEquals(em().createQuery("select count(c.id) from Contact c").getSingleResult(), new Long(3));
     }
 

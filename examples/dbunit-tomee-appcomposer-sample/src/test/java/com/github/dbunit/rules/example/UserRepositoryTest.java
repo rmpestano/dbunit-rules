@@ -32,14 +32,8 @@ public class UserRepositoryTest {
 
     @Rule
     public final TestRule rules = outerRule(new ApplicationComposerRule(this))
-            .around(DBUnitRule.instance(() -> {
-                try {
-                    return dataSource.getConnection();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }));
+            .around(DBUnitRule.instance(() ->  dataSource.getConnection())
+            );
 
 
     @Inject

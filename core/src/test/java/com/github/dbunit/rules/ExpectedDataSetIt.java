@@ -2,17 +2,14 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import java.sql.SQLException;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
@@ -22,7 +19,7 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
  */
 // tag::expectedDeclaration[]
 @RunWith(JUnit4.class)
-@DBUnitConfig(cacheConnection = true)
+@DBUnit(cacheConnection = true)
 public class ExpectedDataSetIt {
 
     @Rule

@@ -1,10 +1,13 @@
 package com.github.dbunit.junit5;
 
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.configuration.DBUnitConfig;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.configuration.GlobaConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -48,22 +51,39 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             throw new RuntimeException("Could not find DataSet annotation for test " + testExtensionContext.getTestMethod().get().getName());
         }
 
-        final DataSetModel model = new DataSetModel().from(annotation);
-        DataSetExecutor executor = DataSetExecutorImpl.instance(model.getExecutorId(), connectionHolder);
+        final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
+        DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
+        executor.setDbUnitConfig(resolveDBUnitConfig(testExtensionContext));
+
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
         testExtensionContext.getStore(namespace).put("executor", executor);
-        testExtensionContext.getStore(namespace).put("model", model);
+        testExtensionContext.getStore(namespace).put("model", dasetConfig);
+
+
         try {
-            executor.createDataSet(model);
+            executor.createDataSet(dasetConfig);
         } catch (final Exception e) {
             throw new RuntimeException(String.format("Could not create dataset for test method %s due to following error " + e.getMessage(), testExtensionContext.getTestMethod().get().getName()), e);
         }
-        boolean isTransactional = model.isTransactional() && isEntityManagerActive();
+        boolean isTransactional = dasetConfig.isTransactional() && isEntityManagerActive();
         if (isTransactional) {
             em().getTransaction().begin();
         }
 
+    }
+
+    private DBUnitConfig resolveDBUnitConfig(TestExtensionContext testExtensionContext) {
+        DBUnit dbUnitConfig = testExtensionContext.getTestMethod().get().getAnnotation(DBUnit.class);
+        if (dbUnitConfig == null) {
+            dbUnitConfig = testExtensionContext.getTestClass().get().getAnnotation(DBUnit.class);
+        }
+
+        if (dbUnitConfig != null) {
+            return DBUnitConfig.from(dbUnitConfig);
+        } else {
+            return GlobaConfig.instance().getDbUnitConfig();
+        }
     }
 
     private boolean shouldCreateDataSet(TestExtensionContext testExtensionContext) {
@@ -87,12 +107,12 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             if (expectedDataSet != null) {
                 ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
                 DataSetExecutor executor = testExtensionContext.getStore(namespace).get("executor", DataSetExecutor.class);
-                DataSetModel model = testExtensionContext.getStore(namespace).get("model", DataSetModel.class);
-                boolean isTransactional = model.isTransactional() && isEntityManagerActive();
+                DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get("model", DataSetConfig.class);
+                boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
                 if (isTransactional) {
                     em().getTransaction().commit();
                 }
-                executor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
+                executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
             }
         }
 

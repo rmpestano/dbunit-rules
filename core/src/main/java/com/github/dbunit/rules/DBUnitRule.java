@@ -1,16 +1,16 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfig;
-import com.github.dbunit.rules.api.dbunit.DBUnitConfigModel;
+import com.github.dbunit.rules.configuration.DBUnitConfig;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.configuration.GlobaConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.dbunit.DatabaseUnitException;
-import org.junit.internal.runners.statements.Fail;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -62,7 +62,7 @@ public class DBUnitRule implements TestRule {
                 currentMethod = description.getMethodName();
                 DataSet dataSet = resolveDataSet(description);
                 if (dataSet != null) {
-                    final DataSetModel model = new DataSetModel().from(dataSet);
+                    final DataSetConfig model = new DataSetConfig().from(dataSet);
                     final String datasetExecutorId = model.getExecutorId();
                     boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
                     if (executorNameIsProvided && !executor.getId().equals(datasetExecutorId)) {
@@ -72,10 +72,7 @@ public class DBUnitRule implements TestRule {
                         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
                     }
                     try {
-                        DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
-                        if(dbUnitConfig != null && dbUnitConfig.executor().equals(executor.getId())){
-                            executor.setDbUnitConfig(DBUnitConfigModel.from(dbUnitConfig));
-                        }
+                        executor.setDbUnitConfig(resolveDBUnitConfig(description));
                         executor.createDataSet(model);
                     } catch (final Exception e) {
                         throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
@@ -130,10 +127,10 @@ public class DBUnitRule implements TestRule {
 
             }
 
-           
+
         };
     }
-    
+
     private DataSet resolveDataSet(Description description) {
         DataSet dataSet = description.getAnnotation(DataSet.class);
         if (dataSet == null) {
@@ -141,41 +138,46 @@ public class DBUnitRule implements TestRule {
         }
         return dataSet;
     }
-    
+
     private DBUnitConfig resolveDBUnitConfig(Description description) {
-        DBUnitConfig dbUnitConfig = description.getAnnotation(DBUnitConfig.class);
+        DBUnit dbUnitConfig = description.getAnnotation(DBUnit.class);
         if (dbUnitConfig == null) {
-            dbUnitConfig = description.getTestClass().getAnnotation(DBUnitConfig.class);
+            dbUnitConfig = description.getTestClass().getAnnotation(DBUnit.class);
         }
-        return dbUnitConfig;
+
+        if (dbUnitConfig != null) {
+            return DBUnitConfig.from(dbUnitConfig);
+        } else {
+            return GlobaConfig.instance().getDbUnitConfig();
+        }
     }
 
-            private void performDataSetComparison(Description description) throws DatabaseUnitException {
-                ExpectedDataSet expectedDataSet = description.getAnnotation(ExpectedDataSet.class);
-                if (expectedDataSet == null) {
-                    //try to infer from class level annotation
-                    expectedDataSet = description.getTestClass().getAnnotation(ExpectedDataSet.class);
-                }
-                if (expectedDataSet != null) {
-                    executor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
-                }
-            }
-
-            private void init(String name, ConnectionHolder connectionHolder) {
-                DataSetExecutorImpl instance = DataSetExecutorImpl.getExecutorById(name);
-                if (instance == null) {
-                    instance = DataSetExecutorImpl.instance(name, connectionHolder);
-                    DataSetExecutorImpl.getExecutors().put(name, instance);
-                } else{
-                    instance.setConnectionHolder(connectionHolder);
-                }
-                executor = instance;
-
-            }
-
-            public DataSetExecutor getDataSetExecutor() {
-                return executor;
-            }
-
-
+    private void performDataSetComparison(Description description) throws DatabaseUnitException {
+        ExpectedDataSet expectedDataSet = description.getAnnotation(ExpectedDataSet.class);
+        if (expectedDataSet == null) {
+            //try to infer from class level annotation
+            expectedDataSet = description.getTestClass().getAnnotation(ExpectedDataSet.class);
         }
+        if (expectedDataSet != null) {
+            executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
+        }
+    }
+
+    private void init(String name, ConnectionHolder connectionHolder) {
+        DataSetExecutorImpl instance = DataSetExecutorImpl.getExecutorById(name);
+        if (instance == null) {
+            instance = DataSetExecutorImpl.instance(name, connectionHolder);
+            DataSetExecutorImpl.getExecutors().put(name, instance);
+        } else {
+            instance.setConnectionHolder(connectionHolder);
+        }
+        executor = instance;
+
+    }
+
+    public DataSetExecutor getDataSetExecutor() {
+        return executor;
+    }
+
+
+}

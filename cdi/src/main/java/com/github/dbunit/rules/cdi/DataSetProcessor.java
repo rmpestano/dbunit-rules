@@ -1,7 +1,8 @@
 package com.github.dbunit.rules.cdi;
 
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.configuration.DBUnitConfig;
+import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
@@ -73,8 +74,9 @@ public class DataSetProcessor {
         return connection;
     }
 
-    public void process(DataSetModel dataSetModel) {
-        dataSetExecutor.createDataSet(dataSetModel);
+    public void process(DataSetConfig dataSetConfig, DBUnitConfig config) {
+        dataSetExecutor.setDbUnitConfig(config);
+        dataSetExecutor.createDataSet(dataSetConfig);
     }
 
 
@@ -87,9 +89,9 @@ public class DataSetProcessor {
         }
     }
 
-    public void clearDatabase(DataSetModel dataSetModel) {
+    public void clearDatabase(DataSetConfig DataSetConfig) {
         try {
-            dataSetExecutor.clearDatabase(dataSetModel);
+            dataSetExecutor.clearDatabase(DataSetConfig);
         } catch (SQLException e) {
             log.error("Could not clear database.", e);
         }
@@ -103,7 +105,7 @@ public class DataSetProcessor {
         dataSetExecutor.executeScript(script);
     }
 
-    public void compareCurrentDataSetWith(DataSetModel expected, String[] excludeCols) throws DatabaseUnitException {
+    public void compareCurrentDataSetWith(DataSetConfig expected, String[] excludeCols) throws DatabaseUnitException {
         dataSetExecutor.compareCurrentDataSetWith(expected, excludeCols);
     }
 

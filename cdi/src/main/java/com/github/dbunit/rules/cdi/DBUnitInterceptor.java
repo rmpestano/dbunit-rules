@@ -1,8 +1,11 @@
 package com.github.dbunit.rules.cdi;
 
-import com.github.dbunit.rules.api.dataset.DataSetModel;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.configuration.DBUnitConfig;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.configuration.GlobaConfig;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -31,7 +34,7 @@ public class DBUnitInterceptor implements Serializable {
         Object proceed = null;
         UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
         if (usingDataSet != null) {
-            DataSetModel dataSetModel = new DataSetModel(usingDataSet.value()).
+            DataSetConfig DataSetConfig = new DataSetConfig(usingDataSet.value()).
                     cleanAfter(usingDataSet.cleanAfter()).
                     cleanBefore(usingDataSet.cleanBefore()).
                     disableConstraints(usingDataSet.disableConstraints()).
@@ -43,8 +46,8 @@ public class DBUnitInterceptor implements Serializable {
                     transactional(usingDataSet.transactional()).
                     tableOrdering(usingDataSet.tableOrdering()).
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
-            dataSetProcessor.process(dataSetModel);
-            boolean isTransactionalTest = dataSetModel.isTransactional();
+            dataSetProcessor.process(DataSetConfig,resolveDBUnitConfig(invocationContext));
+            boolean isTransactionalTest = DataSetConfig.isTransactional();
             if(isTransactionalTest){
                 em.getTransaction().begin();
             }
@@ -61,14 +64,14 @@ public class DBUnitInterceptor implements Serializable {
             }
             ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
             if(expectedDataSet != null){
-                dataSetProcessor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
+                dataSetProcessor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
             }
             if(usingDataSet.cleanAfter()){
-                dataSetProcessor.clearDatabase(dataSetModel);
+                dataSetProcessor.clearDatabase(DataSetConfig);
             }
 
             if (!"".equals(usingDataSet.executeCommandsAfter())) {
-                dataSetProcessor.executeStatements(dataSetModel.getExecuteStatementsAfter());
+                dataSetProcessor.executeStatements(DataSetConfig.getExecuteStatementsAfter());
             }
 
             if(usingDataSet.executeScriptsAfter().length > 0 && !"".equals(usingDataSet.executeScriptsAfter()[0])){
@@ -80,12 +83,25 @@ public class DBUnitInterceptor implements Serializable {
             proceed = invocationContext.proceed();
             ExpectedDataSet expectedDataSet = invocationContext.getMethod().getAnnotation(ExpectedDataSet.class);
             if(expectedDataSet != null){
-                dataSetProcessor.compareCurrentDataSetWith(new DataSetModel(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
+                dataSetProcessor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
             }
         }
 
 
         return proceed;
+    }
+
+    private DBUnitConfig resolveDBUnitConfig(InvocationContext invocationContext) {
+        DBUnit dbUnitConfig = invocationContext.getMethod().getAnnotation(DBUnit.class);
+        if (dbUnitConfig == null) {
+            dbUnitConfig = invocationContext.getMethod().getDeclaringClass().getAnnotation(DBUnit.class);
+        }
+
+        if (dbUnitConfig != null) {
+            return DBUnitConfig.from(dbUnitConfig);
+        } else {
+            return GlobaConfig.instance().getDbUnitConfig();
+        }
     }
 
 
