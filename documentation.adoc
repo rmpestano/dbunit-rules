@@ -10,7 +10,7 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
-:revnumber: 0.12.1-SNAPSHOT
+:revnumber: 0.12.0
 :hardbreaks:
 
 = *Living Documentation*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|05s 342ms
+|05s 535ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|030ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|003ms
+|017ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -102,10 +102,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|018ms
+|024ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|05s 395ms
+|10|0|10|36|0|0|0|0|0|36 2+|05s 582ms
 |===
 
 == *Features*
@@ -131,7 +131,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -222,7 +222,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 341ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 535ms)#
 ******
 
 [discrete]
@@ -340,7 +340,7 @@ include::../../pom.xml[tags=deltaspike-cdi-deps]
 ****
 Given ::
 =====
-The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(028ms)#
+The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 ----
@@ -425,7 +425,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(016ms)#
 ******
 
 ----
@@ -537,7 +537,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(007ms)#
 ******
 
 [discrete]
@@ -662,7 +662,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(014ms)#
 =====
 ****
 
@@ -701,7 +701,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(012ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
@@ -718,7 +718,7 @@ IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
