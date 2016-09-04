@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|012ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|06s 582ms
+|05s 308ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|012ms
+|003ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-and-JUnit-5>>*
@@ -116,10 +116,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|005ms
+|009ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|06s 637ms
+|11|0|11|39|0|0|0|0|0|39 2+|05s 349ms
 |===
 
 == *Features*
@@ -139,7 +139,7 @@ ____
 
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
 
-
+[discrete]
 === *Dependencies*
 
 To use it just add the following maven dependency:
@@ -160,7 +160,7 @@ include::../../../core/pom.xml[tags=version]
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(011ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -245,8 +245,9 @@ public class DBUnitCDITest {
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+=====
 
-
+[discrete]
 === *Dependencies*
 
 To use this module just add the following maven dependency:
@@ -260,7 +261,6 @@ include::../../../cdi/pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
-=====
 ****
 
 ==== Scenario: Seed database using yml dataset
@@ -268,7 +268,7 @@ include::../../../cdi/pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(06s 582ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 308ms)#
 ******
 
 [discrete]
@@ -419,7 +419,7 @@ include::../../../examples/jpa-productivity-boosters/src/test/resources/features
 =====
 And ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 ----
@@ -432,7 +432,7 @@ include::../../../examples/jpa-productivity-boosters/src/test/resources/datasets
 =====
 And ::
 =====
-The following Cucumber test icon:thumbs-up[role="green",title="Passed"] [small right]#(009ms)#
+The following Cucumber test icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
@@ -483,9 +483,11 @@ In order to manage database state in http://junit.org/junit5/[JUnit 5^] integrat
 As a developer
 I want to use DBUnit along side my JUnit 5 tests.
 ____
+====
 
 DBUnit is enabled in JUnit 5 tests through an http://junit.org/junit5/docs/current/user-guide/#extensions[extension^] named *DBUnitExtension*.
 
+[discrete]
 === *Dependencies*
 
 To use the extension just add the following maven dependency:
@@ -499,8 +501,6 @@ include::../../../junit5/pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
-
-====
 ****
 
 ==== Scenario: Seed database using DBUnit rules in JUnit5 tests
@@ -573,7 +573,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(019ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
 ******
 
 ----
@@ -632,7 +632,7 @@ NOTE: Javascript engine comes within JDK so no additional classpath dependency i
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(011ms)#
 ******
 
 ----
@@ -685,7 +685,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 [discrete]
@@ -717,7 +717,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 =====
 ****
 
@@ -849,7 +849,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 [discrete]
@@ -866,7 +866,7 @@ IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 [discrete]
