@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 /**
  * Created by pestano on 03/09/16.
- * <p/>
+ *
  * pojo which represents dbunit.yml, used for global which can be overrided via @DataSet annotation
  * at class or method level and with @DBUnit at class or method level
  */

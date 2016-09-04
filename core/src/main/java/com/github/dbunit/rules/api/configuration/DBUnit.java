@@ -22,7 +22,7 @@ public @interface DBUnit {
 
     /**
      * 
-     * Executor id for which the properties will be setup.
+     * @return executor id for which the properties will be setup.
      */
     String executor() default DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
     
@@ -34,34 +34,35 @@ public @interface DBUnit {
     
 
     /**
-     * configures DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES. Defaults to false.
+     * @return value which configures DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES. Defaults to false.
      */
     boolean qualifiedTableNames() default false;
     
     /**
      * 
-     * DatabaseConfig.FEATURE_BATCHED_STATEMENTS
+     * @return value which configures DatabaseConfig.FEATURE_BATCHED_STATEMENTS
      */
     boolean batchedStatements() default false;
 
     /**
-     * configures DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS. Defaults to false.
+     * @return value which configures DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS. Defaults to false.
+     *
      */
     boolean allowEmptyFields() default false;  
     
     /**
      * 
-     * DatabaseConfig.PROPERTY_FETCH_SIZE. Defaults to 100
+     * @return value which configures DatabaseConfig.PROPERTY_FETCH_SIZE. Defaults to 100
      */
     int fetchSize() default 100;
     
     /**
-     * DatabaseConfig.PROPERTY_BATCH_SIZE. Defaults to 100
+     * @return value which configures DatabaseConfig.PROPERTY_BATCH_SIZE. Defaults to 100
      */
     int batchSize() default 100;
     
     /**
-     * DatabaseConfig.PROPERTY_ESCAPE_PATTERN. Defaults to none
+     * @return value which configures DatabaseConfig.PROPERTY_ESCAPE_PATTERN. Defaults to none
      */
     String escapePattern() default "";
 }

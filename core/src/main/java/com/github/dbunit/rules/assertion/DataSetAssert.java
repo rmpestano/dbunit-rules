@@ -21,10 +21,10 @@ public class DataSetAssert extends DbUnitAssert {
 
     /**
      * Same as DBUnitAssert with support for regex in row values
-     * @param expectedTable
-     * @param actualTable
-     * @param comparisonCols
-     * @param failureHandler
+     * @param expectedTable expected table
+     * @param actualTable current table
+     * @param comparisonCols columnName
+     * @param failureHandler handler
      * @throws DataSetException
      */
     @Override

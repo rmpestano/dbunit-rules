@@ -57,9 +57,8 @@ public class EntityManagerProvider implements TestRule {
 
 
     /**
-     *
+     * @param unitName unit name
      * clear entities on underlying context
-     * @return
      */
     public static synchronized EntityManagerProvider newInstance(String unitName) {
         instance =  new EntityManagerProvider();
@@ -97,7 +96,7 @@ public class EntityManagerProvider implements TestRule {
 
     /**
      *
-     * @param puName
+     * @param puName unit name
      * @return jdbc connection of provider instance represented by given puName
      */
     public Connection connection(String puName) {
@@ -115,7 +114,7 @@ public class EntityManagerProvider implements TestRule {
 
     /**
      *
-     * @param puName
+     * @param puName unit name
      * @return entityManager represented by given puName
      */
     public static EntityManager em(String puName) {
@@ -132,7 +131,7 @@ public class EntityManagerProvider implements TestRule {
     }
 
     /**
-     * @param puName
+     * @param puName unit name
      * clears entityManager (represented by given puName) persistence context
      * @return provider represented by puName
      */
@@ -151,7 +150,7 @@ public class EntityManagerProvider implements TestRule {
     }
 
     /**
-     * @param puName
+     * @param puName unit name
      * @return transaction of entityManager represented by given puName
      */
     public static EntityTransaction tx(String puName) {

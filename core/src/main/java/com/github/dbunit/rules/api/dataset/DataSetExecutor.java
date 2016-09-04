@@ -18,7 +18,7 @@ public interface DataSetExecutor{
 
     /**
      * creates a dataset into executor's database connection using given dataSetConfig
-     * @param dataSetConfig
+     * @param dataSetConfig dataset configuration
      */
     void createDataSet(DataSetConfig dataSetConfig);
 
@@ -36,7 +36,7 @@ public interface DataSetExecutor{
 
     /**
      * compares dataset from executor's databse connection with a given dataset
-     * @param expected
+     * @param expected configuration
      * @throws DatabaseUnitException if current dataset is not equal current dataset
      */
     void compareCurrentDataSetWith(DataSetConfig expected, String[] ignoreCols) throws DatabaseUnitException;

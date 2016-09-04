@@ -88,7 +88,8 @@ public class DataSetConfig {
     }
 
     /**
-     *  name of dataset executor for the given dataset. If not specified the default one will be used.
+     *
+     * @param executorId name of dataset executor for the given dataset. If not specified the default one will be used.
      *
      * Use this option to work with multple database conncetions. Remember that each executor has its own connection.
      * @return DataSetConfig with executor name configured
