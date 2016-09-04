@@ -20,7 +20,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 == *Summary*
 [cols="12*^m", options="header,footer"]
 |===
-3+|Scenarios 7+|Steps 2+|Features: 5
+3+|Scenarios 7+|Steps 2+|Features: 6
 
 |[green]#*Passed*#
 |[red]#*Failed*#
@@ -46,7 +46,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|002ms
+|012ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-CDI>>*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|05s 133ms
+|06s 582ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,21 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |5
-|001ms
+|012ms
+|[green]#*passed*#
+
+12+^|*<<Manage-database-with-DBUnit-Rules-and-JUnit-5>>*
+|1
+|0
+|1
+|3
+|0
+|0
+|0
+|0
+|0
+|3
+|004ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -88,7 +102,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|001ms
+|020ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -102,10 +116,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|016ms
+|005ms
 |[green]#*passed*#
 12+^|*Totals*
-|10|0|10|36|0|0|0|0|0|36 2+|05s 156ms
+|11|0|11|39|0|0|0|0|0|39 2+|06s 637ms
 |===
 
 == *Features*
@@ -124,6 +138,21 @@ ____
 ====
 
 DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your unit tests via https://github.com/junit-team/junit4/wiki/Rules[JUnit rules^].
+
+
+=== *Dependencies*
+
+To use it just add the following maven dependency:
+
+[source,xml,indent=0]
+----
+<dependency>
+  <groupId>com.github.dbunit-rules</groupId>
+  <artifactId>core</artifactId>
+include::../../../core/pom.xml[tags=version]
+  <scope>test</scope>
+</dependency>
+----
 ****
 
 ==== Scenario: Seed database using yml dataset
@@ -131,7 +160,7 @@ DBUnit Rules Core module brings http://dbunit.sourceforge.net/[DBunit^] to your 
 ****
 Given ::
 =====
-The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
+The following junit rules icon:thumbs-up[role="green",title="Passed"] [small right]#(011ms)#
 ******
 
 [discrete]
@@ -143,12 +172,14 @@ include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[
 }
 ----
 [discrete]
-<1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBunit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
+<1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBUnit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
 [discrete]
 <2> DBUnit rule responsible for reading `@DataSet` annotation and prepare the database for each test.
 
 
 ******
+
+TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java/L31[found here^].
 
 =====
 And ::
@@ -214,6 +245,21 @@ public class DBUnitCDITest {
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+
+
+=== *Dependencies*
+
+To use this module just add the following maven dependency:
+
+[source,xml,indent=0]
+----
+<dependency>
+   <groupId>com.github.dbunit-rules</groupId>
+   <artifactId>cdi</artifactId>
+include::../../../cdi/pom.xml[tags=version]
+   <scope>test</scope>
+</dependency>
+----
 =====
 ****
 
@@ -222,7 +268,7 @@ public class DBUnitCDITest {
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 133ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(06s 582ms)#
 ******
 
 [discrete]
@@ -283,6 +329,8 @@ include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=see
 
 ******
 
+TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/DBUnitCDIIt.javaL74[found here^].
+
 =====
 Then ::
 =====
@@ -313,7 +361,7 @@ include::../../src/test/java/com/github/dbunit/rules/bdd/DBUnitRulesBdd.java[]
 ----
 
 
-IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^], you won't be able to use Cucumber runner with _DBunit Rules Core_ because its based on JUnit rules.
+IMPORTANT: As cucumber doesn't work with JUnit Rules, see https://github.com/cucumber/cucumber-jvm/issues/393[this issue^], you won't be able to use Cucumber runner with _DBunit Rules Core_ because its based on JUnit rules, but you can use DataSetExecutor in `@Before`, see https://github.com/rmpestano/dbunit-rules/tree/master/examples/jpa-productivity-boosters/src/test/java/com/github/dbunit/rules/examples/cucumber/withoutcdi[example here^].
 
 [discrete]
 === *Dependencies*
@@ -321,18 +369,36 @@ Here is a set of maven dependencies needed by DBUnit rules Cucumber:
 
 NOTE: Most of the dependencies, except CDI container implementation, are bring by DBUnit Rules Cucumber module transitively.
 
+[source,xml,indent=0]
+----
+<dependency>
+   <groupId>com.github.dbunit-rules</groupId>
+   <artifactId>cucumber</artifactId>
+include::../../../cucumber/pom.xml[tags=version]
+   <scope>test</scope>
+</dependency>
+----
+
 .Cucumber dependencies
+[source,xml,indent=0]
 ----
 include::../../pom.xml[tags=cucumber-deps]
 ----
 <1> You don't need to declare because it comes with DBUnit Rules Cucumber module dependency.
 
 .DeltaSpike and CDI dependency
+[source,xml,indent=0]
 ----
 include::../../pom.xml[tags=deltaspike-cdi-deps]
 ----
 <2> Also comes with DBUit Rules Cucumber.
 <3> You can use CDI implementation of your choice.
+
+
+To use this module just add the following maven dependency:
+
+
+=====
 ****
 
 ==== Scenario: Seed database using DBUnit rules in Cucumber tests
@@ -344,7 +410,7 @@ The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#
 ******
 
 ----
-include::../../../examples/src/test/resources/features/contacts.feature[]
+include::../../../examples/jpa-productivity-boosters/src/test/resources/features/contacts.feature[]
 ----
 
 
@@ -357,7 +423,7 @@ The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#
 ******
 
 ----
-include::../../../examples/src/test/resources/datasets/contacts.yml[]
+include::../../../examples/jpa-productivity-boosters/src/test/resources/datasets/contacts.yml[]
 ----
 
 
@@ -366,13 +432,13 @@ include::../../../examples/src/test/resources/datasets/contacts.yml[]
 =====
 And ::
 =====
-The following Cucumber test icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following Cucumber test icon:thumbs-up[role="green",title="Passed"] [small right]#(009ms)#
 ******
 
 [discrete]
 [source,java,linenums]
 ----
-include::../../../examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
+include::../../../examples/jpa-productivity-boosters/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactFeature.java[]
 ----
 
 
@@ -387,7 +453,7 @@ The following cucumber steps are executed icon:thumbs-up[role="green",title="Pas
 [discrete]
 [source,java,linenums]
 ----
-include::../../../examples/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
+include::../../../examples/jpa-productivity-boosters/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.java[]
 ----
 [discrete]
 <1> As the Cucumber cdi runner enables CDI, you can use injection into your Cucumber steps.
@@ -396,6 +462,88 @@ include::../../../examples/src/test/java/com/github/dbunit/rules/examples/cucumb
 
 
 ******
+
+TIP: Source code for the example above can be https://github.com/rmpestano/dbunit-rules/blob/master/examples/jpa-productivity-boosters/src/test/java/com/github/dbunit/rules/examples/cucumber/ContactSteps.javaL16[found here^].
+
+=====
+Then ::
+=====
+The database should be seeded with the dataset content before step execution icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+=====
+****
+
+[[Manage-database-with-DBUnit-Rules-and-JUnit-5, Manage database with DBUnit Rules and JUnit 5]]
+=== *Manage database with DBUnit Rules and JUnit 5*
+
+****
+====
+[quote]
+____
+In order to manage database state in http://junit.org/junit5/[JUnit 5^] integration tests
+As a developer
+I want to use DBUnit along side my JUnit 5 tests.
+____
+
+DBUnit is enabled in JUnit 5 tests through an http://junit.org/junit5/docs/current/user-guide/#extensions[extension^] named *DBUnitExtension*.
+
+=== *Dependencies*
+
+To use the extension just add the following maven dependency:
+
+[source,xml,indent=0]
+----
+<dependency>
+   <groupId>com.github.dbunit-rules</groupId>
+   <artifactId>junit5</artifactId>
+include::../../../junit5/pom.xml[tags=version]
+   <scope>test</scope>
+</dependency>
+----
+
+====
+****
+
+==== Scenario: Seed database using DBUnit rules in JUnit5 tests
+
+****
+Given ::
+=====
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
+******
+
+[discrete]
+.src/test/resources/dataset/yml/users.yml
+----
+include::../../src/test/resources/datasets/yml/users.yml[]
+----
+
+
+******
+
+=====
+When ::
+=====
+The following junit5 test is executed icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+******
+
+[discrete]
+[source,java,linenums]
+----
+include::../../../junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java[tags=declaration;connectionField;test]
+----
+[discrete]
+<1> Enables DBUnit;
+[discrete]
+<2> JUnit 5 runner;
+[discrete]
+<3> As JUnit5 requires *Java8* you can use lambdas in your tests;
+[discrete]
+<4> DBUnitExtension will get connection by reflection so just declare a field or a method with `ConnectionHolder` as return type.
+
+
+******
+
+TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java/L22[found here^].
 
 =====
 Then ::
@@ -425,7 +573,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(019ms)#
 ******
 
 ----
@@ -537,7 +685,7 @@ ____
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -701,7 +849,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
@@ -718,7 +866,7 @@ IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
 ******
 
 [discrete]
