@@ -17,19 +17,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by pestano on 28/08/16.
  */
-@ExtendWith(DBUnitExtension.class)
-@RunWith(JUnitPlatform.class)
+//tag::declaration[]
+@ExtendWith(DBUnitExtension.class) //<1>
+@RunWith(JUnitPlatform.class) //<2>
 public class DBUnitJUnit5Test {
 
-    //DBUnitExtension will get connection by reflection so either declare a field or a method with ConncetionHolder as return typr
-    private ConnectionHolder connectionHolder = () -> instance("junit5-pu").connection();
+//end::declaration[]
 
+//DBUnitExtension will get connection by reflection so either declare a field or a method with ConncetionHolder as return type
+//tag::connectionField[]
+    private ConnectionHolder connectionHolder = () -> //<3>
+            instance("junit5-pu").connection();//<4>
+
+//end::connectionField[]
+
+//tag::test[]
     @Test
     @DataSet("users.yml")
     public void shouldListUsers() {
         List<User> users = em().createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().isNotEmpty().hasSize(2);
     }
+//end::test[]
 
     @Test
     @DataSet(cleanBefore=true) //avoid conflict with other tests 

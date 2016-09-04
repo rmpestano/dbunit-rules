@@ -5,7 +5,9 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
-        <version>0.12.1-SNAPSHOT</version>
+   <!-- tag::version[] -->
+   <version>0.12.1-SNAPSHOT</version>
+   <!-- end::version[] -->
     </parent>
     
     <artifactId>cucumber</artifactId>

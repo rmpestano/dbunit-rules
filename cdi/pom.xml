@@ -3,7 +3,9 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
-        <version>0.12.1-SNAPSHOT</version>
+   <!-- tag::version[] -->
+   <version>0.12.1-SNAPSHOT</version>
+   <!-- end::version[] -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -89,13 +91,13 @@
         <!--end::deltaspike-cdi-deps[]-->
 
 
-        <!--tag::cucumber-deps[]-->
         <dependency>
             <groupId>com.github.dbunit-rules</groupId>
             <artifactId>cucumber</artifactId>
             <version>${project.parent.version}</version>
             <scope>test</scope>
         </dependency>
+       <!--tag::cucumber-deps[]-->
         <dependency> <!--1-->
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
@@ -119,7 +121,7 @@
                         <plugin>
                             <groupId>com.github.cukedoctor</groupId>
                             <artifactId>cukedoctor-maven-plugin</artifactId>
-                            <version>1.0.2</version>
+                            <version>1.0.3</version>
                             <configuration>
                                 <outputFileName>documentation</outputFileName>
                                 <outputDir>docs</outputDir>

@@ -23,6 +23,21 @@ public class DBUnitCDITest {
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+
+
+=== *Dependencies*
+
+To use this module just add the following maven dependency:
+
+[source,xml,indent=0]
+----
+<dependency>
+     <groupId>com.github.dbunit-rules</groupId>
+     <artifactId>cdi</artifactId>
+include::../../../cdi/pom.xml[tags=version]
+     <scope>test</scope>
+</dependency>
+----
 =====
 
 Scenario: Seed database using yml dataset
@@ -65,6 +80,7 @@ include::../../src/test/resources/datasets/yml/users.yml[]
 ----
  """
 
+#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/DBUnitCDIIt.java#L74[found here^].}
 #cukedoctor-discrete
 When The following test is executed:
  """

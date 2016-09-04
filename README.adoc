@@ -304,7 +304,7 @@ Here are possible values:
 |executeScriptsAfter| A list of sql script files to execute after test. Note that commands inside sql file must be separated by `;`.| {}
 |===
 
-DBUnit Configuration:: this basically setup the `dbunit`. It can be configured by `@DBUnit` annotation (class or method level) and `dbunit.yml` file present in test resources folder.
+DBUnit Configuration:: this basically setup the `DBUnit` itself. It can be configured by `@DBUnit` annotation (class or method level) and `dbunit.yml` file present in test resources folder.
 +
 [source,java]
 ----
