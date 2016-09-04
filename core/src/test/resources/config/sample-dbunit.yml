@@ -1,5 +1,5 @@
-cacheConnection: true
-cacheTables: true
+cacheConnection: false
+cacheTableNames: false
 properties:
   batchedStatements:  true
   qualifiedTableNames: true

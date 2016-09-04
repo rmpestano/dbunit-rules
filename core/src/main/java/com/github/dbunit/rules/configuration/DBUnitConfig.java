@@ -16,7 +16,7 @@ public class DBUnitConfig {
 
     private boolean cacheConnection = false;
 
-    private boolean cacheTables = false;
+    private boolean cacheTableNames = false;
 
     private Map<String, Object> properties;
 
@@ -75,7 +75,7 @@ public class DBUnitConfig {
 
 
     public DBUnitConfig cacheTables(boolean cacheTables) {
-        this.cacheTables = cacheTables;
+        this.cacheTableNames = cacheTables;
         return this;
     }
 
@@ -92,8 +92,8 @@ public class DBUnitConfig {
         this.properties = properties;
     }
 
-    public void setCacheTables(boolean cacheTables) {
-        this.cacheTables = cacheTables;
+    public void setCacheTableNames(boolean cacheTableNames) {
+        this.cacheTableNames = cacheTableNames;
     }
 
     public boolean isCacheConnection() {
@@ -101,8 +101,8 @@ public class DBUnitConfig {
     }
 
 
-    public boolean isCacheTables() {
-        return cacheTables;
+    public boolean isCacheTableNames() {
+        return cacheTableNames;
     }
 
 

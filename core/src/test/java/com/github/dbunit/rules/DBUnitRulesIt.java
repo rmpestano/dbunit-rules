@@ -28,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 
 
 @RunWith(JUnit4.class)
-@DBUnit(cacheConnection = true, cacheTableNames = true)
 public class DBUnitRulesIt {
 
     // tag::rules[]

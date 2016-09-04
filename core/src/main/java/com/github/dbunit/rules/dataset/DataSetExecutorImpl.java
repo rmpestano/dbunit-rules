@@ -96,7 +96,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             instance = new DataSetExecutorImpl(executorId, connectionHolder, new DBUnitConfig(executorId));
             log.debug("creating executor instance " + executorId);
             executors.put(executorId, instance);
-        } else {
+        } else if(!instance.dbUnitConfig.isCacheConnection()) {
             instance.setConnectionHolder(connectionHolder);
         }
         return instance;
@@ -440,8 +440,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
         List<String> tables = new ArrayList<String>();
         
-        if(tableNames != null && dbUnitConfig.isCacheTables()){
-            return tables;
+        if(tableNames != null && dbUnitConfig.isCacheTableNames()){
+            return tableNames;
         }
         
         ResultSet result = null;

@@ -266,6 +266,71 @@ In example below <<EntityManagerProvider rule>> executes *before* `DBUnit rule`:
             around(DBUnitRule.instance(emProvider.connection()));
 ----
 
+=== Configuration
+
+There are two types of configuration in DBUnit Rules: `DataSet` and `DBUnit`.
+
+DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* or *@UsingDataSet (in case of CDI) annotation.
++
+It can be used at *class* or *method* level:
++
+[source,java]
+----
+     @Test
+     @DataSet(value ="users.yml", strategy = SeedStrategy.UPDATE,disableConstraints = true,cleanAfter = true,transactional = true)
+     public void shouldLoadDataSetConfigFromAnnotation(){
+
+      }
+----
++
+Here are possible values:
++
+[cols="3*", options="header"]
+|===
+|Name | Description | Default
+|value| Dataset file name using test resources folder as root directory. Multiple, comma separated, dataset file names can be provided.| ""
+|executorId| Nname of dataset executor for the given dataset.| DataSetExecutorImpl.DEFAULT_EXECUTOR_ID
+|strategy| DataSet seed strategy. Possible values are: CLEAN_INSERT, INSERT, REFRESH and UPDATE.| CLEAN_INSERT, meaning that DBUnit will clean and then insert data in tables present in provided dataset.
+|useSequenceFiltering| If true dbunit will look at constraints and dataset to try to determine the correct ordering for the SQL statements.| true
+|tableOrdering| A list of table names used to reorder DELETE operations to prevent failures due to circular dependencies.| ""
+|disableConstraints| Disable database constraints.| false
+|cleanBefore| If true DBUnit Rules will try to delete database before test in a smart way by using table ordering and brute force.| false
+|cleanAfter| If true DBUnit Rules will try to delete database after test in a smart way by using table ordering and brute force.| false
+|transactional| If true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive() must be true.| false
+|executeStatementsBefore| A list of jdbc statements to execute before test.| {}
+|executeStatementsAfter| A list of jdbc statements to execute after test.| {}
+|executeScriptsBefore| A list of sql script files to execute before test. Note that commands inside sql file must be separated by `;`.| {}
+|executeScriptsAfter| A list of sql script files to execute after test. Note that commands inside sql file must be separated by `;`.| {}
+|===
+
+DBUnit Configuration:: this basically setup the `dbunit`. It can be configured by `@DBUnit` annotation (class or method level) and `dbunit.yml` file present in test resources folder.
++
+[source,java]
+----
+    @Test
+    @DBUnit(cacheConnection = true, cacheTableNames = false, allowEmptyFields = true,batchSize = 50)
+    public void shouldLoadDBUnitConfigViaAnnotation() {
+
+    }
+----
++
+Here is a dbunit.yml example:
++
+.src/test/resources/dbunit.yml
+----
+cacheConnection: false
+cacheTableNames: false
+properties:
+  batchedStatements:  true
+  qualifiedTableNames: true
+  batchSize: 200
+  fetchSize: 200
+  allowEmptyFields: true
+  escapePattern: "[?]"
+----
++
+NOTE: `@DBUnit` annotation takes precedence over `dbunit.yml` global configuration which will be used only if the annotation is not present.
+
 === Multiple Databases
 Each executor has a JDBC connection so multiple databases can be handled by using multiple dataset executors:
 

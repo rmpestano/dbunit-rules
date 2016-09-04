@@ -27,6 +27,9 @@ public @interface DataSet {
    */
   String executorId() default DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
 
+  /**
+   * DataSet seed strategy. Default is CLEAN_INSERT, meaning that DBUnit will clean and then insert data in tables present in provided dataset.
+   */
   SeedStrategy strategy() default SeedStrategy.CLEAN_INSERT;
 
   /**
@@ -68,7 +71,7 @@ public @interface DataSet {
   String[] executeScriptsAfter() default {};
 
   /**
-   * @return if true DBUnit rules will try to delete database before test in a 'smart way'
+   * @return if true DBUnit rules will try to delete database before test in a 'smart way' by using table ordering and brute force.
    */
   boolean cleanBefore() default false;
 
