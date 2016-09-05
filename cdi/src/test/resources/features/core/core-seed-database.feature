@@ -19,10 +19,10 @@ To use it just add the following maven dependency:
 [source,xml,indent=0]
 ----
 <dependency>
-    <groupId>com.github.dbunit-rules</groupId>
-    <artifactId>core</artifactId>
+     <groupId>com.github.dbunit-rules</groupId>
+     <artifactId>core</artifactId>
 include::../../../core/pom.xml[tags=version]
-    <scope>test</scope>
+     <scope>test</scope>
 </dependency>
 ----
 
