@@ -55,4 +55,4 @@ include::../../../junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test
 
  """
 
-Then The database should be seeded with the dataset content before step execution
+Then The database should be seeded with the dataset content before test execution
