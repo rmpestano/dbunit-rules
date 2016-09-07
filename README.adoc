@@ -321,6 +321,7 @@ Here is a dbunit.yml example, also the default values:
 ----
 cacheConnection: true
 cacheTableNames: true
+activateLeakHunter: false
 properties:
   batchedStatements:  false
   qualifiedTableNames: false
