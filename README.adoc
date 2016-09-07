@@ -927,6 +927,56 @@ public class DBUnitJUnit5Test {
 ----
 <1> DBUnit extension will get JDBC connection by reflection so you need to declare a *field* or *method* with `ConnectionHolder` as return type.
 
+== Leak Hunter
+
+Leak hunter is a component based on https://vladmihalcea.com/2016/07/12/the-best-way-to-detect-database-connection-leaks/[this blog post^] which counts open jdbc connections before and after test execution.
+
+To enable it just use *activateLeakHunter = true* in `@DBUnit`annotation, example:
+
+[source, java, linenums]
+----
+@RunWith(JUnit4.class)
+@DBUnit(activateLeakHunter = true)
+public class LeakHunterIt {
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(new ConnectionHolderImpl(getConnection()));
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Test
+    @DataSet("yml/user.yml")
+    public void shouldFindConnectionLeak() throws SQLException {
+         exception.expect(LeakHunterException.class); <1>
+         exception.expectMessage("Execution of method shouldFindConnectionLeak left 1 open connection(s).");
+         createLeak();
+     }
+
+     @Test
+     @DataSet("yml/user.yml")
+     public void shouldFindTwoConnectionLeaks() throws SQLException {
+         exception.expect(LeakHunterException.class);
+         exception.expectMessage("Execution of method shouldFindTwoConnectionLeaks left 2 open connection(s).");
+         createLeak();
+         createLeak();
+     }
+
+     @Test
+     @DataSet("yml/user.yml")
+     @DBUnit(activateLeakHunter = false)
+     public void shouldNotFindConnectionLeakWhenHunterIsDisabled() throws SQLException {
+           createLeak();
+     }
+
+}
+----
+<1> If number of connections after test execution are grater than before then a *LeakHunterException* will be raised.
+
+TIP: Complete source code of example above can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/LeakHunterIt.java[found here^].
+
+
+
 == Snapshots
 
 Snapshots are available in maven central, to use it just add the following snippet in your pom.xml:
