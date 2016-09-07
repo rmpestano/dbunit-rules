@@ -385,6 +385,9 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         if (is == null) {//if not found try to get from datasets folder
             is = getClass().getResourceAsStream("/datasets" + dataSet);
         }
+        if(is == null){
+            throw new RuntimeException(String.format("Could not find dataset '%s' under 'resources' or 'resources/datasets' directory.",dataSet.substring(1)));
+        }
         return is;
     }
 

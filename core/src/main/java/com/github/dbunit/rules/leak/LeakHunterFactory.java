@@ -19,7 +19,7 @@ public class LeakHunterFactory {
     public static LeakHunter from(Connection connection) {
         try {
             if (connection == null || connection.isClosed()) {
-                throw new RuntimeException("Cannot create Leak Hunter from a null connection or closed connection");
+                throw new RuntimeException("Cannot create Leak Hunter from a null or closed connection");
             }
         } catch (SQLException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);

@@ -57,6 +57,7 @@ public class DBUnitRule implements TestRule {
 
     @Override
     public Statement apply(final Statement statement, final Description description) {
+
         return new Statement() {
 
             @Override

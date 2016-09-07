@@ -7,6 +7,6 @@ public class LeakHunterException extends RuntimeException {
 
 
     public LeakHunterException(String methodName, int numberOfConnections) {
-        super(String.format("Execution of method %s left %d open connections.",methodName,numberOfConnections));
+        super(String.format("Execution of method %s left %d open connection(s).",methodName,numberOfConnections));
     }
 }

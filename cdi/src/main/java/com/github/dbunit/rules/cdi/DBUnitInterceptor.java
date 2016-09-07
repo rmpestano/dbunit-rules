@@ -2,10 +2,13 @@ package com.github.dbunit.rules.cdi;
 
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.configuration.GlobaConfig;
+import com.github.dbunit.rules.leak.LeakHunterException;
+import com.github.dbunit.rules.leak.LeakHunterFactory;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
@@ -34,7 +37,7 @@ public class DBUnitInterceptor implements Serializable {
         Object proceed = null;
         UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
         if (usingDataSet != null) {
-            DataSetConfig DataSetConfig = new DataSetConfig(usingDataSet.value()).
+            DataSetConfig dataSetConfig = new DataSetConfig(usingDataSet.value()).
                     cleanAfter(usingDataSet.cleanAfter()).
                     cleanBefore(usingDataSet.cleanBefore()).
                     disableConstraints(usingDataSet.disableConstraints()).
@@ -46,13 +49,29 @@ public class DBUnitInterceptor implements Serializable {
                     transactional(usingDataSet.transactional()).
                     tableOrdering(usingDataSet.tableOrdering()).
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
-            dataSetProcessor.process(DataSetConfig,DBUnitConfig.from(invocationContext.getMethod()));
-            boolean isTransactionalTest = DataSetConfig.isTransactional();
+            DBUnitConfig dbUnitConfig = DBUnitConfig.from(invocationContext.getMethod());
+            dataSetProcessor.process(dataSetConfig,dbUnitConfig);
+            boolean isTransactionalTest = dataSetConfig.isTransactional();
             if(isTransactionalTest){
                 em.getTransaction().begin();
             }
             try {
+                LeakHunter leakHunter = null;
+                boolean leakHunterActivated = dbUnitConfig.isLeakHunter();
+                int openConnectionsBefore = 0;
+                if (leakHunterActivated) {
+                    leakHunter = LeakHunterFactory.from(dataSetProcessor.getConnection());
+                    openConnectionsBefore = leakHunter.openConnections();
+                }
                 proceed = invocationContext.proceed();
+
+                int openConnectionsAfter = 0;
+                if(leakHunterActivated){
+                    openConnectionsAfter = leakHunter.openConnections();
+                    if(openConnectionsAfter > openConnectionsBefore){
+                        throw new LeakHunterException(invocationContext.getMethod().getName(),openConnectionsAfter - openConnectionsBefore);
+                    }
+                }
                 if(isTransactionalTest){
                     em.getTransaction().commit();
                 }
@@ -67,11 +86,11 @@ public class DBUnitInterceptor implements Serializable {
                 dataSetProcessor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true),expectedDataSet.ignoreCols());
             }
             if(usingDataSet.cleanAfter()){
-                dataSetProcessor.clearDatabase(DataSetConfig);
+                dataSetProcessor.clearDatabase(dataSetConfig);
             }
 
             if (!"".equals(usingDataSet.executeCommandsAfter())) {
-                dataSetProcessor.executeStatements(DataSetConfig.getExecuteStatementsAfter());
+                dataSetProcessor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
             }
 
             if(usingDataSet.executeScriptsAfter().length > 0 && !"".equals(usingDataSet.executeScriptsAfter()[0])){

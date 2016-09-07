@@ -4,9 +4,12 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.leak.LeakHunterException;
+import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -24,7 +27,11 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManager
  * Created by pestano on 27/08/16.
  */
 public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-
+    
+    private static final String EXECUTOR_STORE = "executor";
+    private static final String MODEL_STORE = "model";
+    private static final String LEAK_STORE = "leakHunter";
+    private static final String CONNECTION_BEFORE_STORE = "openConnectionsBefore";
 
     @Override
     public void beforeTestExecution(TestExtensionContext testExtensionContext) throws Exception {
@@ -49,15 +56,19 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             throw new RuntimeException("Could not find DataSet annotation for test " + testExtensionContext.getTestMethod().get().getName());
         }
 
+        DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
         final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
         DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
-        executor.setDBUnitConfig(DBUnitConfig.from(testExtensionContext.getTestMethod().get()));
-
+        executor.setDBUnitConfig(dbUnitConfig);
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
-        testExtensionContext.getStore(namespace).put("executor", executor);
-        testExtensionContext.getStore(namespace).put("model", dasetConfig);
-
+        testExtensionContext.getStore(namespace).put(EXECUTOR_STORE, executor);
+        testExtensionContext.getStore(namespace).put(MODEL_STORE, dasetConfig);
+        if(dbUnitConfig.isLeakHunter()){
+            LeakHunter leakHunter = LeakHunterFactory.from(connectionHolder.getConnection());
+            testExtensionContext.getStore(namespace).put(LEAK_STORE, leakHunter);
+            testExtensionContext.getStore(namespace).put(CONNECTION_BEFORE_STORE, leakHunter.openConnections());
+        }
 
         try {
             executor.createDataSet(dasetConfig);
@@ -83,7 +94,17 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
     @Override
     public void afterTestExecution(TestExtensionContext testExtensionContext) throws Exception {
-
+        DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
+        if(dbUnitConfig.isLeakHunter()){
+            ExtensionContext.Namespace executorNamespace = getExecutorNamespace(testExtensionContext);
+            LeakHunter leakHunter = testExtensionContext.getStore(executorNamespace).get(LEAK_STORE,LeakHunter.class);
+            int openConnectionsBefore = testExtensionContext.getStore(executorNamespace).get(CONNECTION_BEFORE_STORE,Integer.class);
+            int openConnectionsAfter = leakHunter.openConnections();
+            if(openConnectionsAfter > openConnectionsBefore){
+                throw new LeakHunterException(testExtensionContext.getTestMethod().get().getName(),openConnectionsAfter - openConnectionsBefore);
+            }
+            
+        }
         if (shouldCompareDataSet(testExtensionContext)) {
             ExpectedDataSet expectedDataSet = testExtensionContext.getTestMethod().get().getAnnotation(ExpectedDataSet.class);
             if (expectedDataSet == null) {
@@ -92,8 +113,8 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             }
             if (expectedDataSet != null) {
                 ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
-                DataSetExecutor executor = testExtensionContext.getStore(namespace).get("executor", DataSetExecutor.class);
-                DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get("model", DataSetConfig.class);
+                DataSetExecutor executor = testExtensionContext.getStore(namespace).get(EXECUTOR_STORE, DataSetExecutor.class);
+                DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(MODEL_STORE, DataSetConfig.class);
                 boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
                 if (isTransactional) {
                     em().getTransaction().commit();

@@ -106,4 +106,7 @@ public class DataSetProcessor {
         dataSetExecutor.compareCurrentDataSetWith(expected, excludeCols);
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
 }

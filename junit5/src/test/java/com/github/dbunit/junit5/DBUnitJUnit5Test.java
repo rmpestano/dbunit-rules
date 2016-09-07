@@ -1,6 +1,7 @@
 package com.github.dbunit.junit5;
 
 import com.github.dbunit.junit5.model.User;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
