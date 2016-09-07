@@ -10,7 +10,7 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
-:revnumber: 0.13.1-SNAPSHOT
+:revnumber: 0.13.0-SNAPSHOT
 :hardbreaks:
 
 = *Living Documentation*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |4
-|06s 545ms
+|05s 314ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |3
-|001ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -102,7 +102,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |7
-|016ms
+|013ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -116,10 +116,10 @@ include::/home/travis/build/rmpestano/dbunit-rules/cdi/target/test-classes/cuked
 |0
 |0
 |16
-|004ms
+|033ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|06s 573ms
+|11|0|11|39|0|0|0|0|0|39 2+|05s 369ms
 |===
 
 == *Features*
@@ -268,7 +268,7 @@ include::../../../cdi/pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(06s 545ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(05s 314ms)#
 ******
 
 [discrete]
@@ -508,7 +508,7 @@ include::../../../junit5/pom.xml[tags=version]
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
@@ -573,7 +573,7 @@ Scritable datasets are backed by JSR 223.footnote:[Scripting for the Java Platfo
 ****
 Given ::
 =====
-Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(014ms)#
+Groovy script engine is on test classpath icon:thumbs-up[role="green",title="Passed"] [small right]#(001ms)#
 ******
 
 ----
@@ -662,7 +662,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ScriptReplacementsI
 =====
 Then ::
 =====
-Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Dataset script should be interpreted while seeding the database icon:thumbs-up[role="green",title="Passed"] [small right]#(010ms)#
 =====
 ****
 
@@ -717,7 +717,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must pass because database state is as in expected dataset. icon:thumbs-up[role="green",title="Passed"] [small right]#(018ms)#
 =====
 ****
 
@@ -849,7 +849,7 @@ include::../../../core/src/test/java/com/github/dbunit/rules/ExpectedDataSetIt.j
 =====
 Then ::
 =====
-Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+Test must fail with following error: icon:thumbs-up[role="green",title="Passed"] [small right]#(003ms)#
 ******
 
 [discrete]
@@ -866,7 +866,7 @@ IMPORTANT: junit.framework.ComparisonFailure: value (table=USER, row=0, col=name
 ****
 Given ::
 =====
-The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#(008ms)#
 ******
 
 [discrete]
