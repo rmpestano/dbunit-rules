@@ -27,8 +27,8 @@ public class ConfigurationTest {
     public void shouldLoadDBUnitConfigViaGlobalFile(){
         GlobaConfig globaConfig = GlobaConfig.newInstance();
         assertThat(globaConfig).isNotNull()
-        .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames")
-        .contains(true,true);
+        .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.leakHunter")
+        .contains(true,true,false);
 
         assertThat(globaConfig.getDbUnitConfig().getProperties()).
                 containsEntry("allowEmptyFields", false).
@@ -49,7 +49,7 @@ public class ConfigurationTest {
 
         GlobaConfig globaConfig = GlobaConfig.newInstance();
         assertThat(globaConfig).isNotNull()
-                .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.activateLeakHunter")
+                .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.leakHunter")
                 .contains(false,false,true);
 
         assertThat(globaConfig.getDbUnitConfig().getProperties()).
