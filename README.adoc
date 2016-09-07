@@ -163,7 +163,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.12.0</version>
+      <version>0.13.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -636,7 +636,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.12.0</version>
+    <version>0.13.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -702,7 +702,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.12.0</version>
+    <version>0.13.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -904,7 +904,7 @@ http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a n
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>junit5</artifactId>
-    <version>0.12.0</version>
+    <version>0.13.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -931,7 +931,7 @@ public class DBUnitJUnit5Test {
 
 Leak hunter is a component based on https://vladmihalcea.com/2016/07/12/the-best-way-to-detect-database-connection-leaks/[this blog post^] which counts open jdbc connections before and after test execution.
 
-To enable it just use *activateLeakHunter = true* in `@DBUnit`annotation, example:
+To enable it just use *activateLeakHunter = true* in `@DBUnit` annotation, example:
 
 [source, java, linenums]
 ----
@@ -971,7 +971,7 @@ public class LeakHunterIt {
 
 }
 ----
-<1> If number of connections after test execution are grater than before then a *LeakHunterException* will be raised.
+<1> If number of connections after test execution are greater than before then a *LeakHunterException* will be raised.
 
 TIP: Complete source code of example above can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/LeakHunterIt.java[found here^].
 
