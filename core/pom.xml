@@ -4,7 +4,7 @@
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>parent</artifactId>
    <!-- tag::version[] -->
-   <version>0.12.1-SNAPSHOT</version>
+   <version>0.13.0</version>
    <!-- end::version[] -->
     </parent>
     <modelVersion>4.0.0</modelVersion>

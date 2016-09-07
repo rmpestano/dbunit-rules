@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>examples</artifactId>
-        <version>0.12.1-SNAPSHOT</version>
+        <version>0.13.0</version>
     </parent>
 
     <artifactId>jpa-productivity-boosters</artifactId>
