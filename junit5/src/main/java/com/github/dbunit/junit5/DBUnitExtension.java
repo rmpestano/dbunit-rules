@@ -1,13 +1,11 @@
 package com.github.dbunit.junit5;
 
-import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.configuration.GlobaConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -53,7 +51,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
         final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
         DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
-        executor.setDbUnitConfig(DBUnitConfig.from(testExtensionContext.getTestMethod().get()));
+        executor.setDBUnitConfig(DBUnitConfig.from(testExtensionContext.getTestMethod().get()));
 
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class

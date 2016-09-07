@@ -5,10 +5,13 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.leak.LeakHunterException;
+import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -63,12 +66,14 @@ public class DBUnitRule implements TestRule {
                 if (dataSet != null) {
                     final DataSetConfig model = new DataSetConfig().from(dataSet);
                     final String datasetExecutorId = model.getExecutorId();
+                    DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
+                    LeakHunter leakHunter = null;
                     boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
                     if (executorNameIsProvided) {
                         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
                     }
                     try {
-                        executor.setDbUnitConfig(resolveDBUnitConfig(description));
+                        executor.setDBUnitConfig(dbUnitConfig);
                         executor.createDataSet(model);
                     } catch (final Exception e) {
                         throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
@@ -79,7 +84,22 @@ public class DBUnitRule implements TestRule {
                         if (isTransactional) {
                             em().getTransaction().begin();
                         }
+                        boolean leakHunterActivated = dbUnitConfig.isLeakHunter();
+                        int openConnectionsBefore = 0;
+                        if (leakHunterActivated) {
+                            leakHunter = LeakHunterFactory.from(executor.getConnectionHolder().getConnection());
+                            openConnectionsBefore = leakHunter.openConnections();
+                        }
                         statement.evaluate();
+
+                        int openConnectionsAfter = 0;
+                        if(leakHunterActivated){
+                            openConnectionsAfter = leakHunter.openConnections();
+                            if(openConnectionsAfter > openConnectionsBefore){
+                                throw new LeakHunterException(currentMethod,openConnectionsAfter - openConnectionsBefore);
+                            }
+                        }
+
                         if (isTransactional) {
                             em().getTransaction().commit();
                         }
@@ -118,7 +138,6 @@ public class DBUnitRule implements TestRule {
                 } else {
                     statement.evaluate();
                     performDataSetComparison(description);
-
                 }
 
             }

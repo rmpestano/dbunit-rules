@@ -3,12 +3,9 @@ package com.github.dbunit.rules.cdi;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
 import org.slf4j.Logger;
@@ -75,7 +72,7 @@ public class DataSetProcessor {
     }
 
     public void process(DataSetConfig dataSetConfig, DBUnitConfig config) {
-        dataSetExecutor.setDbUnitConfig(config);
+        dataSetExecutor.setDBUnitConfig(config);
         dataSetExecutor.createDataSet(dataSetConfig);
     }
 

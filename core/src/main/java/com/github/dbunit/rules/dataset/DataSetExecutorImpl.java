@@ -10,6 +10,7 @@ import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.replacer.DateTimeReplacer;
 import com.github.dbunit.rules.replacer.ScriptReplacer;
+import com.github.dbunit.rules.util.DriverUtils;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.AmbiguousTableNameException;
 import org.dbunit.database.DatabaseConfig;
@@ -249,18 +250,17 @@ public class DataSetExecutorImpl implements DataSetExecutor {
             config.setProperty(DatabaseConfig.findByShortName(p.getKey()).getProperty(),p.getValue());
         }
 
-
         //PROPERTY_DATATYPE_FACTORY
         String driverName = getDriverName(connectionHolder);
-        if (isHsql(driverName)) {
+        if (DriverUtils.isHsql(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new HsqldbDataTypeFactory());
-        } else if (isH2(driverName)) {
+        } else if (DriverUtils.isH2(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new H2DataTypeFactory());
-        } else if (isMysql(driverName)) {
+        } else if (DriverUtils.isMysql(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new MySqlDataTypeFactory());
-        } else if (isPostgre(driverName)) {
+        } else if (DriverUtils.isPostgre(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new PostgresqlDataTypeFactory());
-        } else if (isOracle(driverName)) {
+        } else if (DriverUtils.isOracle(driverName)) {
             config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new Oracle10DataTypeFactory());
         }
 
@@ -269,58 +269,30 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     private void disableConstraints() throws SQLException {
 
         String driverName = getDriverName(connectionHolder);
-        if (isHsql(driverName)) {
+        if (DriverUtils.isHsql(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET DATABASE REFERENTIAL INTEGRITY FALSE;");
         }
 
-        if (isH2(driverName)) {
+        if (DriverUtils.isH2(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET foreign_key_checks = 0;");
         }
 
-        if (isMysql(driverName)) {
+        if (DriverUtils.isMysql(driverName)) {
             connectionHolder.getConnection().createStatement().execute(" SET FOREIGN_KEY_CHECKS=0;");
         }
 
-        if (isPostgre(driverName) || isOracle(driverName)) {
+        if (DriverUtils.isPostgre(driverName) || DriverUtils.isOracle(driverName)) {
             connectionHolder.getConnection().createStatement().execute("SET CONSTRAINTS ALL DEFERRED;");
         }
 
     }
 
     private String getDriverName(ConnectionHolder connectionHolder) throws SQLException {
-        
+
         if(driverName != null){
             return driverName;
         }
-        if (connectionHolder != null && connectionHolder.getConnection() != null) {
-            try {
-                driverName = connectionHolder.getConnection().getMetaData().getDriverName().toLowerCase();
-            } catch (SQLException e) {
-                e.printStackTrace();
-                driverName = null;
-            }
-        }
-        return driverName;
-    }
-
-    private boolean isHsql(String driverName) {
-        return driverName != null && driverName.contains("hsql");
-    }
-
-    private boolean isH2(String driverName) {
-        return driverName != null && driverName.contains("h2");
-    }
-
-    private boolean isMysql(String driverName) {
-        return driverName != null && driverName.contains("mysql");
-    }
-
-    private boolean isPostgre(String driverName) {
-        return driverName != null && driverName.contains("postgre");
-    }
-
-    private boolean isOracle(String driverName) {
-        return driverName != null && driverName.contains("oracle");
+        return DriverUtils.getDriverName(connectionHolder.getConnection());
     }
 
     public void executeStatements(String[] statements) {
@@ -587,11 +559,14 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     }
 
-    public void setDbUnitConfig(DBUnitConfig dbUnitConfig) {
+    public void setDBUnitConfig(DBUnitConfig dbUnitConfig) {
         this.dbUnitConfig = dbUnitConfig;
     }
 
+    @Override
+    public DBUnitConfig getDBUnitConfig() {
+        return dbUnitConfig;
+    }
 
-     
 
 }

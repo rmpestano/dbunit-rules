@@ -42,7 +42,9 @@ public interface DataSetExecutor{
     void compareCurrentDataSetWith(DataSetConfig expected, String[] ignoreCols) throws DatabaseUnitException;
 
 
-    void setDbUnitConfig(DBUnitConfig dbUnitConfig);
+    void setDBUnitConfig(DBUnitConfig dbUnitConfig);
+
+    DBUnitConfig getDBUnitConfig();
     
     
 }

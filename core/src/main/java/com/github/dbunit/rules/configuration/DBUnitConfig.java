@@ -18,6 +18,8 @@ public class DBUnitConfig {
 
     private boolean cacheTableNames = false;
 
+    private boolean leakHunter = false;
+
     private Map<String, Object> properties;
 
     public DBUnitConfig() {
@@ -38,6 +40,7 @@ public class DBUnitConfig {
 
         dbUnitConfig.cacheConnection(dbUnit.cacheConnection()).
                 cacheTableNames(dbUnit.cacheTableNames()).
+                leakHunter(dbUnit.activateLeakHunter()).
                 addDBUnitProperty("batchedStatements", dbUnit.batchedStatements()).
                 addDBUnitProperty("batchSize", dbUnit.batchSize()).
                 addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).
@@ -78,6 +81,11 @@ public class DBUnitConfig {
         return this;
     }
 
+    public DBUnitConfig leakHunter(boolean leakHunter){
+        this.leakHunter = leakHunter;
+        return this;
+    }
+
 
     public DBUnitConfig cacheTableNames(boolean cacheTables) {
         this.cacheTableNames = cacheTables;
@@ -110,6 +118,13 @@ public class DBUnitConfig {
         return cacheTableNames;
     }
 
+    public boolean isLeakHunter() {
+        return leakHunter;
+    }
+
+    public void setLeakHunter(boolean leakHunter) {
+        this.leakHunter = leakHunter;
+    }
 
     public Map<String, Object> getProperties() {
         return properties;

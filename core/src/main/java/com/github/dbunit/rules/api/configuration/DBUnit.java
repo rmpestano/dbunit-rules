@@ -31,6 +31,8 @@ public @interface DBUnit {
     
     
     boolean cacheTableNames() default true;
+
+    boolean activateLeakHunter() default false;
     
 
     /**
@@ -65,4 +67,5 @@ public @interface DBUnit {
      * @return value which configures DatabaseConfig.PROPERTY_ESCAPE_PATTERN. Defaults to none
      */
     String escapePattern() default "";
+
 }

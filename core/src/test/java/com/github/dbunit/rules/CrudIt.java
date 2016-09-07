@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -18,6 +19,7 @@ import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 
 @RunWith(JUnit4.class)
+@DBUnit(activateLeakHunter = true)
 public class CrudIt {
 
 
@@ -30,13 +32,14 @@ public class CrudIt {
 
 	@Test
 	@DataSet("yml/users.yml")
+	@DBUnit(activateLeakHunter = false)
 	public void shouldListUsers() {
 		List<User> users = em().createQuery("select u from User u").getResultList();
 		assertThat(users).isNotNull().isNotEmpty().hasSize(2);
 	}
 
 	@Test
-	@DataSet(cleanBefore=true) //avoid conflict with other tests 
+	@DataSet(cleanBefore=true) //avoid conflict with other tests
 	public void shouldInsertUser() {
 		User user = new User();
 		user.setName("user");
@@ -51,6 +54,7 @@ public class CrudIt {
 
 	@Test
 	@DataSet("yml/users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
+	@DBUnit(activateLeakHunter = false)
 	public void shouldUpdateUser() {
 		User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
 		assertThat(user).isNotNull();
