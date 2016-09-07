@@ -1,5 +1,6 @@
 cacheConnection: true
 cacheTableNames: true
+leakHunter: false
 properties:
   batchedStatements:  false
   qualifiedTableNames: false

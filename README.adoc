@@ -321,7 +321,7 @@ Here is a dbunit.yml example, also the default values:
 ----
 cacheConnection: true
 cacheTableNames: true
-activateLeakHunter: false
+leakHunter: false
 properties:
   batchedStatements:  false
   qualifiedTableNames: false
@@ -932,12 +932,12 @@ public class DBUnitJUnit5Test {
 
 Leak hunter is a component based on https://vladmihalcea.com/2016/07/12/the-best-way-to-detect-database-connection-leaks/[this blog post^] which counts open jdbc connections before and after test execution.
 
-To enable it just use *activateLeakHunter = true* in `@DBUnit` annotation, example:
+To enable it just use *leakHunter = true* in `@DBUnit` annotation, example:
 
 [source, java, linenums]
 ----
 @RunWith(JUnit4.class)
-@DBUnit(activateLeakHunter = true)
+@DBUnit(leakHunter = true)
 public class LeakHunterIt {
 
     @Rule
@@ -948,7 +948,7 @@ public class LeakHunterIt {
 
     @Test
     @DataSet("yml/user.yml")
-    public void shouldFindConnectionLeak() throws SQLException {
+    public void shouldFindConnectionLeak() {
          exception.expect(LeakHunterException.class); <1>
          exception.expectMessage("Execution of method shouldFindConnectionLeak left 1 open connection(s).");
          createLeak();
@@ -956,7 +956,7 @@ public class LeakHunterIt {
 
      @Test
      @DataSet("yml/user.yml")
-     public void shouldFindTwoConnectionLeaks() throws SQLException {
+     public void shouldFindTwoConnectionLeaks()  {
          exception.expect(LeakHunterException.class);
          exception.expectMessage("Execution of method shouldFindTwoConnectionLeaks left 2 open connection(s).");
          createLeak();
@@ -965,8 +965,8 @@ public class LeakHunterIt {
 
      @Test
      @DataSet("yml/user.yml")
-     @DBUnit(activateLeakHunter = false)
-     public void shouldNotFindConnectionLeakWhenHunterIsDisabled() throws SQLException {
+     @DBUnit(leakHunter = false)
+     public void shouldNotFindConnectionLeakWhenHunterIsDisabled() {
            createLeak();
      }
 

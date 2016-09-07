@@ -122,8 +122,8 @@ public class DBUnitConfig {
         return leakHunter;
     }
 
-    public void setLeakHunter(boolean leakHunter) {
-        this.leakHunter = leakHunter;
+    public void setLeakHunter(boolean activateLeakHunter) {
+        this.leakHunter = activateLeakHunter;
     }
 
     public Map<String, Object> getProperties() {

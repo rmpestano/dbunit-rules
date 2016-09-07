@@ -118,7 +118,8 @@ public class DataSetExecutorImpl implements DataSetExecutor {
         if(printDBUnitConfig.compareAndSet(true,false)){
             StringBuilder sb = new StringBuilder(150);
             sb.append("cacheConnection: ").append("" + dbUnitConfig.isCacheConnection()).append("\n").
-                    append("cacheTableNames: ").append(dbUnitConfig.isCacheTableNames()).append("\n");
+                    append("cacheTableNames: ").append(dbUnitConfig.isCacheTableNames()).append("\n").
+                    append("leakHunter: ").append("" + dbUnitConfig.isLeakHunter()).append("\n");
 
             for (Entry<String, Object> entry : dbUnitConfig.getProperties().entrySet()) {
                 sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");

@@ -49,8 +49,8 @@ public class ConfigurationTest {
 
         GlobaConfig globaConfig = GlobaConfig.newInstance();
         assertThat(globaConfig).isNotNull()
-                .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames")
-                .contains(false,false);
+                .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.activateLeakHunter")
+                .contains(false,false,true);
 
         assertThat(globaConfig.getDbUnitConfig().getProperties()).
                 containsEntry("allowEmptyFields", true).
