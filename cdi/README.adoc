@@ -12,7 +12,7 @@ A CDI interceptor to configure DBUnit datasets in your tests.
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.13.0</version>
+    <version>0.13.1</version>
     <scope>test</scope>
 </dependency>
 ----
