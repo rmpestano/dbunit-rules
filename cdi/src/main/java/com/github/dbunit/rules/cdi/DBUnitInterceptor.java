@@ -6,7 +6,7 @@ import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.cdi.api.UsingDataSet;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.configuration.GlobaConfig;
+import com.github.dbunit.rules.configuration.GlobalConfig;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 

@@ -1,5 +1,6 @@
 package com.github.dbunit.rules.configuration;
 
+import org.apache.xmlbeans.impl.common.GlobalLock;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -10,38 +11,41 @@ import java.io.InputStream;
  * pojo which represents dbunit.yml, used for global which can be overrided via @DataSet annotation
  * at class or method level and with @DBUnit at class or method level
  */
-public class GlobaConfig {
+public class GlobalConfig {
 
-    private static GlobaConfig instance;
+    private static GlobalConfig instance;
 
     private DBUnitConfig dbUnitConfig;
 
 
-    private GlobaConfig() {
+    private GlobalConfig() {
     }
 
-    public static GlobaConfig instance() {
+    public static GlobalConfig instance() {
         if (instance == null) {
             createInstance();
         }
         return instance;
     }
 
-    public static GlobaConfig newInstance() {
+    public static GlobalConfig newInstance() {
         instance = null;
         return instance();
     }
 
     private static void createInstance() {
-        instance = new GlobaConfig();
-        DBUnitConfig dbUnitConfig;
+        instance = new GlobalConfig();
+        DBUnitConfig dbUnitConfig = null;
         //try to instance user provided dbunit.yml
         InputStream customConfiguration = Thread.currentThread().getContextClassLoader().getResourceAsStream("dbunit.yml");
         if (customConfiguration != null) {
             dbUnitConfig = new Yaml().loadAs(customConfiguration, DBUnitConfig.class);
-        } else {
-            //default config
-            dbUnitConfig = new Yaml().loadAs(GlobaConfig.class.getResourceAsStream("/default/dbunit.yml"), DBUnitConfig.class);
+        } 
+        
+        if(dbUnitConfig == null) { 
+        	//default config
+        	dbUnitConfig = new Yaml().loadAs(GlobalConfig.class.getResourceAsStream("/default/dbunit.yml"), DBUnitConfig.class);
+        	
         }
 
         if (dbUnitConfig.getProperties().containsKey("escapePattern")) {

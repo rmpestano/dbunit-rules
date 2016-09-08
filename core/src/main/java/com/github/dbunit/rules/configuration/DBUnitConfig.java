@@ -55,7 +55,7 @@ public class DBUnitConfig {
     }
 
     public static DBUnitConfig fromGlobalConfig() {
-        return GlobaConfig.instance().getDbUnitConfig();
+        return GlobalConfig.instance().getDbUnitConfig();
     }
 
     public static DBUnitConfig from(Method method) {

@@ -25,7 +25,7 @@ public class ConfigurationTest {
 
     @Test
     public void shouldLoadDBUnitConfigViaGlobalFile(){
-        GlobaConfig globaConfig = GlobaConfig.newInstance();
+        GlobalConfig globaConfig = GlobalConfig.newInstance();
         assertThat(globaConfig).isNotNull()
         .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.leakHunter")
         .contains(true,true,false);
@@ -47,7 +47,7 @@ public class ConfigurationTest {
         fos.flush();
         fos.close();
 
-        GlobaConfig globaConfig = GlobaConfig.newInstance();
+        GlobalConfig globaConfig = GlobalConfig.newInstance();
         assertThat(globaConfig).isNotNull()
                 .extracting("dbUnitConfig.cacheConnection","dbUnitConfig.cacheTableNames","dbUnitConfig.leakHunter")
                 .contains(false,false,true);
