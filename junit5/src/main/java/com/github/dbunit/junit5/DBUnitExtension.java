@@ -10,10 +10,12 @@ import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
+import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,9 +29,9 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManager
  * Created by pestano on 27/08/16.
  */
 public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-    
+
     private static final String EXECUTOR_STORE = "executor";
-    private static final String MODEL_STORE = "model";
+    private static final String DATASET_CONFIG_STORE = "datasetConfig";
     private static final String LEAK_STORE = "leakHunter";
     private static final String CONNECTION_BEFORE_STORE = "openConnectionsBefore";
 
@@ -40,11 +42,12 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             return;
         }
 
+        ConnectionHolder connectionHolder = findTestConnection(testExtensionContext);
+
         if (isEntityManagerActive()) {
             em().clear();
         }
 
-        ConnectionHolder connectionHolder = findTestConnection(testExtensionContext);
 
         DataSet annotation = testExtensionContext.getTestMethod().get().getAnnotation(DataSet.class);
         if (annotation == null) {
@@ -63,8 +66,8 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
         testExtensionContext.getStore(namespace).put(EXECUTOR_STORE, executor);
-        testExtensionContext.getStore(namespace).put(MODEL_STORE, dasetConfig);
-        if(dbUnitConfig.isLeakHunter()){
+        testExtensionContext.getStore(namespace).put(DATASET_CONFIG_STORE, dasetConfig);
+        if (dbUnitConfig.isLeakHunter()) {
             LeakHunter leakHunter = LeakHunterFactory.from(connectionHolder.getConnection());
             testExtensionContext.getStore(namespace).put(LEAK_STORE, leakHunter);
             testExtensionContext.getStore(namespace).put(CONNECTION_BEFORE_STORE, leakHunter.openConnections());
@@ -75,6 +78,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
         } catch (final Exception e) {
             throw new RuntimeException(String.format("Could not create dataset for test method %s due to following error " + e.getMessage(), testExtensionContext.getTestMethod().get().getName()), e);
         }
+
         boolean isTransactional = dasetConfig.isTransactional() && isEntityManagerActive();
         if (isTransactional) {
             em().getTransaction().begin();
@@ -95,31 +99,68 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
     @Override
     public void afterTestExecution(TestExtensionContext testExtensionContext) throws Exception {
         DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
-        if(dbUnitConfig.isLeakHunter()){
-            ExtensionContext.Namespace executorNamespace = getExecutorNamespace(testExtensionContext);
-            LeakHunter leakHunter = testExtensionContext.getStore(executorNamespace).get(LEAK_STORE,LeakHunter.class);
-            int openConnectionsBefore = testExtensionContext.getStore(executorNamespace).get(CONNECTION_BEFORE_STORE,Integer.class);
-            int openConnectionsAfter = leakHunter.openConnections();
-            if(openConnectionsAfter > openConnectionsBefore){
-                throw new LeakHunterException(testExtensionContext.getTestMethod().get().getName(),openConnectionsAfter - openConnectionsBefore);
-            }
-            
-        }
-        if (shouldCompareDataSet(testExtensionContext)) {
-            ExpectedDataSet expectedDataSet = testExtensionContext.getTestMethod().get().getAnnotation(ExpectedDataSet.class);
-            if (expectedDataSet == null) {
-                //try to infer from class level annotation
-                expectedDataSet = testExtensionContext.getTestClass().get().getAnnotation(ExpectedDataSet.class);
-            }
-            if (expectedDataSet != null) {
-                ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
-                DataSetExecutor executor = testExtensionContext.getStore(namespace).get(EXECUTOR_STORE, DataSetExecutor.class);
-                DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(MODEL_STORE, DataSetConfig.class);
-                boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
-                if (isTransactional) {
-                    em().getTransaction().commit();
+        ExtensionContext.Namespace executorNamespace = getExecutorNamespace(testExtensionContext);
+        try {
+            if (dbUnitConfig != null && dbUnitConfig.isLeakHunter()) {
+                LeakHunter leakHunter = testExtensionContext.getStore(executorNamespace).get(LEAK_STORE, LeakHunter.class);
+                int openConnectionsBefore = testExtensionContext.getStore(executorNamespace).get(CONNECTION_BEFORE_STORE, Integer.class);
+                int openConnectionsAfter = leakHunter.openConnections();
+                if (openConnectionsAfter > openConnectionsBefore) {
+                    throw new LeakHunterException(testExtensionContext.getTestMethod().get().getName(), openConnectionsAfter - openConnectionsBefore);
                 }
-                executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
+
+            }
+            if (shouldCompareDataSet(testExtensionContext)) {
+                ExpectedDataSet expectedDataSet = testExtensionContext.getTestMethod().get().getAnnotation(ExpectedDataSet.class);
+                if (expectedDataSet == null) {
+                    //try to infer from class level annotation
+                    expectedDataSet = testExtensionContext.getTestClass().get().getAnnotation(ExpectedDataSet.class);
+                }
+                if (expectedDataSet != null) {
+                    ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
+                    DataSetExecutor executor = testExtensionContext.getStore(namespace).get(EXECUTOR_STORE, DataSetExecutor.class);
+                    DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
+                    boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
+                    if (isTransactional) {
+                        em().getTransaction().commit();
+                    }
+                    executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
+                }
+            }
+        } finally {
+            DataSetConfig dataSetConfig = testExtensionContext.getStore(executorNamespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
+            if (dataSetConfig == null) {
+                return;
+            }
+            DataSetExecutor executor = testExtensionContext.getStore(executorNamespace).get(EXECUTOR_STORE, DataSetExecutor.class);
+            if (dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
+                try {
+                    for (int i = 0; i < dataSetConfig.getExecuteScriptsAfter().length; i++) {
+                        executor.executeScript(dataSetConfig.getExecuteScriptsAfter()[i]);
+                    }
+                } catch (Exception e) {
+                    if (e instanceof DatabaseUnitException) {
+                        throw e;
+                    }
+                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+                }
+            }//end execute scripts
+
+            if (dataSetConfig.getExecuteScriptsAfter() != null && dataSetConfig.getExecuteScriptsAfter().length > 0) {
+                try {
+                    for (int i = 0; i < dataSetConfig.getExecuteScriptsAfter().length; i++) {
+                        executor.executeScript(dataSetConfig.getExecuteScriptsAfter()[i]);
+                    }
+                } catch (Exception e) {
+                    if (e instanceof DatabaseUnitException) {
+                        throw e;
+                    }
+                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+                }
+            }//end execute scripts
+
+            if (dataSetConfig.isCleanAfter()) {
+                executor.clearDatabase(dataSetConfig);
             }
         }
 

@@ -65,8 +65,8 @@ public class DBUnitRule implements TestRule {
                 currentMethod = description.getMethodName();
                 DataSet dataSet = resolveDataSet(description);
                 if (dataSet != null) {
-                    final DataSetConfig model = new DataSetConfig().from(dataSet);
-                    final String datasetExecutorId = model.getExecutorId();
+                    final DataSetConfig dataSetConfig = new DataSetConfig().from(dataSet);
+                    final String datasetExecutorId = dataSetConfig.getExecutorId();
                     DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
                     LeakHunter leakHunter = null;
                     boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
@@ -75,13 +75,13 @@ public class DBUnitRule implements TestRule {
                     }
                     try {
                         executor.setDBUnitConfig(dbUnitConfig);
-                        executor.createDataSet(model);
+                        executor.createDataSet(dataSetConfig);
                     } catch (final Exception e) {
                         throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
                     }
                     boolean isTransactional = false;
                     try {
-                        isTransactional = model.isTransactional() && isEntityManagerActive();
+                        isTransactional = dataSetConfig.isTransactional() && isEntityManagerActive();
                         if (isTransactional) {
                             em().getTransaction().begin();
                         }
@@ -112,17 +112,17 @@ public class DBUnitRule implements TestRule {
                         throw e;
                     } finally {
 
-                        if (model != null && model.getExecuteStatementsAfter() != null && model.getExecuteStatementsAfter().length > 0) {
+                        if (dataSetConfig != null && dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                             try {
-                                executor.executeStatements(model.getExecuteStatementsAfter());
+                                executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
                             } catch (Exception e) {
                                 LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
                             }
                         }//end execute statements
-                        if (model != null && model.getExecuteScriptsAfter() != null && model.getExecuteScriptsAfter().length > 0) {
+                        if (dataSetConfig != null && dataSetConfig.getExecuteScriptsAfter() != null && dataSetConfig.getExecuteScriptsAfter().length > 0) {
                             try {
-                                for (int i = 0; i < model.getExecuteScriptsAfter().length; i++) {
-                                    executor.executeScript(model.getExecuteScriptsAfter()[i]);
+                                for (int i = 0; i < dataSetConfig.getExecuteScriptsAfter().length; i++) {
+                                    executor.executeScript(dataSetConfig.getExecuteScriptsAfter()[i]);
                                 }
                             } catch (Exception e) {
                                 if (e instanceof DatabaseUnitException) {
@@ -132,8 +132,8 @@ public class DBUnitRule implements TestRule {
                             }
                         }//end execute scripts
 
-                        if (model.isCleanAfter()) {
-                            executor.clearDatabase(model);
+                        if (dataSetConfig.isCleanAfter()) {
+                            executor.clearDatabase(dataSetConfig);
                         }
                     }
                 } else {

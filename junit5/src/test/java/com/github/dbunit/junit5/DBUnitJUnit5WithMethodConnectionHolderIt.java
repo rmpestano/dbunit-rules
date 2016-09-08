@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @ExtendWith(DBUnitExtension.class)
 @RunWith(JUnitPlatform.class)
-public class DBUnitJUnit5WithMethodConnectionHolderTest {
+public class DBUnitJUnit5WithMethodConnectionHolderIt {
 
     //DBUnitExtension will get connection by reflection so either declare a field or a method with ConncetionHolder as return typr
     private ConnectionHolder getConnection(){

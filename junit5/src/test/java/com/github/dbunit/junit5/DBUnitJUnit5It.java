@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 //tag::declaration[]
 @ExtendWith(DBUnitExtension.class) //<1>
 @RunWith(JUnitPlatform.class) //<2>
-public class DBUnitJUnit5Test {
+public class DBUnitJUnit5It {
 
 //end::declaration[]
 
@@ -42,7 +42,7 @@ public class DBUnitJUnit5Test {
 //end::test[]
 
     @Test
-    @DataSet(cleanBefore=true) //avoid conflict with other tests 
+    @DataSet(cleanBefore=true,cleanAfter = true) //avoid conflict with other tests
     public void shouldInsertUser() {
         User user = new User();
         user.setName("user");
@@ -56,7 +56,7 @@ public class DBUnitJUnit5Test {
     }
 
     @Test
-    @DataSet("users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
+    @DataSet(value="users.yml",cleanAfter = true) //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
     public void shouldUpdateUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -71,13 +71,20 @@ public class DBUnitJUnit5Test {
     }
 
     @Test
-    @DataSet(value = "users.yml", transactional = true)
+    @DataSet(value = "users.yml", transactional = true, cleanAfter = true)
     @ExpectedDataSet("expectedUser.yml")
     public void shouldDeleteUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getName()).isEqualTo("@realpestano");
         em().remove(user);
+    }
+
+
+    @Test
+    public void shouldNotSeedDatabaseListUsers() {
+        List<User> users = em().createQuery("select u from User u").getResultList();
+        assertThat(users).isEmpty();
     }
 
 
