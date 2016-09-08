@@ -32,7 +32,7 @@ public @interface DBUnit {
     
     boolean cacheTableNames() default true;
 
-    boolean activateLeakHunter() default false;
+    boolean leakHunter() default false;
     
 
     /**

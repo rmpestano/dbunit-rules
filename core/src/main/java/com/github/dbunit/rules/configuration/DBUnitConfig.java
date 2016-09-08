@@ -40,7 +40,7 @@ public class DBUnitConfig {
 
         dbUnitConfig.cacheConnection(dbUnit.cacheConnection()).
                 cacheTableNames(dbUnit.cacheTableNames()).
-                leakHunter(dbUnit.activateLeakHunter()).
+                leakHunter(dbUnit.leakHunter()).
                 addDBUnitProperty("batchedStatements", dbUnit.batchedStatements()).
                 addDBUnitProperty("batchSize", dbUnit.batchSize()).
                 addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).

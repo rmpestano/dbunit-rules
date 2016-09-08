@@ -21,7 +21,7 @@ import java.sql.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CdiTestRunner.class)
-@DBUnit(activateLeakHunter = true)
+@DBUnit(leakHunter = true)
 public class LeakHunterCDIIt {
 
 	@Inject
@@ -78,7 +78,7 @@ public class LeakHunterCDIIt {
 
 	@Test
 	@UsingDataSet("yml/users.yml")
-	@DBUnit(activateLeakHunter = false)
+	@DBUnit(leakHunter = false)
 	public void shouldNotFindConnectionLeakWhenHunterIsDisabled() throws SQLException {
 		createLeak();
 	}

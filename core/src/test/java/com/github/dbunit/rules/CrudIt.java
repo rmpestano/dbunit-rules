@@ -19,7 +19,7 @@ import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 
 @RunWith(JUnit4.class)
-@DBUnit(activateLeakHunter = true)
+@DBUnit(leakHunter = true)
 public class CrudIt {
 
 
@@ -32,7 +32,7 @@ public class CrudIt {
 
 	@Test
 	@DataSet("yml/users.yml")
-	@DBUnit(activateLeakHunter = false)
+	@DBUnit(leakHunter = false)
 	public void shouldListUsers() {
 		List<User> users = em().createQuery("select u from User u").getResultList();
 		assertThat(users).isNotNull().isNotEmpty().hasSize(2);
@@ -54,7 +54,7 @@ public class CrudIt {
 
 	@Test
 	@DataSet("yml/users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
-	@DBUnit(activateLeakHunter = false)
+	@DBUnit(leakHunter = false)
 	public void shouldUpdateUser() {
 		User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
 		assertThat(user).isNotNull();

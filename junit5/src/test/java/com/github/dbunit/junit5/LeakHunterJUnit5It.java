@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.expectThrows;
 
 @ExtendWith(DBUnitExtension.class)
 @RunWith(JUnitPlatform.class)
-@DBUnit(activateLeakHunter = true)
+@DBUnit(leakHunter = true)
 @Disabled(value = "find a way to test leak exceptions")
 public class LeakHunterJUnit5It {
 
@@ -51,7 +51,7 @@ public class LeakHunterJUnit5It {
 
     @Test
     @DataSet("users.yml")
-    @DBUnit(activateLeakHunter = false)
+    @DBUnit(leakHunter = false)
     public void shouldNotFindConnectionLeakWhenHunterIsDisabled() throws SQLException {
         createLeak();
     }
