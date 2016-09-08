@@ -43,7 +43,7 @@ public class ConfigurationTest {
     public void shouldLoadDBUnitConfigViaCustomGlobalFile() throws IOException {
         File customConfig = new File("target/test-classes/dbunit.yml");
         FileOutputStream fos = new FileOutputStream(customConfig);
-        fos.write(Files.readAllBytes(Paths.get(getClass().getResource("/config/sample-dbunit.yml").getPath())));
+        fos.write(Files.readAllBytes(Paths.get(getClass().getResource("/config/sample-dbunit.yml").getPath().replaceFirst("^/(.:/)", "$1"))));
         fos.flush();
         fos.close();
 
