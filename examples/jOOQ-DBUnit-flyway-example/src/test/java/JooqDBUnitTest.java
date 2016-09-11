@@ -6,6 +6,7 @@ import com.github.dbunit.rules.api.configuration.DBUnit;
 import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;
 import org.jooq.Result;
+import org.jooq.example.flyway.db.h2.Tables;
 import org.jooq.impl.DSL;
 import org.junit.*;
 
