@@ -12,5 +12,5 @@ import java.sql.SQLException;
 public interface DataSetExporter {
 
 
-    OutputStream export(Connection connection, DataSetExportConfig dbUnitExportConfig) throws SQLException, DatabaseUnitException;
+    OutputStream export(Connection connection, DataSetExportConfig dbUnitExportConfig,String outputFileName) throws SQLException, DatabaseUnitException;
 }

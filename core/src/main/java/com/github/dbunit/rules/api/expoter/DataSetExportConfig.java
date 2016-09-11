@@ -8,18 +8,13 @@ import com.github.dbunit.rules.api.dataset.DataSetFormat;
 public class DataSetExportConfig {
 
     private DataSetFormat dataSetFormat = DataSetFormat.YML;
-    private String outputName;
     private String[] includeTables;
+    private String[] queryList;
     private boolean dependentTables = true;
-
+    private String outputFileName;
 
     public DataSetExportConfig dataSetFormat(DataSetFormat dataSetFormat) {
         this.dataSetFormat = dataSetFormat;
-        return this;
-    }
-
-    public DataSetExportConfig outputName(String outputName) {
-        this.outputName = outputName;
         return this;
     }
 
@@ -28,14 +23,23 @@ public class DataSetExportConfig {
         return this;
     }
 
+    public DataSetExportConfig dependentTables(boolean dependentTables) {
+        this.dependentTables = dependentTables;
+        return this;
+    }
 
+    public DataSetExportConfig queryList(String[] queryList){
+        this.queryList = queryList;
+        return this;
+    }
+
+    public DataSetExportConfig outputFileName(String outputFileName){
+        this.outputFileName = outputFileName;
+        return this;
+    }
 
     public DataSetFormat getDataSetFormat() {
         return dataSetFormat;
-    }
-
-    public String getOutputName() {
-        return outputName;
     }
 
     public String[] getIncludeTables() {
@@ -46,8 +50,20 @@ public class DataSetExportConfig {
         return dependentTables;
     }
 
-    public DataSetExportConfig dependentTables(boolean dependentTables) {
-        this.dependentTables = dependentTables;
-        return this;
+    public String[] getQueryList() {
+        return queryList;
     }
+
+    public String getOutputFileName() {
+        return outputFileName;
+    }
+
+    public static DataSetExportConfig from(ExportDataSet dataSetExport){
+        return new DataSetExportConfig().
+                dataSetFormat(dataSetExport.format()).dependentTables(dataSetExport.dependentTables()).
+                outputFileName(dataSetExport.outputName()).
+                includeTables(dataSetExport.includeTables()).queryList(dataSetExport.queryList());
+    }
+
+
 }

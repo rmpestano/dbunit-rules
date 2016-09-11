@@ -5,11 +5,14 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
+import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.exporter.DataSetExporterImpl;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
@@ -111,7 +114,15 @@ public class DBUnitRule implements TestRule {
                         }
                         throw e;
                     } finally {
-
+                        ExportDataSet exportDataSet = resolveExportDataSet(description);
+                        if(exportDataSet != null){
+                           DataSetExportConfig exportConfig = DataSetExportConfig.from(exportDataSet);
+                           String outputName = exportConfig.getOutputFileName();
+                           if(outputName == null || "".equals(outputName.trim())){
+                               outputName = description.getMethodName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
+                           }
+                           DataSetExporterImpl.getInstance().export(executor.getConnectionHolder().getConnection(),exportConfig ,outputName);
+                        }
                         if (dataSetConfig != null && dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                             try {
                                 executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
@@ -145,6 +156,14 @@ public class DBUnitRule implements TestRule {
 
 
         };
+    }
+
+    private ExportDataSet resolveExportDataSet(Description description) {
+        ExportDataSet exportDataSet = description.getAnnotation(ExportDataSet.class);
+        if (exportDataSet == null) {
+            exportDataSet = description.getTestClass().getAnnotation(ExportDataSet.class);
+        }
+        return exportDataSet;
     }
 
     private DataSet resolveDataSet(Description description) {
