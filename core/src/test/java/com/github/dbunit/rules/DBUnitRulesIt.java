@@ -1,13 +1,12 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.cdi.DBUnitRule;
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -19,7 +18,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 

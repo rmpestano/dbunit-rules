@@ -1,9 +1,9 @@
 package com.github.dbunit.rules.cdi;
 
-import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.cdi.api.DBUnitInterceptor;
-import com.github.dbunit.rules.cdi.leak.LeakHunterException;
+import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
+import com.github.dbunit.rules.leak.LeakHunterException;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,7 +1,7 @@
 package com.github.dbunit.rules.cdi;
 
 
-import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;

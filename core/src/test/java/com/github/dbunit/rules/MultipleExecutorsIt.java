@@ -1,6 +1,6 @@
 package com.github.dbunit.rules;
 
-import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -9,8 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.dbunit.rules.cdi.exception.DataBaseSeedingException;
-import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+import com.github.dbunit.rules.exception.DataBaseSeedingException;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -18,8 +18,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.github.dbunit.rules.cdi.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.connection.ConnectionHolderImpl;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.User;

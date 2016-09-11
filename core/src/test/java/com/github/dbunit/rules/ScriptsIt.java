@@ -1,11 +1,10 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.cdi.DBUnitRule;
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
+import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -15,8 +14,8 @@ import org.junit.runners.JUnit4;
 
 import java.util.List;
 
-import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.tx;
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 

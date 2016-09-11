@@ -1,7 +1,7 @@
 package com.github.dbunit.rules.configuration;
 
-import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
-import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

@@ -1,8 +1,8 @@
 package com.github.dbunit.rules.cdi;
 
-import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.cdi.api.DBUnitInterceptor;
+import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.After;

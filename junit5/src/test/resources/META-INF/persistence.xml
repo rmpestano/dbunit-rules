@@ -4,7 +4,7 @@
     <persistence-unit name="junit5-pu" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <class>com.github.dbunit.junit5.model.User</class>
+        <class>com.github.dbunit.rules.junit5.model.User</class>
 
 
         <properties>

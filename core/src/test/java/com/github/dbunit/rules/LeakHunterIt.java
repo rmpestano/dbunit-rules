@@ -1,10 +1,9 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.cdi.DBUnitRule;
-import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.connection.ConnectionHolderImpl;
-import com.github.dbunit.rules.cdi.leak.LeakHunterException;
+import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.connection.ConnectionHolderImpl;
+import com.github.dbunit.rules.leak.LeakHunterException;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;

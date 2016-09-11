@@ -7,13 +7,13 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import com.github.dbunit.rules.cdi.cdi.api.DBUnitInterceptor;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
 
 /**
  * Created by pestano on 23/07/15.

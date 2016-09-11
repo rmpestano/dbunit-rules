@@ -3,7 +3,6 @@ package com.github.dbunit.rules.bdd;
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 /**
  * Created by rmpestano on 4/17/16.
