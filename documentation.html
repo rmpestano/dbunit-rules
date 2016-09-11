@@ -426,7 +426,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
   <div id="header"> 
    <h1>Living Documentation</h1> 
    <div class="details"> 
-    <span id="revnumber">version 0.13.2</span> 
+    <span id="revnumber">version 0.13.3-SNAPSHOT</span> 
    </div> 
    <div id="toc" class="toc"> 
     <div id="toctitle">
@@ -511,6 +511,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
        <li> <p>Multiple database support;</p> </li> 
        <li> <p>Date/time support in datasets;</p> </li> 
        <li> <p><a href="http://junit.org/junit5/" target="_blank">JUnit 5</a> integration.</p> </li> 
+       <li> <p>Export dataSets</p> </li> 
+       <li> <p>Connection leak detection</p> </li> 
       </ul> 
      </div> 
      <div class="paragraph"> 
@@ -564,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>39</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>04s 865ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>05s 572ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -596,7 +598,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>009ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -613,7 +615,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>04s 808ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>05s 507ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -630,7 +632,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>5</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>002ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>026ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -664,7 +666,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>006ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>023ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -681,7 +683,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>16</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>036ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>012ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -723,7 +725,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
           <pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
    &lt;groupId&gt;com.github.dbunit-rules&lt;/groupId&gt;
    &lt;artifactId&gt;core&lt;/artifactId&gt;
-   &lt;version&gt;0.13.2&lt;/version&gt;
+   &lt;version&gt;0.13.3-SNAPSHOT&lt;/version&gt;
    &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre> 
          </div> 
@@ -744,7 +746,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(008ms)</span></p> 
+            <p>The following junit rules <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -775,16 +777,6 @@ public class DBUnitRulesIt {
               </table> 
              </div> 
             </div> 
-           </div> 
-           <div class="admonitionblock tip"> 
-            <table> 
-             <tbody> 
-              <tr> 
-               <td class="icon"> <i class="fa icon-tip" title="Tip"></i> </td> 
-               <td class="content"> Source code of the above example can be <a href="https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java/#L31" target="_blank">found here</a>. </td> 
-              </tr> 
-             </tbody> 
-            </table> 
            </div> 
           </div> 
          </div> 
@@ -864,6 +856,16 @@ follower:
               </div> 
              </div> 
             </div> 
+           </div> 
+           <div class="admonitionblock tip"> 
+            <table> 
+             <tbody> 
+              <tr> 
+               <td class="icon"> <i class="fa icon-tip" title="Tip"></i> </td> 
+               <td class="content"> Source code of the above example can be <a href="https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java/#L31" target="_blank">found here</a>. </td> 
+              </tr> 
+             </tbody> 
+            </table> 
            </div> 
           </div> 
          </div> 
@@ -945,7 +947,7 @@ public class DBUnitCDITest {
           <pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
    &lt;groupId&gt;com.github.dbunit-rules&lt;/groupId&gt;
    &lt;artifactId&gt;cdi&lt;/artifactId&gt;
-   &lt;version&gt;0.13.2&lt;/version&gt;
+   &lt;version&gt;0.13.3-SNAPSHOT&lt;/version&gt;
    &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre> 
          </div> 
@@ -966,7 +968,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(04s 808ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(05s 506ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -980,7 +982,7 @@ public class DBUnitCDITest {
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd"&gt;
      &lt;interceptors&gt;
-            &lt;class&gt;com.github.dbunit.rules.cdi.DBUnitInterceptor&lt;/class&gt;
+            &lt;class&gt;com.github.dbunit.rules.cdi.DBUnitInterceptorImpl&lt;/class&gt;
      &lt;/interceptors&gt;
 &lt;/beans&gt;</code></pre> 
               </div> 
@@ -1179,7 +1181,7 @@ public class DBUnitRulesBdd {
           <pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
    &lt;groupId&gt;com.github.dbunit-rules&lt;/groupId&gt;
    &lt;artifactId&gt;cucumber&lt;/artifactId&gt;
-   &lt;version&gt;0.13.2&lt;/version&gt;
+   &lt;version&gt;0.13.3-SNAPSHOT&lt;/version&gt;
    &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre> 
          </div> 
@@ -1337,7 +1339,7 @@ public class DBUnitRulesBdd {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(001ms)</span></p> 
+            <p>The following dataset <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(025ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1390,12 +1392,14 @@ company:
               <div class="content"> 
                <pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.github.dbunit.rules.examples.cucumber;
 
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.cucumber.CdiCucumberTestRunner;
 import cucumber.api.CucumberOptions;
 import org.junit.runner.RunWith;
 
 
 @RunWith(CdiCucumberTestRunner.class)
+@DBUnitInterceptor
 @CucumberOptions(
         features = {"src/test/resources/features/contacts.feature"},
         plugin = {"json:target/cucumber.json"}
@@ -1427,7 +1431,7 @@ public class ContactFeature {
               <div class="content"> 
                <pre class="highlightjs highlight"><code class="language-java" data-lang="java">package com.github.dbunit.rules.examples.cucumber; <i class="conum" data-value="1"></i><b>(1)</b>
 
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -1461,7 +1465,7 @@ public class ContactSteps {
     }
 
     @Given("^we have a list of contacts$")
-    @UsingDataSet("datasets/contacts.yml") <i class="conum" data-value="2"></i><b>(2)</b>
+    @DataSet("datasets/contacts.yml") <i class="conum" data-value="2"></i><b>(2)</b>
     public void given() {
         assertEquals(contactRepository.count(), new Long(3));
     }
@@ -1553,7 +1557,7 @@ public class ContactSteps {
           <pre class="highlightjs highlight"><code class="language-xml" data-lang="xml">&lt;dependency&gt;
    &lt;groupId&gt;com.github.dbunit-rules&lt;/groupId&gt;
    &lt;artifactId&gt;junit5&lt;/artifactId&gt;
-   &lt;version&gt;0.13.2&lt;/version&gt;
+   &lt;version&gt;0.13.3-SNAPSHOT&lt;/version&gt;
    &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre> 
          </div> 
@@ -1717,7 +1721,7 @@ follower:
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Groovy script engine is on test classpath <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
+            <p>Groovy script engine is on test classpath <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(020ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -2037,7 +2041,7 @@ public class ExpectedDataSetIt {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Test must pass because database state is as in expected dataset. <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(033ms)</span></p> 
+            <p>Test must pass because database state is as in expected dataset. <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -2232,7 +2236,7 @@ public void shouldMatchExpectedDataSetAfterSeedingDataBase() {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>Test must pass because database state is as in expected dataset. <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
+            <p>Test must pass because database state is as in expected dataset. <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(008ms)</span></p> 
            </div> 
           </div> 
          </div> 
@@ -2446,8 +2450,8 @@ public void shouldManageTransactionAutomatically() {
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.4</a> - Sep 9, 2016 3:11:11 AM 
-   <span style="float:right;font-size:11px"> Execution time: 7.881 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.4</a> - Sep 11, 2016 3:01:46 PM 
+   <span style="float:right;font-size:11px"> Execution time: 11.771 seconds</span> 
   </div> 
   <style>  
 
