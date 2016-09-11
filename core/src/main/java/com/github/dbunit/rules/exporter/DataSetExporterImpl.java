@@ -10,6 +10,7 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -112,12 +113,17 @@ public class DataSetExporterImpl implements DataSetExporter {
             filter = new DatabaseSequenceFilter(dbunitConnection);
         }
         if (queryDataSet != null) {
-            dataset = new FilteredDataSet(filter, queryDataSet);
+            dataset = queryDataSet;
         } else {
             dataset = new FilteredDataSet(filter, dbunitConnection.createDataSet());
         }
         FileOutputStream fos = null;
         try {
+            if(outputFile.contains(System.getProperty("file.separator"))){
+                String pathWithoutFileName = outputFile.substring(0,outputFile.lastIndexOf(System.getProperty("file.separator"))+1);
+                new File(pathWithoutFileName).mkdirs();
+
+            }
             fos = new FileOutputStream(outputFile);
             switch (dataSetExportConfig.getDataSetFormat()) {
                 case XML: {
