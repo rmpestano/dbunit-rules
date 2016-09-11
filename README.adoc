@@ -270,7 +270,7 @@ In example below <<EntityManagerProvider rule>> executes *before* `DBUnit rule`:
 
 There are two types of configuration in DBUnit Rules: `DataSet` and `DBUnit`.
 
-DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* or *@UsingDataSet* (in case of CDI) annotation.
+DataSet Configuration:: this basically setup the `dataset` which will be used. The only way to configure a dataset is using *@DataSet* annotation.
 +
 It can be used at *class* or *method* level:
 +
@@ -656,17 +656,18 @@ configure it in you test beans.xml:
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
        <interceptors>
-              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
+              <class>com.github.dbunit.rules.cdi.DBUnitInterceptorImpl</class>
        </interceptors>
 </beans>
 
 ----
 
-and then enable it in your tests by using *@UsingDataSet* annotation:
+and then enable it in your tests by using *@DBUnitInterceptor* annotation (class or method level):
 
 [source,java]
 ----
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class DeltaspikeUsingInterceptorIt {
 
     @Inject
@@ -674,7 +675,7 @@ public class DeltaspikeUsingInterceptorIt {
 
 
     @Test
-    @UsingDataSet("datasets/contacts.yml")
+    @DataSet("datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
@@ -767,7 +768,7 @@ public class ContactFeature {
 ----
 package com.github.dbunit.rules.examples.cucumber; //<1>
 
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -788,7 +789,7 @@ public class ContactSteps {
     Long count;
 
     @Given("^we have a list of contacts")
-    @UsingDataSet("datasets/contacts.yml") //<2>
+    @DataSet("datasets/contacts.yml") //<2>
     public void given() {
         assertEquals(contactRepository.count(), new Long(3));
     }

@@ -11,7 +11,7 @@ public class DataSetConfig {
 
     private String name;
     private String executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
-    private SeedStrategy seedStrategy = SeedStrategy.CLEAN_INSERT;
+    private SeedStrategy strategy = SeedStrategy.CLEAN_INSERT;
     private boolean useSequenceFiltering = true;
     private boolean disableConstraints = false;
     private boolean cleanBefore = false;
@@ -37,8 +37,8 @@ public class DataSetConfig {
         return this;
     }
 
-    public DataSetConfig seedStrategy(SeedStrategy seedStrategy) {
-        this.seedStrategy = seedStrategy;
+    public DataSetConfig strategy(SeedStrategy strategy) {
+        this.strategy = strategy;
         return this;
     }
 
@@ -107,7 +107,7 @@ public class DataSetConfig {
 
     public DataSetConfig from(DataSet dataSet) {
         if(dataSet != null){
-            return name(dataSet.value()).seedStrategy(dataSet.strategy()).
+            return name(dataSet.value()).strategy(dataSet.strategy()).
                     useSequenceFiltering(dataSet.useSequenceFiltering()).
                     tableOrdering(dataSet.tableOrdering()).
                     disableConstraints(dataSet.disableConstraints()).
@@ -130,8 +130,8 @@ public class DataSetConfig {
         return name;
     }
 
-    public SeedStrategy getSeedStrategy() {
-        return seedStrategy;
+    public SeedStrategy getstrategy() {
+        return strategy;
     }
 
     public boolean isUseSequenceFiltering() {
@@ -178,8 +178,8 @@ public class DataSetConfig {
         return cleanAfter;
     }
 
-    public void setSeedStrategy(SeedStrategy seedStrategy) {
-        this.seedStrategy = seedStrategy;
+    public void setstrategy(SeedStrategy strategy) {
+        this.strategy = strategy;
     }
 
     public void setUseSequenceFiltering(boolean useSequenceFiltering) {

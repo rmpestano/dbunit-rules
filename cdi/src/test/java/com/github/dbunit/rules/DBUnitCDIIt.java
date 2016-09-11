@@ -1,18 +1,17 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.exception.DataBaseSeedingException;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,47 +21,49 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class DBUnitCDIIt {
 
     @Inject
     EntityManager em;
+
     @Test
-    @UsingDataSet(value = "",cleanBefore = true)
+    @DataSet(value = "",cleanBefore = true)
     public void shouldSeedDBWhenUsingEmptyDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test(expected = DataBaseSeedingException.class)
-    @UsingDataSet(value="ymlzzz/users.yml",cleanBefore = true)
+    @DataSet(value="ymlzzz/users.yml",cleanBefore = true)
     public void shouldFailToSeedInexistentYMLDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test(expected = DataBaseSeedingException.class)
-    @UsingDataSet(value = "jsonzzz/users.json",cleanBefore = true)
+    @DataSet(value = "jsonzzz/users.json",cleanBefore = true)
     public void shouldFailToSeedInexistentJSONDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test(expected = DataBaseSeedingException.class)
-    @UsingDataSet(value="zzz/users.xml",cleanBefore = true)
+    @DataSet(value="zzz/users.xml",cleanBefore = true)
     public void shouldFailToSeedInexistentXMLDataSet() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test(expected = DataBaseSeedingException.class)
-    @UsingDataSet(value="users",cleanBefore = true)
+    @DataSet(value="users",cleanBefore = true)
     public void shouldFailToSeedDataSetWithoutExtension() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
     }
 
     @Test(expected = DataBaseSeedingException.class)
-    @UsingDataSet(value = "users.doc",cleanBefore = true)
+    @DataSet(value = "users.doc",cleanBefore = true)
     public void shouldNotFailToSeedUnknownDataSetFormat() {
         List<User> users = (List<User>) em.createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(0);
@@ -70,7 +71,7 @@ public class DBUnitCDIIt {
 
     // tag::seedDatabase[]
     @Test
-    @UsingDataSet("yml/users.yml")
+    @DataSet("yml/users.yml")
     public void shouldSeedUserDataSetUsingCdiInterceptor() {
         List<User> users = em.createQuery("select u from User u order by u.id asc").getResultList();
         User user1 = new User(1);
@@ -84,7 +85,7 @@ public class DBUnitCDIIt {
     // end::seedDatabase[]
 
     @Test
-    @UsingDataSet("json/users.json")
+    @DataSet("json/users.json")
     public void shouldSeedUserDataSetUsingCdiInterceptorUsingJsonDataSet() {
         User user = (User) em.createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -94,7 +95,7 @@ public class DBUnitCDIIt {
     }
 
     @Test
-    @UsingDataSet("xml/users.xml")
+    @DataSet("xml/users.xml")
     public void shouldSeedUserDataSetUsingCdiInterceptorUsingXmlDataSet() {
         User user = (User) em.createQuery("select u from User u join fetch u.tweets join fetch u.followers where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
@@ -104,8 +105,8 @@ public class DBUnitCDIIt {
     }
 
     @Test
-    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT, cleanBefore = true,
-            executeCommandsBefore = "INSERT INTO USER VALUES (3,'user3')"
+    @DataSet(value = "yml/users.yml", strategy = SeedStrategy.INSERT, cleanBefore = true,
+            executeStatementsBefore = "INSERT INTO USER VALUES (3,'user3')"
     )
     public void shouldExecuteCommandBefore() {
         User user = (User) em.createQuery("select u from User u where u.id = 3").getSingleResult();

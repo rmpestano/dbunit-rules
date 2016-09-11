@@ -1,6 +1,6 @@
 package com.github.dbunit.rules.examples.cucumber; //<1>
 
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -34,7 +34,7 @@ public class ContactSteps {
     }
 
     @Given("^we have a list of contacts$")
-    @UsingDataSet("datasets/contacts.yml") //<2>
+    @DataSet("datasets/contacts.yml") //<2>
     public void given() {
         assertEquals(contactRepository.count(), new Long(3));
     }

@@ -2,7 +2,8 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
@@ -22,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CdiTestRunner.class)
 @DBUnit(leakHunter = true)
+@DBUnitInterceptor
 public class LeakHunterCDIIt {
 
 	@Inject
@@ -63,13 +65,13 @@ public class LeakHunterCDIIt {
 
 
 	@Test(expected = LeakHunterException.class)
-	@UsingDataSet("yml/users.yml")
+	@DataSet("yml/users.yml")
 	public void shouldFindConnectionLeak() throws SQLException {
 		createLeak();
 	}
 
 	@Test(expected = LeakHunterException.class)
-	@UsingDataSet("yml/users.yml")
+	@DataSet("yml/users.yml")
 	public void shouldFindTwoConnectionLeaks() throws SQLException {
 		createLeak();
 		createLeak();
@@ -77,14 +79,14 @@ public class LeakHunterCDIIt {
 
 
 	@Test
-	@UsingDataSet("yml/users.yml")
+	@DataSet("yml/users.yml")
 	@DBUnit(leakHunter = false)
 	public void shouldNotFindConnectionLeakWhenHunterIsDisabled() throws SQLException {
 		createLeak();
 	}
 
 	@Test
-	@UsingDataSet("yml/users.yml")
+	@DataSet("yml/users.yml")
 	public void shouldNotFindConnectionLeakWhenConnectionIsClosed() throws SQLException {
 		createAndCloseConnection();
 	}

@@ -63,7 +63,7 @@ Given DBUnit interceptor is enabled in your test beans.xml:
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
        <interceptors>
-              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
+              <class>com.github.dbunit.rules.cdi.DBUnitInterceptorImpl</class>
        </interceptors>
 </beans>
 ----

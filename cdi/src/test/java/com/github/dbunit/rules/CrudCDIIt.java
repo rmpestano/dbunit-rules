@@ -8,11 +8,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.model.User;
 
 /**
@@ -20,6 +21,7 @@ import com.github.dbunit.rules.model.User;
  */
 
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class CrudCDIIt {
 
     @Inject
@@ -28,14 +30,14 @@ public class CrudCDIIt {
 
 
     @Test
-	@UsingDataSet("yml/users.yml")
+	@DataSet("yml/users.yml")
 	public void shouldListUsers() {
 		List<User> users = em.createQuery("select u from User u").getResultList();
 		assertThat(users).isNotNull().isNotEmpty().hasSize(2);
 	}
 
 	@Test
-	@UsingDataSet(cleanBefore=true) //avoid conflict with other tests 
+	@DataSet(cleanBefore=true) //avoid conflict with other tests
 	public void shouldInsertUser() {
 		User user = new User();
 		user.setName("user");
@@ -49,7 +51,7 @@ public class CrudCDIIt {
 	}
 
 	@Test
-	@UsingDataSet("yml/users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
+	@DataSet("yml/users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
 	public void shouldUpdateUser() {
 		User user = (User) em.createQuery("select u from User u  where u.id = 1").getSingleResult();
 		assertThat(user).isNotNull();
@@ -64,7 +66,7 @@ public class CrudCDIIt {
 	}
 
 	@Test
-	@UsingDataSet(value = "yml/users.yml", disableConstraints=true)//disable constraints because User 1 has one tweet and a follower
+	@DataSet(value = "yml/users.yml", disableConstraints=true)//disable constraints because User 1 has one tweet and a follower
 	public void shouldDeleteUser() {
 		User user = (User) em.createQuery("select u from User u  where u.id = 1").getSingleResult();
 		assertThat(user).isNotNull();
@@ -77,7 +79,7 @@ public class CrudCDIIt {
 	}
 	
 	@Test
-	@UsingDataSet(value = "yml/users.yml")
+	@DataSet(value = "yml/users.yml")
 	public void shouldDeleteUserWithoutDisablingConstraints() {
 		User user = (User) em.createQuery("select u from User u  where u.id = 1").getSingleResult();
 		assertThat(user).isNotNull();

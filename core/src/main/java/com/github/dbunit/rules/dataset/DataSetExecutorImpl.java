@@ -162,7 +162,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
                     resultingDataSet = performReplacements(resultingDataSet);
 
-                    DatabaseOperation operation = dataSetConfig.getSeedStrategy().getOperation();
+                    DatabaseOperation operation = dataSetConfig.getstrategy().getOperation();
 
                     operation.execute(databaseConnection, resultingDataSet);
                 }

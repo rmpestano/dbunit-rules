@@ -25,6 +25,8 @@
 * Multiple database support;
 * Date/time support in datasets;
 * http://junit.org/junit5/[JUnit 5^] integration.
+* Export dataSets
+* Connection leak detection
 
 
 The project is composed by 5 modules:

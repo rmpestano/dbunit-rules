@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
 public class ContactStepsWithoutCDI {
 
 
-    EntityManagerProvider entityManagerProvider = EntityManagerProvider.newInstance("customerDB");
+    EntityManagerProvider entityManagerProvider = EntityManagerProvider.newInstance("customerTestDB");
 
     DataSetExecutor dbunitExecutor;
 

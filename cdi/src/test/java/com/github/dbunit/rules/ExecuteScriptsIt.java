@@ -1,7 +1,8 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.After;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.fail;
  * Created by pestano on 27/02/16.
  */
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class ExecuteScriptsIt {
 
     @Inject
@@ -42,8 +44,8 @@ public class ExecuteScriptsIt {
     }
 
     @Test
-    @UsingDataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"},
-            executeScriptsAfter = "after.sql", seedStrategy = SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
+    @DataSet(value = "yml/users.yml", executeScriptsBefore = {"users.sql","tweets.sql"},
+            executeScriptsAfter = "after.sql", strategy = SeedStrategy.INSERT)//NEED to be INSERT because clean will delete users inserted in script
     public void shouldExecuteScriptsBefore() {
         User userFromSqlScript = new User(10);
         List<User> users = listUsers("select u from User u where u.id = 6");

@@ -75,7 +75,7 @@ public class ConfigurationTest {
 
         DataSetConfig dataSetConfig = new DataSetConfig().from(dataSet);
         assertThat(dataSetConfig).isNotNull().
-                extracting("seedStrategy","useSequenceFiltering","disableConstraints","cleanBefore","cleanAfter","transactional").
+                extracting("strategy","useSequenceFiltering","disableConstraints","cleanBefore","cleanAfter","transactional").
                 contains(SeedStrategy.UPDATE, true, true, false,true,true);
 
     }

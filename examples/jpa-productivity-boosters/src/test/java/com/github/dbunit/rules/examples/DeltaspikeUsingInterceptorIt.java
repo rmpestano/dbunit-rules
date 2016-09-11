@@ -1,6 +1,7 @@
 package com.github.dbunit.rules.examples;
 
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.example.jpadomain.Company;
 import org.example.jpadomain.Contact;
@@ -21,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
  */
 
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class DeltaspikeUsingInterceptorIt {
 
     @Inject
@@ -34,20 +36,20 @@ public class DeltaspikeUsingInterceptorIt {
 
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @DataSet(value = "datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
     }
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.json")
+    @DataSet(value = "datasets/contacts.json")
     public void shouldQueryAllContactsUsingJsonDataSet() {
         assertThat(companyRepository.count()).isEqualTo(4);
     }
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml", tableOrdering = {"company", "contact"})
+    @DataSet(value = "datasets/contacts.yml", tableOrdering = {"company", "contact"})
     public void shouldFindCompanyByName() {
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);
@@ -61,7 +63,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @DataSet(value = "datasets/contacts.yml")
     public void shouldCreateCompany() {
         assertThat(companyRepository.count()).isEqualTo(4);
         Company company = new Company("test company");
@@ -74,7 +76,7 @@ public class DeltaspikeUsingInterceptorIt {
 
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @DataSet(value = "datasets/contacts.yml")
     public void shouldCreateContact() {
         Company google = companyRepository.findByName("Google").get(0);
         assertThat(contactService.countByCompanyAndName(google, "rmpestano")).isEqualTo(0);
@@ -85,7 +87,7 @@ public class DeltaspikeUsingInterceptorIt {
     }
 
     @Test
-    @UsingDataSet(value = "datasets/contacts.yml")
+    @DataSet(value = "datasets/contacts.yml")
     public void shouldDeleteContact() {
         Company pivotal = companyRepository.findByName("Pivotal").get(0);
         assertThat(contactService.countByCompanyAndName(pivotal, "Spring")).

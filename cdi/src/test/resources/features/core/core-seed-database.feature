@@ -28,7 +28,6 @@ include::../../../core/pom.xml[tags=version]
 
   Scenario: Seed database using yml dataset
 
-    #{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java/#L31[found here^].}
     #cukedoctor-discrete
     Given The following junit rules
     """
@@ -55,6 +54,7 @@ include::../../src/test/resources/datasets/yml/users.yml[]
  """
 
 #cukedoctor-discrete
+#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java/#L31[found here^].}
     When The following test is executed:
  """
 [source,java]

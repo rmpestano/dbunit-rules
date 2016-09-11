@@ -1,7 +1,8 @@
 package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import javax.persistence.EntityManager;
  */
 // tag::expectedCDIDeclaration[]
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class ExpectedDataSetCDIIt {
 
     @Inject
@@ -24,7 +26,7 @@ public class ExpectedDataSetCDIIt {
 
     // tag::expectedCDI[]
     @Test
-    @UsingDataSet(cleanBefore = true) //needed to activate interceptor (can be at class level)
+    @DataSet(cleanBefore = true) //needed to activate interceptor (can be at class level)
     @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     public void shouldMatchExpectedDataSet() {
         User u = new User();

@@ -1,12 +1,11 @@
 package com.github.dbunit.rules.cdi;
 
-import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.api.leak.LeakHunter;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.configuration.GlobalConfig;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 
@@ -21,8 +20,8 @@ import java.io.Serializable;
  * Created by pestano on 26/07/15.
  */
 @Interceptor
-@UsingDataSet
-public class DBUnitInterceptor implements Serializable {
+@DBUnitInterceptor
+public class DBUnitInterceptorImpl implements Serializable {
 
     @Inject
     DataSetProcessor dataSetProcessor;
@@ -35,17 +34,17 @@ public class DBUnitInterceptor implements Serializable {
             throws Exception {
 
         Object proceed = null;
-        UsingDataSet usingDataSet = invocationContext.getMethod().getAnnotation(UsingDataSet.class);
+        DataSet usingDataSet = invocationContext.getMethod().getAnnotation(DataSet.class);
         if (usingDataSet != null) {
             DataSetConfig dataSetConfig = new DataSetConfig(usingDataSet.value()).
                     cleanAfter(usingDataSet.cleanAfter()).
                     cleanBefore(usingDataSet.cleanBefore()).
                     disableConstraints(usingDataSet.disableConstraints()).
                     executeScripsBefore(usingDataSet.executeScriptsBefore()).
-                    executeScriptsAfter(usingDataSet.executeCommandsAfter()).
-                    executeStatementsAfter(usingDataSet.executeCommandsAfter()).
-                    executeStatementsBefore(usingDataSet.executeCommandsBefore()).
-                    seedStrategy(usingDataSet.seedStrategy()).
+                    executeScriptsAfter(usingDataSet.executeScriptsAfter()).
+                    executeStatementsAfter(usingDataSet.executeStatementsAfter()).
+                    executeStatementsBefore(usingDataSet.executeStatementsBefore()).
+                    strategy(usingDataSet.strategy()).
                     transactional(usingDataSet.transactional()).
                     tableOrdering(usingDataSet.tableOrdering()).
                     useSequenceFiltering(usingDataSet.useSequenceFiltering());
@@ -89,7 +88,7 @@ public class DBUnitInterceptor implements Serializable {
                 dataSetProcessor.clearDatabase(dataSetConfig);
             }
 
-            if (!"".equals(usingDataSet.executeCommandsAfter())) {
+            if (!"".equals(usingDataSet.executeStatementsAfter())) {
                 dataSetProcessor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
             }
 

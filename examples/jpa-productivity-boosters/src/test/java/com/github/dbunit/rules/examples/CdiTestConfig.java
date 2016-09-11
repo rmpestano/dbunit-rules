@@ -17,7 +17,7 @@ public class CdiTestConfig extends CdiConfig {
     @Produces
     public EntityManager produce() {
         synchronized (this) {
-            return EntityManagerProvider.instance("customerDB").em();
+            return EntityManagerProvider.instance("customerTestDB").em();
         }
     }
 

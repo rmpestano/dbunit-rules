@@ -40,7 +40,7 @@ property in test/resources/META-INF/apache-deltaspike.properties:
        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
        <interceptors>
-              <class>com.github.dbunit.rules.cdi.DBUnitInterceptor</class>
+              <class>com.github.dbunit.rules.cdi.DBUnitInterceptorImpl</class>
        </interceptors>
 </beans>
 ----
@@ -57,7 +57,7 @@ public class ContactServiceIt {
 
 
     @Test
-    @UsingDataSet("datasets/contacts.yml")
+    @DataSet("datasets/contacts.yml")
     public void shouldQueryAllCompanies() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);

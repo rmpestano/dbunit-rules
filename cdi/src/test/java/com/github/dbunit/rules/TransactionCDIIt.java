@@ -2,7 +2,8 @@ package com.github.dbunit.rules;
 
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.Test;
@@ -16,13 +17,14 @@ import javax.persistence.EntityManager;
  * Created by rmpestano on 6/21/16.
  */
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class TransactionCDIIt {
 
     @Inject
     EntityManager em;
 
     @Test
-    @UsingDataSet(cleanBefore = true)
+    @DataSet(cleanBefore = true)
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldManageTransactionInsideTest() {
         User u = new User();
@@ -36,7 +38,7 @@ public class TransactionCDIIt {
     }
 
     @Test
-    @UsingDataSet(cleanBefore = true, transactional = true)
+    @DataSet(cleanBefore = true, transactional = true)
     @ExpectedDataSet(value = "yml/expectedUsersRegex.yml")
     public void shouldManageTransactionAutomatically() {
         User u = new User();

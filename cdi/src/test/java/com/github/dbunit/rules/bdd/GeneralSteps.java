@@ -33,19 +33,6 @@ public class GeneralSteps {
         // Express the Regexp above with the code you wish you had
     }
 
-    /*@Then("^Test must fail with following error:$")
-    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
-    @UsingDataSet//needed to activate dbunit cdi interceptor
-    public void Test_must_fail_showing_what_it_was_expecting_as_database_state(String docstring) throws Throwable {
-        User u = new User();
-        u.setName("non expected user1");
-        User u2 = new User();
-        u2.setName("non expected user2");
-        em.getTransaction().begin();
-        em.persist(u);
-        em.persist(u2);
-        em.getTransaction().commit();
-    }*/
 
     @Then("^Test must fail with following error:$")
     public void Test_must_fail_with_following_error(String docstring) throws Throwable {

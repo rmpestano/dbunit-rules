@@ -47,7 +47,7 @@ public class CDISeedDatabaseStepdefs {
     /*  Use database seeding in cucumber on cucumber feature
 
     @Then("^The database should be seeded with the dataset content before test execution$")
-    @UsingDataSet("yml/users.yml")
+    @DataSet("yml/users.yml")
     public void The_database_should_be_seeded_with_the_dataset_content() throws Throwable {
         List<User> users = em.createQuery("select u from User u order by u.id asc").getResultList();
         User user1 = new User(1);

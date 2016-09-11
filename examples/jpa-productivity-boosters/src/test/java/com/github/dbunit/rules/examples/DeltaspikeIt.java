@@ -3,7 +3,8 @@ package com.github.dbunit.rules.examples;
 import com.github.dbunit.rules.DBUnitRule;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.example.jpadomain.Company;
 import org.example.jpadomain.Contact;
@@ -66,7 +67,7 @@ public class DeltaspikeIt {
     }
 
     @Test
-    @UsingDataSet("datasets/contacts.yml")
+    @DataSet("datasets/contacts.yml")
     public void shouldQueryAllCompaniesUsingInterceptor() {
         assertNotNull(contactService);
         assertThat(contactService.findCompanies()).hasSize(4);
@@ -94,7 +95,7 @@ public class DeltaspikeIt {
     }
 
     @Test
-    @UsingDataSet("contacts.yml")
+    @DataSet("contacts.yml")
     public void shouldFindCompanyByNameUsingInterceptor() {
         Company expectedCompany = new Company("Google");
         assertNotNull(companyRepository);

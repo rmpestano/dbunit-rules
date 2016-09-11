@@ -1,28 +1,27 @@
 package com.github.dbunit.rules;
 
+import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.cdi.api.UsingDataSet;
+import com.github.dbunit.rules.cdi.api.DBUnitInterceptor;
 import com.github.dbunit.rules.model.User;
 import org.apache.deltaspike.testcontrol.api.junit.CdiTestRunner;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 
 /**
  * Created by pestano on 09/10/15.
  */
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor
 public class BeforeAndAfterTest {
 
     @Inject
@@ -44,7 +43,7 @@ public class BeforeAndAfterTest {
     }
 
     @Test
-    @UsingDataSet(value = "yml/users.yml", seedStrategy = SeedStrategy.INSERT,
+    @DataSet(value = "yml/users.yml", strategy = SeedStrategy.INSERT,
               cleanBefore = true, cleanAfter = true
     )
     public void shouldClearDatabaseBeforeAndAfter() {
