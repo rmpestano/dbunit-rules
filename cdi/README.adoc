@@ -12,7 +12,7 @@ A CDI interceptor to configure DBUnit datasets in your tests.
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.13.1</version>
+    <version>0.13.2</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -50,6 +50,7 @@ property in test/resources/META-INF/apache-deltaspike.properties:
 [source,java]
 ----
 @RunWith(CdiTestRunner.class)
+@DBUnitInterceptor <1>
 public class ContactServiceIt {
 
     @Inject
@@ -64,6 +65,7 @@ public class ContactServiceIt {
     }
 }
 ----
+<1> Activates the CDI interceptor which will seed database based on @DataSet annotation.
 
 .contacts.yml
 ----

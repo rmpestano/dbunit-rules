@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -29,7 +30,7 @@ public class ScriptsIt {
 
     @BeforeAll
     public static void before() {
-        EntityManagerProvider provider = EntityManagerProvider.instance("junit5-pu");
+        EntityManagerProvider provider = instance("junit5-pu");
         tx().begin();
         em().createNativeQuery("DELETE FROM USER").executeUpdate();
         em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
@@ -52,7 +53,7 @@ public class ScriptsIt {
     }
 
     private List<User> listUsers(String sql) {
-        return EntityManagerProvider.instance("junit5-pu").em().createQuery(sql).getResultList();
+        return instance("junit5-pu").em().createQuery(sql).getResultList();
     }
 
     @AfterAll

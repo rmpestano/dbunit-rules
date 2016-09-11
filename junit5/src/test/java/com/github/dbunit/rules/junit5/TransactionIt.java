@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
+import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 
 /**
  * Created by rmpestano on 6/21/16.

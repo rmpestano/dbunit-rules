@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 
 /**
  * Created by pestano on 28/08/16.
