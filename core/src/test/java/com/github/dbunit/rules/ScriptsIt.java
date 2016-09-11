@@ -1,10 +1,11 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.DBUnitRule;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
 import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.util.EntityManagerProvider;
+import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -14,8 +15,8 @@ import org.junit.runners.JUnit4;
 
 import java.util.List;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -35,12 +36,12 @@ public class ScriptsIt {
     @BeforeClass
     public static void before() {
         EntityManagerProvider provider = EntityManagerProvider.instance("rules-it");
-        tx().begin();
-        em().createNativeQuery("DELETE FROM USER").executeUpdate();
-        em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
-        em().flush();
-        tx().commit();
-        List<User> users = em().createQuery("select u from User u").getResultList();
+        EntityManagerProvider.tx().begin();
+        EntityManagerProvider.em().createNativeQuery("DELETE FROM USER").executeUpdate();
+        EntityManagerProvider.em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
+        EntityManagerProvider.em().flush();
+        EntityManagerProvider.tx().commit();
+        List<User> users = EntityManagerProvider.em().createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(1);
     }
 
@@ -62,8 +63,8 @@ public class ScriptsIt {
 
     @AfterClass
     public static void after() throws InterruptedException {
-        em().clear();
-        List<User> users = em().createQuery("select u from User u").getResultList();
+        EntityManagerProvider.em().clear();
+        List<User> users = EntityManagerProvider.em().createQuery("select u from User u").getResultList();
         if (users == null || users.size() != 1) {
             fail("We should have 1 user after test execution");
         }

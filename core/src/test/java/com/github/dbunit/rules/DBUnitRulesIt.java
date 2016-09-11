@@ -1,14 +1,15 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.api.configuration.DBUnit;
-import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.cdi.DBUnitRule;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.model.Follower;
 import com.github.dbunit.rules.model.Tweet;
 import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.util.EntityManagerProvider;
+import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -102,7 +103,7 @@ public class DBUnitRulesIt {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
-        assertEquals(user.getTweets().get(0).getContent(), "dbunit rules!");
+        Assert.assertEquals(user.getTweets().get(0).getContent(), "dbunit rules!");
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
@@ -115,7 +116,7 @@ public class DBUnitRulesIt {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
-        assertEquals("dbunit rules json example",user.getTweets().get(0).getContent());
+        Assert.assertEquals("dbunit rules json example", user.getTweets().get(0).getContent());
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
@@ -128,7 +129,7 @@ public class DBUnitRulesIt {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
-        assertEquals("dbunit rules flat xml example",user.getTweets().get(0).getContent());
+        Assert.assertEquals("dbunit rules flat xml example", user.getTweets().get(0).getContent());
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);
@@ -141,7 +142,7 @@ public class DBUnitRulesIt {
         assertThat(user).isNotNull();
         assertThat(user.getId()).isEqualTo(1);
         assertThat(user.getTweets()).hasSize(1);
-        assertEquals("dbunit rules again!",user.getTweets().get(0).getContent());
+        Assert.assertEquals("dbunit rules again!", user.getTweets().get(0).getContent());
         assertThat(user.getFollowers()).isNotNull().hasSize(1);
         Follower expectedFollower = new Follower(2,1);
         assertThat(user.getFollowers()).contains(expectedFollower);

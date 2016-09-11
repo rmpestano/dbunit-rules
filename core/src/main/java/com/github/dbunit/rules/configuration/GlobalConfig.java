@@ -1,6 +1,5 @@
 package com.github.dbunit.rules.configuration;
 
-import org.apache.xmlbeans.impl.common.GlobalLock;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;

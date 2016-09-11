@@ -1,15 +1,15 @@
 package com.github.dbunit.junit5;
 
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.DataSetExecutor;
-import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.leak.LeakHunter;
+import com.github.dbunit.rules.cdi.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.DataSetExecutor;
+import com.github.dbunit.rules.cdi.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.cdi.api.leak.LeakHunter;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
-import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import com.github.dbunit.rules.leak.LeakHunterException;
-import com.github.dbunit.rules.leak.LeakHunterFactory;
+import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.cdi.leak.LeakHunterException;
+import com.github.dbunit.rules.cdi.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
@@ -22,8 +22,8 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.isEntityManagerActive;
 
 /**
  * Created by pestano on 27/08/16.

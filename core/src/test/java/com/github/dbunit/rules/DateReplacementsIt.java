@@ -1,9 +1,10 @@
 package com.github.dbunit.rules;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.DBUnitRule;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
 import com.github.dbunit.rules.model.Tweet;
-import com.github.dbunit.rules.util.EntityManagerProvider;
+import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

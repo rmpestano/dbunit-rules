@@ -1,8 +1,8 @@
 package com.github.dbunit.rules.configuration;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.SeedStrategy;
-import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.cdi.dataset.DataSetExecutorImpl;
 
 /**
  * Created by pestano on 26/07/15.

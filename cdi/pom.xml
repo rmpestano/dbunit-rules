@@ -91,26 +91,6 @@
         <!--end::deltaspike-cdi-deps[]-->
 
 
-        <dependency>
-            <groupId>com.github.dbunit-rules</groupId>
-            <artifactId>cucumber</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>test</scope>
-        </dependency>
-       <!--tag::cucumber-deps[]-->
-        <dependency> <!--1-->
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>1.2.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency> <!--1-->
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>1.2.4</version>
-            <scope>test</scope>
-        </dependency>
-        <!--end::cucumber-deps[]-->
     </dependencies>
 
     <profiles>

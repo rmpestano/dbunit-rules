@@ -3,7 +3,6 @@ package com.github.dbunit.rules.model;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by pestano on 22/07/15.

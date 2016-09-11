@@ -1,8 +1,8 @@
 package com.github.dbunit.junit5;
 
 import com.github.dbunit.junit5.model.User;
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 

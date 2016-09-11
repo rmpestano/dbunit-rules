@@ -1,7 +1,7 @@
-import com.github.dbunit.rules.DBUnitRule;
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.DBUnitRule;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
 
 import org.flywaydb.core.Flyway;
 import org.jooq.DSLContext;

@@ -1,8 +1,8 @@
 package com.github.dbunit.rules.configuration;
 
-import com.github.dbunit.rules.api.configuration.DBUnit;
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.SeedStrategy;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.SeedStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

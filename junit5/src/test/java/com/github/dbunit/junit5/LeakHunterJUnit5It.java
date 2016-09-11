@@ -1,9 +1,9 @@
 package com.github.dbunit.junit5;
 
-import com.github.dbunit.rules.api.configuration.DBUnit;
-import com.github.dbunit.rules.api.connection.ConnectionHolder;
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.leak.LeakHunterException;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.api.connection.ConnectionHolder;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.leak.LeakHunterException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 
 import java.sql.*;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.instance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.expectThrows;
 

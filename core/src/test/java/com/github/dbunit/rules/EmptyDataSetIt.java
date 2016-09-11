@@ -1,10 +1,11 @@
 package com.github.dbunit.rules;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.cdi.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.dbunit.rules.api.configuration.DBUnit;
+import com.github.dbunit.rules.cdi.DBUnitRule;
+import com.github.dbunit.rules.cdi.api.configuration.DBUnit;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,10 +14,10 @@ import org.junit.rules.TestRule;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.github.dbunit.rules.api.dataset.DataSet;
-import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.cdi.api.dataset.DataSet;
+import com.github.dbunit.rules.cdi.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.model.User;
-import com.github.dbunit.rules.util.EntityManagerProvider;
+import com.github.dbunit.rules.cdi.util.EntityManagerProvider;
 
 /**
  * Created by rmpestano on 8/21/16.
