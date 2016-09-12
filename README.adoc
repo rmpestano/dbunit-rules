@@ -1003,7 +1003,7 @@ In table below is all options for ExportDataset:
 |Name | Description | Default
 |format| Exported dataset file format.| YML
 |includeTables| A list of table names to include in exported dataset.| Default is empty which means ALL tables.
-|queryList| A list of select statements which the result will be present in exported dataset. {}
+|queryList| A list of select statements which the result will be present in exported dataset.| {}
 |dependentTables| If true will bring dependent tables of declared includeTables.| false
 |outputName| Name (and path) of output file.| ""
 |===
