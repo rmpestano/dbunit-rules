@@ -993,6 +993,37 @@ In order to export database state *after test* execution into datasets files one
 
 After execution of above test, all tables will be exported to a xml dataset.
 
+
+[TIP]
+====
+You don't need `@ExportDataSet`, you can use DataSetExporter component programmatically:
+
+[source,java,linenums]
+----
+    @Test
+    @DataSet(cleanBefore=true)
+    public void shouldExportYMLDataSetWithoutAnnotations() throws SQLException, DatabaseUnitException{
+    	tx().begin();
+    	User u1 = new User();
+    	u1.setName("u1");
+    	em().persist(u1);
+    	tx().commit();
+    	DataSetExporterImpl.getInstance().export(new DatabaseConnection(emProvider.connection()), <1> 
+    	new DataSetExportConfig().outputFileName("target/user.yml"));
+    	File ymlDataSet = new File("target/user.yml");
+          assertThat(ymlDataSet).exists();
+          assertThat(contentOf(ymlDataSet)).
+                  contains("USER:"+NEW_LINE +
+                          "  - ID: 1"+NEW_LINE +
+                          "    NAME: \"u1\""+NEW_LINE 
+                          );
+
+    }
+----
+<1> DatabaseConnection is from DBUnit api and it needs a JDBC connection.
+
+====
+
 NOTE: *xml*, *yml*, *JSON*, *XLS* and *CSV* formats are supported.
 
 TIP: Full example above (and other related tests) can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/ExportDataSetIt.java#L35[found here^].

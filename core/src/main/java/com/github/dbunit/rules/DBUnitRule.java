@@ -163,8 +163,9 @@ public class DBUnitRule implements TestRule {
             if(outputName == null || "".equals(outputName.trim())){
                 outputName = description.getMethodName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
             }
+            exportConfig.outputFileName(outputName);
             try {
-                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(),exportConfig ,outputName);
+                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(),exportConfig);
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+description.getMethodName(),e);
             }

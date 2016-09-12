@@ -8,7 +8,7 @@
     </appender>
 
     <root>
-        <priority value="debug"/>
+        <priority value="error"/>
         <appender-ref ref="stdout"/>
     </root>
 </log4j:configuration>

@@ -1,11 +1,18 @@
-package com.github.dbunit.rules;
+package com.github.dbunit.rules.exporter;
 
+import com.github.dbunit.rules.DBUnitRule;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetFormat;
+import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
 import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.exporter.DataSetExporterImpl;
+import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
+
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConnection;
 import org.junit.AfterClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,9 +20,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.File;
+import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
+import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 
 /**
  * Created by pestano on 11/09/16.
@@ -56,6 +65,25 @@ public class ExportDataSetIt {
     @DataSet("datasets/yml/users.yml")
     @ExportDataSet(format = DataSetFormat.XLS,outputName="target/exported/xls/allTables.xls")
     public void shouldExportAllTablesInXLSFormat() {
+    }
+    
+    @Test
+    @DataSet(cleanBefore=true)
+    public void shouldExportYMLDataSetWithoutAnnotations() throws SQLException, DatabaseUnitException{
+    	tx().begin();
+    	User u1 = new User();
+    	u1.setName("u1");
+    	em().persist(u1);
+    	tx().commit();
+    	DataSetExporterImpl.getInstance().export(new DatabaseConnection(emProvider.connection()), new DataSetExportConfig().outputFileName("target/user.yml"));
+    	File ymlDataSet = new File("target/user.yml");
+          assertThat(ymlDataSet).exists();
+          assertThat(contentOf(ymlDataSet)).
+                  contains("USER:"+NEW_LINE +
+                          "  - ID: 1"+NEW_LINE +
+                          "    NAME: \"u1\""+NEW_LINE 
+                          );
+
     }
     
     @Test

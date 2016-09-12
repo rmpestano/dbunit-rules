@@ -57,7 +57,7 @@ public class DataSetExporterImpl {
         return instance;
     }
 
-    public OutputStream export(DatabaseConnection databaseConnection, DataSetExportConfig dataSetExportConfig, String outputFile) throws SQLException, DatabaseUnitException {
+    public OutputStream export(DatabaseConnection databaseConnection, DataSetExportConfig dataSetExportConfig) throws SQLException, DatabaseUnitException {
 
         if (databaseConnection == null || databaseConnection.getConnection() == null || databaseConnection.getConnection().isClosed()) {
             throw new RuntimeException("Provide a valid connection to export datasets");
@@ -66,11 +66,13 @@ public class DataSetExporterImpl {
         if (dataSetExportConfig == null) {
             dataSetExportConfig = new DataSetExportConfig();
         }
+        
+        String outputFile = dataSetExportConfig.getOutputFileName();
 
         if(outputFile == null || "".equals(outputFile)){
             throw new RuntimeException("Provide output file name to export dataset.");
         }
-
+        
         if(!outputFile.contains(".")){
             outputFile = outputFile +"."+dataSetExportConfig.getDataSetFormat().name().toLowerCase();
         }

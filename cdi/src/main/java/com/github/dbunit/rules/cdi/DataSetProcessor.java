@@ -124,8 +124,9 @@ public class DataSetProcessor {
             if(outputName == null || "".equals(outputName.trim())){
                 outputName = method.getName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
             }
+            exportConfig.outputFileName(outputName);
             try {
-                DataSetExporterImpl.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig ,outputName);
+                DataSetExporterImpl.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig);
             } catch (Exception e) {
                 java.util.logging.Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+method.getName(),e);
             }
