@@ -996,14 +996,14 @@ NOTE: For now only *xml* and *yml* formats are supported.
 
 TIP: Full example above (and other related tests) can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/ExportDataSetIt.java#L35[found here^].
 
-In table below is all options for ExportDataset:
+Following table you can find all options for ExportDataset:
 
 [cols="3*", options="header"]
 |===
 |Name | Description | Default
 |format| Exported dataset file format.| YML
 |includeTables| A list of table names to include in exported dataset.| Default is empty which means ALL tables.
-|queryList| A list of select statements which the result will be present in exported dataset.| {}
+|queryList| A list of select statements which the result will used in exported dataset.| {}
 |dependentTables| If true will bring dependent tables of declared includeTables.| false
 |outputName| Name (and path) of output file.| ""
 |===
