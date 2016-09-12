@@ -30,13 +30,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4.class)
 public class DBUnitRulesIt {
 
-    // tag::rules[]
+  // tag::rules[]
+	
     @Rule
     public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it"); //<1>
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection()); //<2>
-   // end::rules[]
+ // end::rules[]
 
     @Test
     @DataSet(value = "datasets/yml/users.yml",disableConstraints = true)

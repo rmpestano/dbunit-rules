@@ -9,7 +9,7 @@ I want to use DBUnit in a CDI test environment.
 ____
 ====
 
-DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
+DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^] which reads `@DataSet` to prepare database for CDI based tests.
 
 [IMPORTANT]
 =====
@@ -18,11 +18,13 @@ CDI must be enabled in your test, see the following example:
 [source, java]
 ----
 \@RunWith(CdiTestRunner.class) <1>
+\@DBUnitInterceptor <2>
 public class DBUnitCDITest {
 
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+<2> Needed to activate DBUnit interceptor
 =====
 
 [discrete]
@@ -35,7 +37,7 @@ To use this module just add the following maven dependency:
 <dependency>
      <groupId>com.github.dbunit-rules</groupId>
      <artifactId>cdi</artifactId>
-include::../../../cdi/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
      <scope>test</scope>
 </dependency>
 ----
@@ -77,17 +79,17 @@ And The following dataset
  """
 .src/test/resources/dataset/yml/users.yml
 ----
-include::../../src/test/resources/datasets/yml/users.yml[]
+include::../../../cdi/src/test/resources/datasets/yml/users.yml[]
 ----
  """
 
-#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/DBUnitCDIIt.java#L74[found here^].}
+#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/cdi/DBUnitCDIIt.java#L74[found here^].}
 #cukedoctor-discrete
 When The following test is executed:
  """
 [source,java]
 ----
-include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=seedDatabase]
+include::../../../cdi/src/test/java/com/github/dbunit/rules/cdi/DBUnitCDIIt.java[tags=seedDatabase]
 ----
  """
 

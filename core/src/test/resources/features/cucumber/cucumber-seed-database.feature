@@ -32,7 +32,7 @@ NOTE: Most of the dependencies, except CDI container implementation, are bring b
 <dependency>
      <groupId>com.github.dbunit-rules</groupId>
      <artifactId>cucumber</artifactId>
-include::../../../cucumber/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
      <scope>test</scope>
 </dependency>
 ----
@@ -40,7 +40,7 @@ include::../../../cucumber/pom.xml[tags=version]
 .Cucumber dependencies
 [source,xml,indent=0]
 ----
-include::../../pom.xml[tags=cucumber-deps]
+include::../../../cucumber/pom.xml[tags=cucumber-deps]
 ----
 <1> You don't need to declare because it comes with DBUnit Rules Cucumber module dependency.
 

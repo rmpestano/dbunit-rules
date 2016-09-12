@@ -21,7 +21,7 @@ To use it just add the following maven dependency:
 <dependency>
      <groupId>com.github.dbunit-rules</groupId>
      <artifactId>core</artifactId>
-include::../../../core/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
      <scope>test</scope>
 </dependency>
 ----
@@ -35,7 +35,7 @@ include::../../../core/pom.xml[tags=version]
 ----
 @RunWith(JUnit4.class)
 public class DBUnitRulesIt {
-include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
+include::../../src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
 }
 ----
 <1> https://github.com/rmpestano/dbunit-rules/blob/master/jpa/src/main/java/com/github/dbunit/rules/jpa/EntityManagerProvider.java[EntityManagerProvider^] is a simple Junit rule that creates a JPA entityManager for each test. DBUnit rule don’t depend on EntityManagerProvider, it only needs a JDBC connection.
@@ -59,7 +59,7 @@ include::../../src/test/resources/datasets/yml/users.yml[]
  """
 [source,java]
 ----
-include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=seedDatabase]
+include::../../src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=seedDatabase]
 ----
  """
     Then The database should be seeded with the dataset content before test execution

@@ -21,7 +21,7 @@ To use the extension just add the following maven dependency:
 <dependency>
      <groupId>com.github.dbunit-rules</groupId>
      <artifactId>junit5</artifactId>
-include::../../../junit5/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
      <scope>test</scope>
 </dependency>
 ----
@@ -33,20 +33,20 @@ Scenario: Seed database using DBUnit rules in JUnit5 tests
 #cukedoctor-discrete
 Given The following dataset
  """
-.src/test/resources/dataset/yml/users.yml
+.src/test/resources/dataset/users.yml
 ----
-include::../../src/test/resources/datasets/yml/users.yml[]
+include::../../../junit5/src/test/resources/datasets/users.yml[]
 ----
  """
 
-#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java/#L22[found here^].}
+#{TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5It.java/#L22[found here^].}
 #cukedoctor-discrete
 When The following junit5 test is executed
 
  """
 [source,java,linenums]
 ----
-include::../../../junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java[tags=declaration;connectionField;test]
+include::../../../junit5/src/test/java/com/github/dbunit/rules/junit5/DBUnitJUnit5It.java[tags=declaration;connectionField;test]
 ----
 <1> Enables DBUnit;
 <2> JUnit 5 runner;

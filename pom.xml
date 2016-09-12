@@ -12,7 +12,9 @@
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.13.3-SNAPSHOT</version>
+   <!-- tag::version[] -->
+   <version>0.13.3-SNAPSHOT</version>
+   <!-- end::version[] -->
 
     <modules>
         <module>core</module>

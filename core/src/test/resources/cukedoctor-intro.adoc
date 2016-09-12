@@ -17,16 +17,18 @@
 ----
 <1> The rule depends on a JDBC connection.
 +
-* CDI interceptor to seed database without rule instantiation;
-* Json, Yaml, xml and flat xml support;
+* https://github.com/rmpestano/dbunit-rules#cdi-module[CDI integration^] via interceptor to seed database without rule instantiation;
+* JSON, YAML, XML, XLS, and CSV support;
 * https://github.com/rmpestano/dbunit-rules#configuration[Configuration^] via annotations or yml files;
-* Cucumber integration;
-* JPA integration;
+* https://github.com/rmpestano/dbunit-rules#cucumber-module[Cucumber^] integration;
 * Multiple database support;
 * Date/time support in datasets;
-* http://junit.org/junit5/[JUnit 5^] integration.
-* Export dataSets
-* Connection leak detection
+* Scriptable datasets with groovy and javascript;
+* Regular expressions in expected datasets;
+* https://github.com/rmpestano/dbunit-rules#junit-5[JUnit 5^] integration;
+* https://github.com/rmpestano/dbunit-rules#export-datasets[DataSet export^];
+* https://github.com/rmpestano/dbunit-rules#8-leak-hunter[Connection leak detection^];
+* Lot of https://github.com/rmpestano/dbunit-rules#example[examples^].
 
 
 The project is composed by 5 modules:
