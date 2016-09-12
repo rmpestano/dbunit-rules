@@ -22,6 +22,9 @@ import org.junit.runners.model.Statement;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
@@ -80,7 +83,7 @@ public class DBUnitRule implements TestRule {
                         executor.setDBUnitConfig(dbUnitConfig);
                         executor.createDataSet(dataSetConfig);
                     } catch (final Exception e) {
-                        throw new RuntimeException("Could not create dataset due to following error " + e.getMessage(), e);
+                        throw new RuntimeException(String.format("Could not create dataset for test '%s'.",description.getMethodName()), e);
                     }
                     boolean isTransactional = false;
                     try {
@@ -114,15 +117,7 @@ public class DBUnitRule implements TestRule {
                         }
                         throw e;
                     } finally {
-                        ExportDataSet exportDataSet = resolveExportDataSet(description);
-                        if(exportDataSet != null){
-                           DataSetExportConfig exportConfig = DataSetExportConfig.from(exportDataSet);
-                           String outputName = exportConfig.getOutputFileName();
-                           if(outputName == null || "".equals(outputName.trim())){
-                               outputName = description.getMethodName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
-                           }
-                           DataSetExporterImpl.getInstance().export(executor.getConnectionHolder().getConnection(),exportConfig ,outputName);
-                        }
+                        exportDataSet(executor,description);
                         if (dataSetConfig != null && dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                             try {
                                 executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
@@ -147,7 +142,9 @@ public class DBUnitRule implements TestRule {
                             executor.clearDatabase(dataSetConfig);
                         }
                     }
+                //no dataset provided, only export and evaluate expected dataset
                 } else {
+                    exportDataSet(executor,description);
                     statement.evaluate();
                     performDataSetComparison(description);
                 }
@@ -156,6 +153,22 @@ public class DBUnitRule implements TestRule {
 
 
         };
+    }
+
+    private void exportDataSet(DataSetExecutor executor, Description description) {
+        ExportDataSet exportDataSet = resolveExportDataSet(description);
+        if(exportDataSet != null){
+            DataSetExportConfig exportConfig = DataSetExportConfig.from(exportDataSet);
+            String outputName = exportConfig.getOutputFileName();
+            if(outputName == null || "".equals(outputName.trim())){
+                outputName = description.getMethodName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
+            }
+            try {
+                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(),exportConfig ,outputName);
+            } catch (Exception e) {
+                Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+description.getMethodName(),e);
+            }
+        }
     }
 
     private ExportDataSet resolveExportDataSet(Description description) {

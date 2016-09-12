@@ -1,13 +1,14 @@
 package com.github.dbunit.rules.exporter;
 
 import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
-import com.github.dbunit.rules.api.expoter.DataSetExporter;
+import com.github.dbunit.rules.dataset.writer.YMLWriter;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.*;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.ForwardOnlyResultSetTableFactory;
+import org.dbunit.database.QueryDataSet;
 import org.dbunit.database.search.TablesDependencyHelper;
-import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.filter.ITableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 
 import java.io.File;
@@ -15,7 +16,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * <p/>
  * based on: http://archive.oreilly.com/pub/post/dbunit_made_easy.html
  */
-public class DataSetExporterImpl implements DataSetExporter {
+public class DataSetExporterImpl {
 
     /**
      * A regular expression that is used to get the table name
@@ -46,21 +46,20 @@ public class DataSetExporterImpl implements DataSetExporter {
     private static Logger log = Logger.getLogger(DataSetExporterImpl.class.getName());
 
 
-    private static DataSetExporter instance;
+    private static DataSetExporterImpl instance;
 
     private DataSetExporterImpl(){}
 
-    public static DataSetExporter getInstance(){
+    public static DataSetExporterImpl getInstance(){
         if(instance == null){
             instance = new DataSetExporterImpl();
         }
         return instance;
     }
 
-    @Override
-    public OutputStream export(Connection connection, DataSetExportConfig dataSetExportConfig, String outputFile) throws SQLException, DatabaseUnitException {
+    public OutputStream export(DatabaseConnection databaseConnection, DataSetExportConfig dataSetExportConfig, String outputFile) throws SQLException, DatabaseUnitException {
 
-        if (connection == null || connection.isClosed()) {
+        if (databaseConnection == null || databaseConnection.getConnection() == null || databaseConnection.getConnection().isClosed()) {
             throw new RuntimeException("Provide a valid connection to export datasets");
         }
 
@@ -78,9 +77,8 @@ public class DataSetExporterImpl implements DataSetExporter {
 
         boolean hasIncludes = dataSetExportConfig.getIncludeTables() != null && dataSetExportConfig.getIncludeTables().length > 0;
 
-        IDatabaseConnection dbunitConnection = new DatabaseConnection(connection);
 
-        DatabaseConfig config = dbunitConnection.getConfig();
+        DatabaseConfig config = databaseConnection.getConfig();
         config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new ForwardOnlyResultSetTableFactory());
 
         Set<String> targetTables = new HashSet<>();
@@ -88,7 +86,7 @@ public class DataSetExporterImpl implements DataSetExporter {
         if (hasIncludes) {
             targetTables.addAll(Arrays.asList(dataSetExportConfig.getIncludeTables()));
             if (dataSetExportConfig.isDependentTables()) {
-                String[] dependentTables = TablesDependencyHelper.getAllDependentTables(dbunitConnection, dataSetExportConfig.getIncludeTables());
+                String[] dependentTables = TablesDependencyHelper.getAllDependentTables(databaseConnection, dataSetExportConfig.getIncludeTables());
                 if (dependentTables != null && dependentTables.length > 0) {
                     targetTables.addAll(Arrays.asList(dependentTables));
                 }
@@ -96,27 +94,14 @@ public class DataSetExporterImpl implements DataSetExporter {
         }
 
 
-        QueryDataSet queryDataSet = null;
-        if (dataSetExportConfig.getQueryList() != null && dataSetExportConfig.getQueryList().length > 0) {
-            queryDataSet = new QueryDataSet(dbunitConnection);
-            addQueries(queryDataSet, dataSetExportConfig.getQueryList(), targetTables);
+        IDataSet dataSet = new QueryDataSet(databaseConnection);
+        if ((targetTables != null && !targetTables.isEmpty()) || (dataSetExportConfig.getQueryList() != null && dataSetExportConfig.getQueryList().length > 0)) {
+            addQueries((QueryDataSet)dataSet, dataSetExportConfig.getQueryList(), targetTables);
+        } else{
+            dataSet = databaseConnection.createDataSet();
         }
 
 
-        IDataSet dataset = null;
-        ITableFilter filter = null;
-        //sequenceFiltering
-        if (!targetTables.isEmpty()) {
-            filter = new DatabaseSequenceFilter(dbunitConnection, targetTables.toArray(new String[targetTables.size()]));
-        } else {
-            //if no tables are included then use seq filtering on all tables
-            filter = new DatabaseSequenceFilter(dbunitConnection);
-        }
-        if (queryDataSet != null) {
-            dataset = queryDataSet;
-        } else {
-            dataset = new FilteredDataSet(filter, dbunitConnection.createDataSet());
-        }
         FileOutputStream fos = null;
         try {
             if(outputFile.contains(System.getProperty("file.separator"))){
@@ -127,9 +112,19 @@ public class DataSetExporterImpl implements DataSetExporter {
             fos = new FileOutputStream(outputFile);
             switch (dataSetExportConfig.getDataSetFormat()) {
                 case XML: {
-                    FlatXmlDataSet.write(dataset, fos);
+                    FlatXmlDataSet.write(dataSet, fos);
                     log.info("DataSet exported successfully at "+ Paths.get(outputFile).toAbsolutePath().toString());
+                    break;
                 }
+                case YML: {
+                    new YMLWriter(fos).write(dataSet);
+                    log.info("DataSet exported successfully at "+ Paths.get(outputFile).toAbsolutePath().toString());
+                    break;
+                }
+                default: {
+                    throw new RuntimeException("Format not supported.");
+                }
+
             }
         } catch (Exception e) {
             log.log(Level.SEVERE, "Could not export dataset.", e);

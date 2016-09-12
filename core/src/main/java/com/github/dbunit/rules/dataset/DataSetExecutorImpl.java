@@ -573,4 +573,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
     }
 
 
+    public DatabaseConnection getDBUnitConnection() {
+        return databaseConnection;
+    }
 }

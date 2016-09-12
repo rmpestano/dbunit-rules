@@ -3,6 +3,8 @@ package com.github.dbunit.rules;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetFormat;
 import com.github.dbunit.rules.api.expoter.ExportDataSet;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.util.EntityManagerProvider;
 import org.junit.AfterClass;
 import org.junit.Rule;
@@ -20,88 +22,178 @@ import static org.assertj.core.api.Assertions.contentOf;
  */
 @RunWith(JUnit4.class)
 public class ExportDataSetIt {
+    
+    private static final String NEW_LINE = System.getProperty("line.separator");
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it"); //<1>
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance("rules-it");
 
     @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
 
 
     @Test
-    @DataSet("datasets/yml/user.yml")
-    @ExportDataSet(format = DataSetFormat.XML,outputName="target/exported/generated.xml")
-    public void shouldExportDataSetAfterTestExecution() {
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML,outputName="target/exported/xml/allTables.xml")
+    public void shouldExportAllTablesInXMLFormat() {
     }
 
     @Test
-    @DataSet("datasets/yml/user.yml")
-    @ExportDataSet(format = DataSetFormat.XML, queryList = {"select * from USER u where u.ID = 1"}, outputName="target/exported/filtered.xml")
-    public void shouldExportDataSetUsingQueryToFilterRows() {
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.YML,outputName="target/exported/yml/allTables")
+    public void shouldExportAllTablesInYMLFormatOmmitingExtension() {
+    }
+
+    @Test
+    @ExportDataSet(outputName="target/exported/yml/generatedWithoutDataSetAnnotation")
+    public void shouldExportAllTablesInYMLFormatWithoutDataSetAnnotation() {
+        //seed database
+        DataSetExecutorImpl.getExecutorById(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID)
+                .createDataSet(new DataSetConfig("datasets/yml/users.yml"));
+    }
+
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML, queryList = {"select * from USER u where u.ID = 1"}, outputName="target/exported/xml/filtered.xml")
+    public void shouldExportXMLDataSetUsingQueryToFilterRows() {
 
     }
 
     @Test
-    @DataSet("datasets/yml/user.yml")
-    @ExportDataSet(format = DataSetFormat.XML, includeTables = "USER", outputName="target/exported/includes.xml")
-    public void shouldExportDataSetUsingIncludes() {
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.YML, queryList = {"select * from USER u where u.ID = 1"}, outputName="target/exported/yml/filtered.yml")
+    public void shouldExportYMLDataSetUsingQueryToFilterRows() {
 
     }
 
     @Test
-    @DataSet("datasets/yml/user.yml")
-    @ExportDataSet(format = DataSetFormat.XML, includeTables = "USER", dependentTables = true, outputName="target/exported/dependentTables.xml")
-    public void shouldExportDataSetUsingIncludesWithDependentTables() {
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML, queryList = {"select * from USER u where u.ID = 1"}, includeTables = {"TWEET"}, outputName="target/exported/xml/filteredIncludes.xml")
+    public void shouldExportXMLDataSetUsingQueryAndIncludesToFilterRows() {
 
     }
 
-    /**
-     * full dataset
-     * <?xml version='1.0' encoding='UTF-8'?>
-     <dataset>
-     <USER ID="1" NAME="@realpestano"/>
-     <USER ID="2" NAME="@dbunit"/>
-     <FOLLOWER/>
-     <SEQUENCE SEQ_NAME="SEQ_GEN" SEQ_COUNT="0"/>
-     <TWEET/>
-     </dataset>
-     */
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.YML, queryList = {"select * from USER u where u.ID = 1"}, includeTables = "TWEET", outputName="target/exported/yml/filteredIncludes.yml")
+    public void shouldExportYMLDataSetUsingQueryAndIncludesToFilterRows() {
+
+    }
+
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML, includeTables = "USER", outputName="target/exported/xml/includes.xml")
+    public void shouldExportXMLDataSetWithTablesInIncludes() {
+
+    }
+
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.YML, includeTables = "USER", outputName="target/exported/yml/includes.yml")
+    public void shouldExportYMLDataSetWithTablesInIncludes() {
+
+    }
+
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML, includeTables = "USER", dependentTables = true, outputName="target/exported/xml/dependentTables.xml")
+    public void shouldExportXMLDataSetUsingIncludesWithDependentTables() {
+
+    }
+
+
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.YML, includeTables = {"USER","TWEET"}, dependentTables = true, outputName="target/exported/yml/dependentTables.yml")
+    public void shouldExportYMLDataSetUsingIncludesWithDependentTables() {
+
+    }
+
+
     @AfterClass
     public static void assertGeneratedDataSets(){
-        File generatedXmlDataSet = new File("target/exported/generated.xml");
-        assertThat(generatedXmlDataSet).exists();
-        assertThat(contentOf(generatedXmlDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
-        assertThat(contentOf(generatedXmlDataSet)).contains("<TWEET/>");
-        assertThat(contentOf(generatedXmlDataSet)).contains("<USER ID=\"2\" NAME=\"@dbunit\"/>");
-        assertThat(contentOf(generatedXmlDataSet)).contains("<FOLLOWER/>");
+        File xmlDataSetWithAllTables = new File("target/exported/xml/allTables.xml");
+        assertThat(xmlDataSetWithAllTables).exists();
+        assertThat(contentOf(xmlDataSetWithAllTables)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
+        assertThat(contentOf(xmlDataSetWithAllTables)).contains("<USER ID=\"2\" NAME=\"@dbunit\"/>");
+        assertThat(contentOf(xmlDataSetWithAllTables)).contains("<FOLLOWER ID=\"1\" USER_ID=\"1\" FOLLOWER_ID=\"2\"/>");
 
-        generatedXmlDataSet.delete();
+        //xmlDataSetWithAllTables.delete();
 
-        File filterdXmlDataSet = new File("target/exported/filtered.xml");
-        assertThat(filterdXmlDataSet).exists();
-        assertThat(contentOf(filterdXmlDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
-        assertThat(contentOf(filterdXmlDataSet)).doesNotContain("<USER ID=\"2\" NAME=\"@dbunit\"/>");
-        assertThat(contentOf(filterdXmlDataSet)).doesNotContain("<TWEET/>");
-        assertThat(contentOf(filterdXmlDataSet)).doesNotContain("<FOLLOWER/>");
-        filterdXmlDataSet.delete();
+        File ymlDataSetWithAllTables = new File("target/exported/yml/allTables.yml");
+        assertThat(ymlDataSetWithAllTables).exists();
+        assertThat(contentOf(ymlDataSetWithAllTables)).
+                contains("FOLLOWER:"+NEW_LINE +
+                "  - ID: 1"+NEW_LINE +
+                "    USER_ID: 1"+NEW_LINE +
+                "    FOLLOWER_ID: 2"+NEW_LINE );
 
-        File includesXmlDataSet = new File("target/exported/includes.xml");
-        assertThat(includesXmlDataSet).exists();
-        assertThat(contentOf(includesXmlDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
-        assertThat(contentOf(includesXmlDataSet)).contains("<USER ID=\"2\" NAME=\"@dbunit\"/>");
-        assertThat(contentOf(includesXmlDataSet)).doesNotContain("<TWEET/>");
-        assertThat(contentOf(includesXmlDataSet)).doesNotContain("<FOLLOWER/>");
-        includesXmlDataSet.delete();
+        assertThat(contentOf(ymlDataSetWithAllTables)).
+                contains("USER:"+NEW_LINE +
+                        "  - ID: 1"+NEW_LINE +
+                        "    NAME: \"@realpestano\""+NEW_LINE +
+                        "  - ID: 2"+NEW_LINE +
+                        "    NAME: \"@dbunit\"");
 
-        File dependentTablesXmlDataSet = new File("target/exported/dependentTables.xml");
-        assertThat(dependentTablesXmlDataSet).exists();
-        assertThat(contentOf(dependentTablesXmlDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
-        assertThat(contentOf(dependentTablesXmlDataSet)).contains("<USER ID=\"2\" NAME=\"@dbunit\"/>");
-        assertThat(contentOf(dependentTablesXmlDataSet)).contains("<TWEET/>");
-        assertThat(contentOf(dependentTablesXmlDataSet)).contains("<FOLLOWER/>");
-        assertThat(contentOf(dependentTablesXmlDataSet)).contains("<FOLLOWER/>");
 
-        dependentTablesXmlDataSet.delete();
+        File xmlFilteredDataSet = new File("target/exported/xml/filtered.xml");
+        assertThat(xmlFilteredDataSet).exists();
+        assertThat(contentOf(xmlFilteredDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
+        assertThat(contentOf(xmlFilteredDataSet)).doesNotContain("<USER ID=\"2\" NAME=\"@dbunit\"/>");
+        assertThat(contentOf(xmlFilteredDataSet)).doesNotContain("<FOLLOWER ID=\"1\" USER_ID=\"1\" FOLLOWER_ID=\"2\"/>");
+
+        File ymlFilteredDataSet = new File("target/exported/yml/filtered.yml");
+        assertThat(ymlFilteredDataSet).exists();
+        assertThat(contentOf(ymlFilteredDataSet)).contains("USER:"+NEW_LINE +
+                "  - ID: 1"+NEW_LINE +
+                "    NAME: \"@realpestano\"");
+
+
+        File xmlFilteredWithIncludesDataSet = new File("target/exported/xml/filteredIncludes.xml");
+        assertThat(xmlFilteredWithIncludesDataSet).exists();
+        assertThat(contentOf(xmlFilteredWithIncludesDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
+        assertThat(contentOf(xmlFilteredWithIncludesDataSet)).contains("<TWEET ID=\"abcdef12345\" CONTENT=\"dbunit rules!\"");
+        assertThat(contentOf(xmlFilteredWithIncludesDataSet)).doesNotContain("<USER ID=\"2\" NAME=\"@dbunit\"/>");
+        assertThat(contentOf(xmlFilteredWithIncludesDataSet)).doesNotContain("<FOLLOWER ID=\"1\" USER_ID=\"1\" FOLLOWER_ID=\"2\"/>");
+
+        File ymlFilteredIncludesDataSet = new File("target/exported/yml/filteredIncludes.yml");
+        assertThat(ymlFilteredIncludesDataSet).exists();
+        assertThat(contentOf(ymlFilteredIncludesDataSet)).contains("USER:" + NEW_LINE +
+                "  - ID: 1" + NEW_LINE +
+                "    NAME: \"@realpestano\"");
+
+        assertThat(contentOf(ymlFilteredIncludesDataSet)).
+                contains("TWEET:"+NEW_LINE +
+                        "  - ID: \"abcdef12345\""+NEW_LINE +
+                        "    CONTENT: \"dbunit rules!\"");
+
+
+        File xmlDependentTablesDataSet = new File("target/exported/xml/dependentTables.xml");
+        assertThat(xmlDependentTablesDataSet).exists();
+        assertThat(contentOf(xmlDependentTablesDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");
+        assertThat(contentOf(xmlDependentTablesDataSet)).contains("<USER ID=\"2\" NAME=\"@dbunit\"/>");
+        assertThat(contentOf(xmlDependentTablesDataSet)).contains("<FOLLOWER ID=\"1\" USER_ID=\"1\" FOLLOWER_ID=\"2\"/>");
+        assertThat(contentOf(xmlDependentTablesDataSet)).contains("<TWEET ID=\"abcdef12345\" CONTENT=\"dbunit rules!\"");
+
+
+        File ymlDependentTablesDataSet = new File("target/exported/yml/dependentTables.yml");
+        assertThat(ymlDependentTablesDataSet).exists();
+        assertThat(contentOf(ymlDependentTablesDataSet)).contains("USER:"+NEW_LINE +
+                "  - ID: 1"+NEW_LINE +
+                "    NAME: \"@realpestano\""+NEW_LINE +
+                "  - ID: 2"+NEW_LINE +
+                "    NAME: \"@dbunit\"");
+
+        assertThat(contentOf(ymlDependentTablesDataSet)).
+                contains("TWEET:"+NEW_LINE +
+                        "  - ID: \"abcdef12345\""+NEW_LINE +
+                        "    CONTENT: \"dbunit rules!\"");
+
+        assertThat(contentOf(ymlDependentTablesDataSet)).
+                contains("FOLLOWER:"+NEW_LINE +
+                        "  - ID: 1"+NEW_LINE +
+                        "    USER_ID: 1"+NEW_LINE +
+                        "    FOLLOWER_ID: 2");
 
     }
 }

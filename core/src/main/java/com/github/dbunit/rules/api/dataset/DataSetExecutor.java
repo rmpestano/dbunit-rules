@@ -5,6 +5,7 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
@@ -45,6 +46,7 @@ public interface DataSetExecutor{
     void setDBUnitConfig(DBUnitConfig dbUnitConfig);
 
     DBUnitConfig getDBUnitConfig();
-    
-    
+
+
+    DatabaseConnection getDBUnitConnection();
 }
