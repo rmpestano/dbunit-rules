@@ -979,7 +979,7 @@ TIP: Complete source code of example above can be https://github.com/rmpestano/d
 
 == Export DataSets
 
-In order to export database state *after test* execution into datasets one can use *@ExportDataSet* Annotation (class or method level):
+In order to export database state *after test* execution into datasets files one can use *@ExportDataSet* Annotation (class or method level):
 
 [source, java, linenums]
 ----
