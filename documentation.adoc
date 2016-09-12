@@ -15,6 +15,8 @@
 
 = *Living Documentation*
 
+include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cukedoctor-intro.adoc[leveloffset=+1]
+
 == *Summary*
 [cols="12*^m", options="header,footer"]
 |===
@@ -58,7 +60,7 @@
 |0
 |0
 |4
-|717ms
+|01s 700ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -117,7 +119,7 @@
 |000ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|718ms
+|11|0|11|39|0|0|0|0|0|39 2+|01s 702ms
 |===
 
 == *Features*
@@ -147,7 +149,7 @@ To use it just add the following maven dependency:
 <dependency>
    <groupId>com.github.dbunit-rules</groupId>
    <artifactId>core</artifactId>
-include::../../../core/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
@@ -166,7 +168,7 @@ The following junit rules icon:thumbs-up[role="green",title="Passed"] [small rig
 ----
 @RunWith(JUnit4.class)
 public class DBUnitRulesIt {
-include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
+include::../../src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=rules]
 }
 ----
 [discrete]
@@ -201,7 +203,7 @@ The following test is executed: icon:thumbs-up[role="green",title="Passed"] [sma
 [discrete]
 [source,java]
 ----
-include::../../../core/src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=seedDatabase]
+include::../../src/test/java/com/github/dbunit/rules/DBUnitRulesIt.java[tags=seedDatabase]
 ----
 
 
@@ -229,7 +231,7 @@ I want to use DBUnit in a CDI test environment.
 ____
 ====
 
-DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^].
+DBUnit CDI integration is done through a https://docs.jboss.org/weld/reference/latest/en-US/html_single/#interceptors[CDI interceptor^] which reads `@DataSet` to prepare database for CDI based tests.
 
 [IMPORTANT]
 =====
@@ -238,11 +240,13 @@ CDI must be enabled in your test, see the following example:
 [source, java]
 ----
 @RunWith(CdiTestRunner.class) <1>
+@DBUnitInterceptor <2>
 public class DBUnitCDITest {
 
 }
 ----
 <1> https://deltaspike.apache.org/documentation/test-control.html[CdiTestRunner^] is provided by https://deltaspike.apache.org[Apache Deltaspike^] but you should be able to use other CDI test runners.
+<2> Needed to activate DBUnit interceptor
 =====
 
 [discrete]
@@ -255,7 +259,7 @@ To use this module just add the following maven dependency:
 <dependency>
    <groupId>com.github.dbunit-rules</groupId>
    <artifactId>cdi</artifactId>
-include::../../../cdi/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
@@ -266,7 +270,7 @@ include::../../../cdi/pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(716ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 700ms)#
 ******
 
 [discrete]
@@ -306,7 +310,7 @@ The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#
 [discrete]
 .src/test/resources/dataset/yml/users.yml
 ----
-include::../../src/test/resources/datasets/yml/users.yml[]
+include::../../../cdi/src/test/resources/datasets/yml/users.yml[]
 ----
 
 
@@ -321,13 +325,13 @@ The following test is executed: icon:thumbs-up[role="green",title="Passed"] [sma
 [discrete]
 [source,java]
 ----
-include::../../src/test/java/com/github/dbunit/rules/DBUnitCDITest.java[tags=seedDatabase]
+include::../../../cdi/src/test/java/com/github/dbunit/rules/cdi/DBUnitCDIIt.java[tags=seedDatabase]
 ----
 
 
 ******
 
-TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/DBUnitCDIIt.java#L74[found here^].
+TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/cdi/src/test/java/com/github/dbunit/rules/cdi/DBUnitCDIIt.java#L74[found here^].
 
 =====
 Then ::
@@ -372,7 +376,7 @@ NOTE: Most of the dependencies, except CDI container implementation, are bring b
 <dependency>
    <groupId>com.github.dbunit-rules</groupId>
    <artifactId>cucumber</artifactId>
-include::../../../cucumber/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
@@ -380,7 +384,7 @@ include::../../../cucumber/pom.xml[tags=version]
 .Cucumber dependencies
 [source,xml,indent=0]
 ----
-include::../../pom.xml[tags=cucumber-deps]
+include::../../../cucumber/pom.xml[tags=cucumber-deps]
 ----
 <1> You don't need to declare because it comes with DBUnit Rules Cucumber module dependency.
 
@@ -495,7 +499,7 @@ To use the extension just add the following maven dependency:
 <dependency>
    <groupId>com.github.dbunit-rules</groupId>
    <artifactId>junit5</artifactId>
-include::../../../junit5/pom.xml[tags=version]
+include::../../../pom.xml[tags=version]
    <scope>test</scope>
 </dependency>
 ----
@@ -510,9 +514,9 @@ The following dataset icon:thumbs-up[role="green",title="Passed"] [small right]#
 ******
 
 [discrete]
-.src/test/resources/dataset/yml/users.yml
+.src/test/resources/dataset/users.yml
 ----
-include::../../src/test/resources/datasets/yml/users.yml[]
+include::../../../junit5/src/test/resources/datasets/users.yml[]
 ----
 
 
@@ -527,7 +531,7 @@ The following junit5 test is executed icon:thumbs-up[role="green",title="Passed"
 [discrete]
 [source,java,linenums]
 ----
-include::../../../junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java[tags=declaration;connectionField;test]
+include::../../../junit5/src/test/java/com/github/dbunit/rules/junit5/DBUnitJUnit5It.java[tags=declaration;connectionField;test]
 ----
 [discrete]
 <1> Enables DBUnit;
@@ -541,7 +545,7 @@ include::../../../junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test
 
 ******
 
-TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5Test.java/#L22[found here^].
+TIP: Source code of the above example can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/junit5/DBUnitJUnit5It.java/#L22[found here^].
 
 =====
 Then ::
