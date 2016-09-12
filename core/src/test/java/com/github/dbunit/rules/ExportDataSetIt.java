@@ -51,6 +51,18 @@ public class ExportDataSetIt {
         DataSetExecutorImpl.getExecutorById(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID)
                 .createDataSet(new DataSetConfig("datasets/yml/users.yml"));
     }
+    
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XLS,outputName="target/exported/xls/allTables.xls")
+    public void shouldExportAllTablesInXLSFormat() {
+    }
+    
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.CSV,outputName="target/exported/csv/allTables.csv")
+    public void shouldExportAllTablesInCSVFormat() {
+    }
 
     @Test
     @DataSet("datasets/yml/users.yml")
@@ -135,6 +147,21 @@ public class ExportDataSetIt {
                         "  - ID: 2"+NEW_LINE +
                         "    NAME: \"@dbunit\"");
 
+        File xlsDataSetWithAllTables = new File("target/exported/xls/allTables.xls");
+        assertThat(xlsDataSetWithAllTables).exists();
+        
+        
+        File csvDataSetWithAllTables = new File("target/exported/csv/allTables");
+        assertThat(csvDataSetWithAllTables).exists();
+        
+        File userCsvDataSet = new File("target/exported/csv/allTables/USER.csv");
+        assertThat(userCsvDataSet).exists();
+        
+        File tweetCsvDataSet = new File("target/exported/csv/allTables/TWEET.csv");
+        assertThat(tweetCsvDataSet).exists();
+        
+        File followerCsvDataSet = new File("target/exported/csv/allTables/FOLLOWER.csv");
+        assertThat(followerCsvDataSet).exists();
 
         File xmlFilteredDataSet = new File("target/exported/xml/filtered.xml");
         assertThat(xmlFilteredDataSet).exists();
@@ -149,6 +176,8 @@ public class ExportDataSetIt {
                 "    NAME: \"@realpestano\"");
 
 
+        
+        
         File xmlFilteredWithIncludesDataSet = new File("target/exported/xml/filteredIncludes.xml");
         assertThat(xmlFilteredWithIncludesDataSet).exists();
         assertThat(contentOf(xmlFilteredWithIncludesDataSet)).contains("<USER ID=\"1\" NAME=\"@realpestano\"/>");

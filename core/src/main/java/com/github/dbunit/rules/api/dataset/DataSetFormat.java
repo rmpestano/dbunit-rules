@@ -5,5 +5,5 @@ package com.github.dbunit.rules.api.dataset;
  */
 public enum DataSetFormat {
 
-    YML, JSON, XML, XLS
+    YML, JSON, XML, XLS, CSV
 }

@@ -6,6 +6,8 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.*;
 import org.dbunit.database.search.TablesDependencyHelper;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.csv.CsvDataSetWriter;
+import org.dbunit.dataset.excel.XlsDataSetWriter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 
 import java.io.File;
@@ -71,6 +73,10 @@ public class DataSetExporterImpl {
         if(!outputFile.contains(".")){
             outputFile = outputFile +"."+dataSetExportConfig.getDataSetFormat().name().toLowerCase();
         }
+        
+        if(outputFile.contains("/") && System.getProperty("os.name").toLowerCase().contains("win")){
+        	outputFile = outputFile.replace("/", "\\");
+        }
 
         boolean hasIncludes = dataSetExportConfig.getIncludeTables() != null && dataSetExportConfig.getIncludeTables().length > 0;
 
@@ -104,25 +110,36 @@ public class DataSetExporterImpl {
             if(outputFile.contains(System.getProperty("file.separator"))){
                 String pathWithoutFileName = outputFile.substring(0,outputFile.lastIndexOf(System.getProperty("file.separator"))+1);
                 new File(pathWithoutFileName).mkdirs();
-
             }
             fos = new FileOutputStream(outputFile);
             switch (dataSetExportConfig.getDataSetFormat()) {
                 case XML: {
                     FlatXmlDataSet.write(dataSet, fos);
-                    log.info("DataSet exported successfully at "+ Paths.get(outputFile).toAbsolutePath().toString());
                     break;
                 }
                 case YML: {
                     new YMLWriter(fos).write(dataSet);
-                    log.info("DataSet exported successfully at "+ Paths.get(outputFile).toAbsolutePath().toString());
                     break;
+                }
+                case XLS: {
+                	config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
+                	new XlsDataSetWriter().write(dataSet, fos);
+                	break;
+                }
+                case CSV: {
+                	//csv needs a directory instead of file
+                	outputFile = outputFile.substring(0,outputFile.lastIndexOf("."));
+                	CsvDataSetWriter.write(dataSet, new File(outputFile));
+                	break;
                 }
                 default: {
                     throw new RuntimeException("Format not supported.");
                 }
-
+                
             }
+            
+           log.info("DataSet exported successfully at "+ Paths.get(outputFile).toAbsolutePath().toString());
+            
         } catch (Exception e) {
             log.log(Level.SEVERE, "Could not export dataset.", e);
             throw new RuntimeException("Could not export dataset.", e);

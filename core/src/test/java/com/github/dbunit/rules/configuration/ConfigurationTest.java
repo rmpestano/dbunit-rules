@@ -3,6 +3,8 @@ package com.github.dbunit.rules.configuration;
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
+
+import org.apache.xmlbeans.impl.common.IOUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,7 +43,13 @@ public class ConfigurationTest {
 
     @Test
     public void shouldLoadDBUnitConfigViaCustomGlobalFile() throws IOException {
-        File customConfig = new File("target/test-classes/dbunit.yml");
+    	File backupConfig = new File("target/test-classes/dbunit-backup.yml");
+    	File customConfig = new File("target/test-classes/dbunit.yml");
+        FileOutputStream backupStream = new FileOutputStream(backupConfig);
+        backupStream.write(Files.readAllBytes(Paths.get(getClass().getResource("/default/dbunit.yml").getPath().replaceFirst("^/(.:/)", "$1"))));
+
+        backupStream.flush();
+        backupStream.close();
         FileOutputStream fos = new FileOutputStream(customConfig);
         fos.write(Files.readAllBytes(Paths.get(getClass().getResource("/config/sample-dbunit.yml").getPath().replaceFirst("^/(.:/)", "$1"))));
         fos.flush();
@@ -60,7 +68,11 @@ public class ConfigurationTest {
                 containsEntry("fetchSize",200).
                 containsEntry("escapePattern","[?]");
 
-        customConfig.delete();
+        FileOutputStream originalStream = new FileOutputStream(customConfig);
+        originalStream.write(Files.readAllBytes(Paths.get(backupConfig.toURI())));
+        originalStream.flush();
+        originalStream.close();
+        
     }
 
 
