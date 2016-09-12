@@ -112,7 +112,7 @@ public class DBUnitRule implements TestRule {
                         }
                         performDataSetComparison(description);
                     } catch (Exception e) {
-                        if (isTransactional) {
+                        if (isTransactional && em().getTransaction().isActive()) {
                             em().getTransaction().rollback();
                         }
                         throw e;

@@ -194,6 +194,5 @@ public class ExportDataSetIt {
                         "  - ID: 1"+NEW_LINE +
                         "    USER_ID: 1"+NEW_LINE +
                         "    FOLLOWER_ID: 2");
-
     }
 }

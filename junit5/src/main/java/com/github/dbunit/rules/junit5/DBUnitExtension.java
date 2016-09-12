@@ -4,10 +4,13 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.DataSetExecutor;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
+import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.api.leak.LeakHunter;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.exporter.DataSetExporterImpl;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
@@ -21,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.logging.Level;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
@@ -95,21 +99,40 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
         return testExtensionContext.getTestMethod().get().isAnnotationPresent(ExpectedDataSet.class) || testExtensionContext.getTestClass().get().isAnnotationPresent(ExpectedDataSet.class);
     }
 
+    private boolean shouldExportDataSet(TestExtensionContext testExtensionContext) {
+        return testExtensionContext.getTestMethod().get().isAnnotationPresent(ExportDataSet.class) || testExtensionContext.getTestClass().get().isAnnotationPresent(ExportDataSet.class);
+    }
+
+    public void exportDataSet(DataSetExecutor dataSetExecutor, Method method) {
+        ExportDataSet exportDataSet = resolveExportDataSet(method);
+        if(exportDataSet != null){
+            DataSetExportConfig exportConfig = DataSetExportConfig.from(exportDataSet);
+            String outputName = exportConfig.getOutputFileName();
+            if(outputName == null || "".equals(outputName.trim())){
+                outputName = method.getName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
+            }
+            try {
+                DataSetExporterImpl.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig ,outputName);
+            } catch (Exception e) {
+                java.util.logging.Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+method.getName(),e);
+            }
+        }
+    }
+
+    private ExportDataSet resolveExportDataSet(Method method) {
+        ExportDataSet exportDataSet = method.getAnnotation(ExportDataSet.class);
+        if (exportDataSet == null) {
+            exportDataSet = method.getDeclaringClass().getAnnotation(ExportDataSet.class);
+        }
+        return exportDataSet;
+    }
+
 
     @Override
     public void afterTestExecution(TestExtensionContext testExtensionContext) throws Exception {
         DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
         ExtensionContext.Namespace executorNamespace = getExecutorNamespace(testExtensionContext);
         try {
-            if (dbUnitConfig != null && dbUnitConfig.isLeakHunter()) {
-                LeakHunter leakHunter = testExtensionContext.getStore(executorNamespace).get(LEAK_STORE, LeakHunter.class);
-                int openConnectionsBefore = testExtensionContext.getStore(executorNamespace).get(CONNECTION_BEFORE_STORE, Integer.class);
-                int openConnectionsAfter = leakHunter.openConnections();
-                if (openConnectionsAfter > openConnectionsBefore) {
-                    throw new LeakHunterException(testExtensionContext.getTestMethod().get().getName(), openConnectionsAfter - openConnectionsBefore);
-                }
-
-            }
             if (shouldCompareDataSet(testExtensionContext)) {
                 ExpectedDataSet expectedDataSet = testExtensionContext.getTestMethod().get().getAnnotation(ExpectedDataSet.class);
                 if (expectedDataSet == null) {
@@ -127,12 +150,29 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                     executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
                 }
             }
+
+            if (dbUnitConfig != null && dbUnitConfig.isLeakHunter()) {
+                LeakHunter leakHunter = testExtensionContext.getStore(executorNamespace).get(LEAK_STORE, LeakHunter.class);
+                int openConnectionsBefore = testExtensionContext.getStore(executorNamespace).get(CONNECTION_BEFORE_STORE, Integer.class);
+                int openConnectionsAfter = leakHunter.openConnections();
+                if (openConnectionsAfter > openConnectionsBefore) {
+                    throw new LeakHunterException(testExtensionContext.getTestMethod().get().getName(), openConnectionsAfter - openConnectionsBefore);
+                }
+
+            }
+
         } finally {
+
             DataSetConfig dataSetConfig = testExtensionContext.getStore(executorNamespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
             if (dataSetConfig == null) {
                 return;
             }
             DataSetExecutor executor = testExtensionContext.getStore(executorNamespace).get(EXECUTOR_STORE, DataSetExecutor.class);
+
+            if(shouldExportDataSet(testExtensionContext)){
+                exportDataSet(executor,testExtensionContext.getTestMethod().get());
+            }
+
             if (dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                 try {
                     for (int i = 0; i < dataSetConfig.getExecuteScriptsAfter().length; i++) {

@@ -3,10 +3,7 @@ package com.github.dbunit.rules.exporter;
 import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
 import com.github.dbunit.rules.dataset.writer.YMLWriter;
 import org.dbunit.DatabaseUnitException;
-import org.dbunit.database.DatabaseConfig;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.ForwardOnlyResultSetTableFactory;
-import org.dbunit.database.QueryDataSet;
+import org.dbunit.database.*;
 import org.dbunit.database.search.TablesDependencyHelper;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
@@ -27,7 +24,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by pestano on 09/09/16.
- * <p/>
+ *
  * based on: http://archive.oreilly.com/pub/post/dbunit_made_easy.html
  */
 public class DataSetExporterImpl {
@@ -138,6 +135,9 @@ public class DataSetExporterImpl {
                     log.log(Level.SEVERE, "Could not close file output stream.", e);
                 }
             }
+            //set back default ResultSetTableFactory
+            config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
+
         }
 
         return null;
