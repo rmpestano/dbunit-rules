@@ -58,7 +58,7 @@
 |0
 |0
 |4
-|01s 032ms
+|01s 473ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -117,7 +117,7 @@
 |000ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|01s 034ms
+|11|0|11|39|0|0|0|0|0|39 2+|01s 475ms
 |===
 
 == *Features*
@@ -266,7 +266,7 @@ include::../../../cdi/pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 032ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 473ms)#
 ******
 
 [discrete]
