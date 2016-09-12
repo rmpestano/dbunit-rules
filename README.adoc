@@ -970,7 +970,7 @@ Following table you can find all options for ExportDataset:
 
 === Programatic export
 
-You don't need `@ExportDataSet`, you can use DataSetExporter component programmatically:
+You can also export DataSets without `@ExportDataSet` by using DataSetExporter component programmatically:
 
 [source,java,linenums]
 ----
