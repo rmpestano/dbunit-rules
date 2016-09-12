@@ -987,6 +987,7 @@ In order to export database state *after test* execution into datasets files one
     @DataSet("datasets/yml/users.yml")
     @ExportDataSet(format = DataSetFormat.XML,outputName="target/exported/xml/allTables.xml")
     public void shouldExportAllTablesInXMLFormat() {
+       //data inserted inside method can be exported
     }
 ----
 
