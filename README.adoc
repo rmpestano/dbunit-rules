@@ -977,7 +977,36 @@ public class LeakHunterIt {
 
 TIP: Complete source code of example above can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/LeakHunterIt.java[found here^].
 
+== Export DataSets
 
+In order to export database state *after test* execution into datasets one can use *@ExportDataSet* Annotation (class or method level):
+
+[source, java, linenums]
+----
+    @Test
+    @DataSet("datasets/yml/users.yml")
+    @ExportDataSet(format = DataSetFormat.XML,outputName="target/exported/xml/allTables.xml")
+    public void shouldExportAllTablesInXMLFormat() {
+    }
+----
+
+After execution of above test, all tables will be exported to a xml dataset.
+
+NOTE: For now only *xml* and *yml* formats are supported.
+
+TIP: Full example above (and other related tests) can be https://github.com/rmpestano/dbunit-rules/blob/master/core/src/test/java/com/github/dbunit/rules/ExportDataSetIt.java#L35[found here^].
+
+In table below is all options for ExportDataset:
+
+[cols="3*", options="header"]
+|===
+|Name | Description | Default
+|format| Exported dataset file format.| YML
+|includeTables| A list of table names to include in exported dataset.| Default is empty which means ALL tables.
+|queryList| A list of select statements which the result will be present in exported dataset. {}
+|dependentTables| If true will bring dependent tables of declared includeTables.| false
+|outputName| Name (and path) of output file.| ""
+|===
 
 == Snapshots
 
