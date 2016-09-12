@@ -1,6 +1,7 @@
 package com.github.dbunit.rules.exporter;
 
 import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
+import com.github.dbunit.rules.dataset.writer.JSONWriter;
 import com.github.dbunit.rules.dataset.writer.YMLWriter;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.*;
@@ -130,6 +131,11 @@ public class DataSetExporterImpl {
                 	//csv needs a directory instead of file
                 	outputFile = outputFile.substring(0,outputFile.lastIndexOf("."));
                 	CsvDataSetWriter.write(dataSet, new File(outputFile));
+                	break;
+                }
+                case JSON: {
+                	config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY, new CachedResultSetTableFactory());
+                	new JSONWriter(fos,dataSet).write();
                 	break;
                 }
                 default: {
