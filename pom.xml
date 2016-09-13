@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
         <version>7</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-   <!-- tag::version[] -->
-   <version>0.13.3-SNAPSHOT</version>
-   <!-- end::version[] -->
+    <!-- tag::version[] -->
+    <version>0.14.0</version>
+    <!-- end::version[] -->
 
     <modules>
         <module>core</module>
@@ -50,8 +51,8 @@
         <connection>scm:git:https://github.com/rmpestano/dbunit-rules.git</connection>
         <developerConnection>scm:git:git@github.com:rmpestano/dbunit-rules.git</developerConnection>
         <url>https://github.com/rmpestano/dbunit-rules.git</url>
-        <tag>HEAD</tag>
-  </scm>
+        <tag>0.14.0</tag>
+    </scm>
 
     <ciManagement>
         <system>tranvis-ci.org</system>
@@ -323,6 +324,25 @@
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.19.1</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*It.java</include>
+                                <include>**/*Test.java</include>
+                                <include>**/*Feature.java</include>
+                                <include>**/*Bdd.java</include>
+                            </includes>
+                            <excludes>
+                                <!-- conflict with open ejb/jpa and jacoco
+                                Caused by: org.apache.openejb.OpenEJBException: org.apache.openejb.OpenEJBRuntimeException: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null
+                                Caused by: org.apache.openejb.OpenEJBRuntimeException: <openjpa-2.4.1-r422266:1730418 fatal general error> org.apache.openjpa.persistence.PersistenceException: null
+                                -->
+                                <exclude>**/*UserRepositoryTest.java</exclude>
+                            </excludes>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
