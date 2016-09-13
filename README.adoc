@@ -364,7 +364,7 @@ public class ConnectionConfigIt {
 <1> driver class can be ommited in new JDBC drivers since version 4.
 <2> Note that the rule instantiation doesn't need a connection anymore.
 
-IMPORTANT: As CDI module depends on a produced entitty manager, connection configuration will be ignored.
+IMPORTANT: As CDI module depends on a produced entity manager, connection configuration will be ignored.
 
 === Rule chaining
 
@@ -692,7 +692,7 @@ property in test/resources/META-INF/apache-deltaspike.properties:
 
 == Cucumber module
 
-this module brings a Cucumber runner which is CDI aware. 
+this module brings a Cucumber runner which is CDI aware.
 
 NOTE: If you don't use CDI you need to <<Programmatically creating datasets, create datasets Programmatically>> because Cucumber `official` runner https://github.com/cucumber/cucumber-jvm/issues/393[doesn't support JUnit rules^].
 
@@ -927,7 +927,7 @@ public class DBUnitJUnit5Test {
 ----
 <1> DBUnit extension will get JDBC connection by reflection so you need to declare a *field* or *method* with `ConnectionHolder` as return type.
 
-TIP: You can configure JDBC connection using @DBUnit annotation or dbunit.yml, https://github.com/rmpestano/dbunit-rules#jdbc-connection[see example here^].
+TIP: You can configure JDBC connection using @DBUnit annotation or dbunit.yml, see <<JDBC Connection>>.
 
 == Leak Hunter
 
