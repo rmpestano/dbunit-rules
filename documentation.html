@@ -568,7 +568,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>39</code></p></td> 
-        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>01s 111ms</code></p></td> 
+        <td class="tableblock halign-center valign-top" colspan="2"><p class="tableblock"><code>01s 422ms</code></p></td> 
        </tr> 
       </tfoot> 
       <tbody> 
@@ -617,7 +617,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>4</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>01s 104ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>01s 418ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -651,7 +651,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>3</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>004ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>000ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -668,7 +668,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>0</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code>7</code></p></td> 
-        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>000ms</code></p></td> 
+        <td class="tableblock halign-center valign-top"><p class="tableblock"><code>001ms</code></p></td> 
         <td class="tableblock halign-center valign-top"><p class="tableblock"><code><span class="green"><strong>passed</strong></span></code></p></td> 
        </tr> 
        <tr> 
@@ -971,7 +971,7 @@ public class DBUnitCDITest {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(01s 104ms)</span></p> 
+            <p>DBUnit interceptor is enabled in your test beans.xml: <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(01s 418ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1578,7 +1578,7 @@ public class ContactSteps {
          <div class="exampleblock"> 
           <div class="content"> 
            <div class="paragraph"> 
-            <p>The following junit5 test is executed <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(004ms)</span></p> 
+            <p>The following junit5 test is executed <span class="icon green"><i class="fa fa-thumbs-up" title="Passed"></i></span> <span class="small right">(000ms)</span></p> 
            </div> 
            <div class="sidebarblock"> 
             <div class="content"> 
@@ -1586,6 +1586,7 @@ public class ContactSteps {
               <div class="content"> 
                <pre class="highlightjs highlight"><code class="language-java" data-lang="java">@ExtendWith(DBUnitExtension.class) <i class="conum" data-value="1"></i><b>(1)</b>
 @RunWith(JUnitPlatform.class) <i class="conum" data-value="2"></i><b>(2)</b>
+@DataSet(cleanBefore = true)
 public class DBUnitJUnit5It {
 
     private ConnectionHolder connectionHolder = () -&gt; <i class="conum" data-value="3"></i><b>(3)</b>
@@ -2418,8 +2419,8 @@ public void shouldManageTransactionAutomatically() {
   </div> 
   <div id="footer" style="color:gray;font-size:11px">
     Generated by 
-   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.4</a> - Sep 13, 2016 6:32:17 PM 
-   <span style="float:right;font-size:11px"> Execution time: 12.811 seconds</span> 
+   <a href="https://github.com/rmpestano/cukedoctor" target="_blank"> Cukedoctor 1.0.4</a> - Sep 13, 2016 8:52:53 PM 
+   <span style="float:right;font-size:11px"> Execution time: 12.532 seconds</span> 
   </div> 
   <style>  
 
