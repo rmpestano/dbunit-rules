@@ -289,7 +289,7 @@ Here are possible values:
 |executeScriptsAfter| A list of sql script files to execute after test. Note that commands inside sql file must be separated by `;`.| {}
 |===
 
-DBUnit Configuration:: this basically setup the `DBUnit` itself. It can be configured by `@DBUnit` annotation (class or method level) and `dbunit.yml` file present in test resources folder.
+DBUnit Configuration:: this basically setup `DBUnit` itself. It can be configured by *@DBUnit* annotation (class or method level) and *dbunit.yml* file present in test resources folder.
 +
 [source,java]
 ----
@@ -310,16 +310,61 @@ leakHunter: false
 properties:
   batchedStatements:  false
   qualifiedTableNames: false
+  caseSensitiveTableNames: false
   batchSize: 100
   fetchSize: 100
   allowEmptyFields: false
   escapePattern:
+connectionConfig:
+  driver: ""
+  url: ""
+  user: ""
+  password: ""
 ----
 +
 NOTE: `@DBUnit` annotation takes precedence over `dbunit.yml` global configuration which will be used only if the annotation is not present.
 
 
 TIP: Both configuration mechanisms work for all DBUnit Rules modules.
+
+=== JDBC Connection
+
+As seen in examples above `DBUnit needs a JDBC connection to be instantiated. To avoid creating connection for each test you can define it in *dbunit.yml* for all tests or define in *@DBUnit* on each test.
+
+NOTE: `@DBUnit` annotation takes precedence over dbunit.yml global configuration.
+
+==== Example
+
+[source, java, linenums]
+----
+@RunWith(JUnit4.class)
+@DBUnit(url = "jdbc:hsqldb:mem:test;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa") <1>
+public class ConnectionConfigIt {
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(); <2>
+
+
+
+    @BeforeClass
+    public static void initDB(){
+        //trigger db creation
+        EntityManagerProvider.instance("rules-it");
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/user.yml")
+    public void shouldSeedFromDeclaredConnection() {
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+}
+----
+<1> driver class can be ommited in new JDBC drivers since version 4.
+<2> Note that the rule instantiation doesn't need a connection anymore.
+
+IMPORTANT: As CDI module depends on a produced entitty manager, connection configuration will be ignored.
 
 === Rule chaining
 
@@ -881,6 +926,8 @@ public class DBUnitJUnit5Test {
     }
 ----
 <1> DBUnit extension will get JDBC connection by reflection so you need to declare a *field* or *method* with `ConnectionHolder` as return type.
+
+TIP: You can configure JDBC connection using @DBUnit annotation or dbunit.yml, https://github.com/rmpestano/dbunit-rules#jdbc-connection[see example here^].
 
 == Leak Hunter
 

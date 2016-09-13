@@ -20,4 +20,8 @@ public class ConnectionHolderImpl implements ConnectionHolder {
         return connection;
     }
 
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
 }
