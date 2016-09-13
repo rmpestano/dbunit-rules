@@ -568,7 +568,7 @@ Below is a pure JDBC example where commented code is not needed because the test
         //connection.setAutoCommit(false);
     }
 ----
-TIP: Above example code (which uses JUnit5 and Flyway) can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/rules/junit5/FlywayIt.java[found here^].
+TIP: Above example code (which uses JUnit5 and Flyway) can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/rules/junit5/FlywayIt.java#L26[found here^].
 
 === EntityManagerProvider
 
