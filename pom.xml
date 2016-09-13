@@ -14,7 +14,7 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <!-- tag::version[] -->
-    <version>0.14.0</version>
+    <version>0.14.1-SNAPSHOT</version>
     <!-- end::version[] -->
 
     <modules>
