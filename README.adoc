@@ -163,7 +163,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.13.2</version>
+      <version>0.14.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -635,7 +635,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -702,7 +702,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -779,6 +779,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@DBUnitInterceptor <2>
 public class ContactSteps {
 
     @Inject
@@ -819,7 +820,7 @@ public class ContactSteps {
 ----
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
-<2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
+<2> Activates DBUnit CDI interceptor which will read @DataSet annotation in cucumber steps to prepare the database.
 
 == Programmatic creating datasets
 
@@ -904,7 +905,7 @@ http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a n
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>junit5</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
