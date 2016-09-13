@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |4
-|01s 254ms
+|839ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -119,7 +119,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |000ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|01s 256ms
+|11|0|11|39|0|0|0|0|0|39 2+|841ms
 |===
 
 == *Features*
@@ -270,7 +270,7 @@ include::../../../pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 254ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(839ms)#
 ******
 
 [discrete]
