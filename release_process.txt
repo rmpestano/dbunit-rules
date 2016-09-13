@@ -3,7 +3,7 @@
 	<server>
 	  <id>bintray</id>
 	  <username>rmpestano</username>
-	  <password>1ea13015136ec87327475538f4880b9404f63e5c</password>
+	  <password>bintrayapikey</password>
 	</server>
 </servers>
 
