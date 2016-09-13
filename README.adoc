@@ -955,7 +955,7 @@ TIP: Full example above (and other related tests) can be https://github.com/rmpe
 
 === Configuration
 
-Following table you can find all options for ExportDataset:
+Following table shows all exporter configuration options:
 
 [cols="3*", options="header"]
 |===
