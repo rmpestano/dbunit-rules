@@ -1,0 +1,12 @@
+1 - add bintray server to settings.xml
+<servers>
+	<server>
+	  <id>bintray</id>
+	  <username>rmpestano</username>
+	  <password>1ea13015136ec87327475538f4880b9404f63e5c</password>
+	</server>
+</servers>
+
+2 - mvn release:prepare -Prelease -Darguments="-DskipTests" -Dmaven.test.skip=true
+
+3 - mvn deploy -Prelease -DskipTests=true
