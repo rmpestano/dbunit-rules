@@ -7,6 +7,6 @@
 	</server>
 </servers>
 
-2 - mvn release:prepare -Prelease -Darguments="-DskipTests" -Dmaven.test.skip=true
+2 - mvn release:prepare -Prelease -Darguments="-DskipTests" -Dmaven.javadoc.skip=true -Dmaven.test.skip=true
 
 3 - mvn deploy -Prelease -DskipTests=true
