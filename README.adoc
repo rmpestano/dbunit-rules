@@ -329,7 +329,7 @@ TIP: Both configuration mechanisms work for all DBUnit Rules modules.
 
 === JDBC Connection
 
-As seen in examples above `DBUnit needs a JDBC connection to be instantiated. To avoid creating connection for each test you can define it in *dbunit.yml* for all tests or define in *@DBUnit* on each test.
+As seen in examples above `DBUnit` needs a JDBC connection to be instantiated. To avoid creating connection for each test you can define it in *dbunit.yml* for all tests or define in *@DBUnit* on each test.
 
 NOTE: `@DBUnit` annotation takes precedence over dbunit.yml global configuration.
 
