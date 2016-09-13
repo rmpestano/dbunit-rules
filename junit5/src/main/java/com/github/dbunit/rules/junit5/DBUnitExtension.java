@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.Optional;
@@ -92,9 +93,14 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             throw new RuntimeException(String.format("Could not create dataset for test method %s due to following error " + e.getMessage(), testExtensionContext.getTestMethod().get().getName()), e);
         }
 
-        boolean isTransactional = dasetConfig.isTransactional() && isEntityManagerActive();
+        boolean isTransactional = dasetConfig.isTransactional();
         if (isTransactional) {
-            em().getTransaction().begin();
+            if (isEntityManagerActive()) {
+                em().getTransaction().begin();
+            } else{
+                Connection connection = executor.getConnectionHolder().getConnection();
+                connection.setAutoCommit(false);
+            }
         }
 
     }
@@ -153,9 +159,15 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                     ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
                     DataSetExecutor executor = testExtensionContext.getStore(namespace).get(EXECUTOR_STORE, DataSetExecutor.class);
                     DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
-                    boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
+                    boolean isTransactional = datasetConfig.isTransactional();
                     if (isTransactional) {
-                        em().getTransaction().commit();
+                        if(isEntityManagerActive()){
+                            em().getTransaction().commit();
+                        } else{
+                            Connection connection = executor.getConnectionHolder().getConnection();
+                            connection.commit();
+                            connection.setAutoCommit(false);
+                        }
                     }
                     executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
                 }

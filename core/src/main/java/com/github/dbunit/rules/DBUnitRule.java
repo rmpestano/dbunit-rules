@@ -95,9 +95,14 @@ public class DBUnitRule implements TestRule {
                     }
                     boolean isTransactional = false;
                     try {
-                        isTransactional = dataSetConfig.isTransactional() && isEntityManagerActive();
+                        isTransactional = dataSetConfig.isTransactional();
                         if (isTransactional) {
-                            em().getTransaction().begin();
+                            if(isEntityManagerActive()){
+                                em().getTransaction().begin();
+                            }else{
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.setAutoCommit(false);
+                            }
                         }
                         boolean leakHunterActivated = dbUnitConfig.isLeakHunter();
                         int openConnectionsBefore = 0;
@@ -116,12 +121,23 @@ public class DBUnitRule implements TestRule {
                         }
 
                         if (isTransactional) {
-                            em().getTransaction().commit();
+                            if(isEntityManagerActive() && em().getTransaction().isActive()){
+                                em().getTransaction().commit();
+                            } else{
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.commit();
+                                connection.setAutoCommit(false);
+                            }
                         }
                         performDataSetComparison(description);
                     } catch (Exception e) {
-                        if (isTransactional && em().getTransaction().isActive()) {
-                            em().getTransaction().rollback();
+                        if (isTransactional){
+                            if(isEntityManagerActive() && em().getTransaction().isActive()) {
+                                em().getTransaction().rollback();
+                            } else {
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.rollback();
+                            }
                         }
                         throw e;
                     } finally {

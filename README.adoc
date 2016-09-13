@@ -282,7 +282,7 @@ Here are possible values:
 |disableConstraints| Disable database constraints.| false
 |cleanBefore| If true DBUnit Rules will try to delete database before test in a smart way by using table ordering and brute force.| false
 |cleanAfter| If true DBUnit Rules will try to delete database after test in a smart way by using table ordering and brute force.| false
-|transactional| If true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive() must be true.| false
+|transactional| If true a transaction will be started before test and committed after test execution. | false
 |executeStatementsBefore| A list of jdbc statements to execute before test.| {}
 |executeStatementsAfter| A list of jdbc statements to execute after test.| {}
 |executeScriptsBefore| A list of sql script files to execute before test. Note that commands inside sql file must be separated by `;`.| {}
@@ -547,7 +547,28 @@ In case of `ExpectedDataSet` you'll usually need a transaction to modify databas
 
 Note that DBUnit Rules will start a transaction before test and commit the transaction *after* test execution but *before* expected dataset comparison.
 
-IMPORTANT: It will only work for tests that use *EntityManagerProvider* component.
+Below is a pure JDBC example where commented code is not needed because the test is transactional:
+
+[source, java, linenums]
+----
+    @Test
+    @DataSet(cleanBefore = true, transactional = true)
+    @ExpectedDataSet(value = "usersInserted.yml")
+    public void shouldInserUsers() throws SQLException {
+        Connection connection = flyway.getDataSource().getConnection();
+        //connection.setAutoCommit(false); //transactional=true
+        java.sql.Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+
+        statement.addBatch("INSERT INTO User VALUES (1, 'user1')");
+        statement.addBatch("INSERT INTO User VALUES (2, 'user2')");
+        statement.addBatch("INSERT INTO User VALUES (3, 'user3')");
+        statement.executeBatch();
+        //connection.commit();
+        //connection.setAutoCommit(false);
+    }
+----
+TIP: Above example code (which uses JUnit5 and Flyway) can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/rules/junit5/FlywayIt.java[found here^].
 
 === EntityManagerProvider
 
