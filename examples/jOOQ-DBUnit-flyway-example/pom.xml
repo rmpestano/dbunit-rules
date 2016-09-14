@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.github.dbunit-rules</groupId>
         <artifactId>examples</artifactId>
-        <version>0.15.0</version>
+        <version>0.15.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>jooq-dbunit-flyway-example</artifactId>
