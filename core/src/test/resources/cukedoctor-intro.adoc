@@ -28,7 +28,7 @@
 * https://github.com/rmpestano/dbunit-rules#junit-5[JUnit 5^] integration;
 * https://github.com/rmpestano/dbunit-rules#export-datasets[DataSet export^];
 * https://github.com/rmpestano/dbunit-rules#8-leak-hunter[Connection leak detection^];
-* Lot of https://github.com/rmpestano/dbunit-rules#example[examples^].
+* Lot of https://github.com/rmpestano/dbunit-rules#examples[examples^].
 
 
 The project is composed by 5 modules:
