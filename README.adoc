@@ -163,7 +163,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.14.0</version>
+      <version>0.15.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -657,7 +657,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -724,7 +724,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -927,7 +927,7 @@ http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a n
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>junit5</artifactId>
-    <version>0.14.0</version>
+    <version>0.15.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -1002,7 +1002,7 @@ TIP: Complete source code of example above can be https://github.com/rmpestano/d
 
 == Export DataSets
 
-In order to export database state *after test* execution into datasets files one can use *@ExportDataSet* Annotation (class or method level)
+Manual creation of datasets is a very error prone task. In order to export database state *after test* execution into datasets files one can use *@ExportDataSet* Annotation or use DataSetExporter component.
 
 === Example
 
@@ -1016,7 +1016,7 @@ In order to export database state *after test* execution into datasets files one
     }
 ----
 
-After execution of above test, all tables will be exported to a xml dataset.
+After above test execution all tables will be exported to a xml dataset.
 
 
 NOTE: *XML*, *YML*, *JSON*, *XLS* and *CSV* formats are supported.
