@@ -149,7 +149,7 @@ public class DBUnitRulesIt {
     }
 
     @Test
-    @DataSet("datasets/csv/USER.csv")
+    @DataSet(value = "datasets/csv/USER.csv", cleanBefore = true)
     public void shouldSeedDatabaseWithCSVDataSet(){
         User user = (User) em().createQuery("select u from User u join u.tweets t where t.content = 'dbunit rules!'").getSingleResult();
         assertThat(user).isNotNull();
