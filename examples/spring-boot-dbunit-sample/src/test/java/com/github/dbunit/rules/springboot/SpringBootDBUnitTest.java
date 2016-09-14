@@ -1,15 +1,10 @@
 package com.github.dbunit.rules.springboot;
 
 import com.github.dbunit.rules.DBUnitRule;
-import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
-import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
-import com.github.dbunit.rules.api.expoter.ExportDataSet;
-import com.github.dbunit.rules.exporter.DataSetExporterImpl;
 import com.github.dbunit.rules.springboot.models.User;
 import com.github.dbunit.rules.springboot.models.UserRepository;
-import org.dbunit.database.DatabaseConnection;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

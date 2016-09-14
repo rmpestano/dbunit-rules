@@ -13,7 +13,7 @@ import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import com.github.dbunit.rules.exporter.DataSetExporterImpl;
+import com.github.dbunit.rules.exporter.DataSetExporter;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
@@ -208,7 +208,7 @@ public class DBUnitRule implements TestRule {
             }
             exportConfig.outputFileName(outputName);
             try {
-                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(), exportConfig);
+                DataSetExporter.getInstance().export(executor.getDBUnitConnection(), exportConfig);
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.WARNING, "Could not export dataset after method " + description.getMethodName(), e);
             }

@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
  *
  * based on: http://archive.oreilly.com/pub/post/dbunit_made_easy.html
  */
-public class DataSetExporterImpl {
+public class DataSetExporter {
 
     /**
      * A regular expression that is used to get the table name
@@ -43,18 +44,22 @@ public class DataSetExporterImpl {
     private static final Pattern TABLE_MATCH_PATTERN = Pattern.compile(".*\\s+from\\s+(\\w+(\\.\\w+)?).*",
             Pattern.CASE_INSENSITIVE);
 
-    private static Logger log = Logger.getLogger(DataSetExporterImpl.class.getName());
+    private static Logger log = Logger.getLogger(DataSetExporter.class.getName());
 
 
-    private static DataSetExporterImpl instance;
+    private static DataSetExporter instance;
 
-    private DataSetExporterImpl(){}
+    private DataSetExporter(){}
 
-    public static DataSetExporterImpl getInstance(){
+    public static DataSetExporter getInstance(){
         if(instance == null){
-            instance = new DataSetExporterImpl();
+            instance = new DataSetExporter();
         }
         return instance;
+    }
+
+    public OutputStream export(Connection connection, DataSetExportConfig dataSetExportConfig) throws SQLException, DatabaseUnitException {
+        return export(new DatabaseConnection(connection),dataSetExportConfig);
     }
 
     public OutputStream export(DatabaseConnection databaseConnection, DataSetExportConfig dataSetExportConfig) throws SQLException, DatabaseUnitException {

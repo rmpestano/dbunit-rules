@@ -7,11 +7,10 @@ import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import com.github.dbunit.rules.exporter.DataSetExporterImpl;
+import com.github.dbunit.rules.exporter.DataSetExporter;
 import org.dbunit.DatabaseUnitException;
 import org.hibernate.Session;
 import org.hibernate.internal.SessionImpl;
-import org.junit.runner.Description;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,7 +125,7 @@ public class DataSetProcessor {
             }
             exportConfig.outputFileName(outputName);
             try {
-                DataSetExporterImpl.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig);
+                DataSetExporter.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig);
             } catch (Exception e) {
                 java.util.logging.Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+method.getName(),e);
             }

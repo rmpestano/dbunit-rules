@@ -7,10 +7,8 @@ import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
 import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
-import com.github.dbunit.rules.exporter.DataSetExporterImpl;
 import com.github.dbunit.rules.model.User;
 import com.github.dbunit.rules.util.EntityManagerProvider;
-
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConnection;
 import org.junit.AfterClass;
@@ -20,11 +18,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
+import static com.github.dbunit.rules.util.EntityManagerProvider.em;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.contentOf;
-import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 
 /**
  * Created by pestano on 11/09/16.
@@ -69,13 +69,13 @@ public class ExportDataSetIt {
     
     @Test
     @DataSet(cleanBefore=true)
-    public void shouldExportYMLDataSetWithoutAnnotations() throws SQLException, DatabaseUnitException{
+    public void shouldExportYMLDataSetProgrammatically() throws SQLException, DatabaseUnitException{
     	tx().begin();
     	User u1 = new User();
     	u1.setName("u1");
     	em().persist(u1);
     	tx().commit();
-    	DataSetExporterImpl.getInstance().export(new DatabaseConnection(emProvider.connection()), new DataSetExportConfig().outputFileName("target/user.yml"));
+    	DataSetExporter.getInstance().export(new DatabaseConnection(emProvider.connection()), new DataSetExportConfig().outputFileName("target/user.yml"));
     	File ymlDataSet = new File("target/user.yml");
           assertThat(ymlDataSet).exists();
           assertThat(contentOf(ymlDataSet)).
@@ -83,7 +83,27 @@ public class ExportDataSetIt {
                           "  - ID: 1"+NEW_LINE +
                           "    NAME: \"u1\""+NEW_LINE 
                           );
+    }
 
+    @Test
+    @DataSet(cleanBefore=true)
+    public void shouldExportJSONDataSetProgrammatically() throws SQLException, DatabaseUnitException, FileNotFoundException {
+        tx().begin();
+        User u1 = new User();
+        u1.setName("u1");
+        em().persist(u1);
+        tx().commit();
+        DataSetExporter.getInstance().export(emProvider.connection(), new DataSetExportConfig().
+                outputFileName("target/user.json").dataSetFormat(DataSetFormat.JSON));
+        File jsonDataSet = new File("target/user.json");
+        assertThat(jsonDataSet).exists();
+        assertThat(contentOf(jsonDataSet)).contains("\"USER\": ["+NEW_LINE +
+                "    {"+NEW_LINE +
+                "      \"ID\": " + u1.getId() +
+                ","+NEW_LINE +
+                "      \"NAME\": \"u1\""+NEW_LINE +
+                "    }"+NEW_LINE +
+                "  ]");
     }
     
     @Test

@@ -150,6 +150,18 @@ A getting started guide can be found here http://rmpestano.github.io/dbunit-rule
 
 For main features overview see project living documentation: http://rmpestano.github.io/dbunit-rules/documentation.html.
 
+=== Examples
+
+There are a lot of examples that can also be used as documentation.
+
+The examples module which contains:
+
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/jpa-productivity-boosters[JPA productivity boosters^]
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/dbunit-tomee-appcomposer-sample[DBUnit Rules Application Composer^]
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/jOOQ-DBUnit-flyway-example/[jOOQ Flyway DBUnit^]
+* https://github.com/rmpestano/dbunit-rules/tree/master/examples/spring-boot-dbunit-sample/[SpringBoot Data DBUnit^]
+
+And also each module contain a lot of tests that you can use as example.
 
 == Core module
 
@@ -1052,7 +1064,7 @@ You can also export DataSets without `@ExportDataSet` by using DataSetExporter c
     	u1.setName("u1");
     	em().persist(u1);//just insert a user and assert it is present in exported dataset
     	tx().commit();
-    	DataSetExporterImpl.getInstance().export(new DatabaseConnection(emProvider.connection()), <1> 
+    	DataSetExporter.getInstance().export(emProvider.connection(),
     	new DataSetExportConfig().outputFileName("target/user.yml"));
     	File ymlDataSet = new File("target/user.yml");
         assertThat(ymlDataSet).exists();
@@ -1063,8 +1075,7 @@ You can also export DataSets without `@ExportDataSet` by using DataSetExporter c
 
     }
 ----
-<1> DatabaseConnection is from DBUnit api and it needs a JDBC connection.
- 
+
 
 
 == Snapshots
@@ -1082,13 +1093,3 @@ Snapshots are available in maven central, to use it just add the following snipp
     </repository>
 </repositories>
 ----
-
-== Examples
-
-Take a look at examples module which contains:
-
-* https://github.com/rmpestano/dbunit-rules/tree/master/examples/jpa-productivity-boosters[JPA productivity boosters^]
-* https://github.com/rmpestano/dbunit-rules/tree/master/examples/dbunit-tomee-appcomposer-sample[DBUnit Rules Application Composer^]
-* https://github.com/rmpestano/dbunit-rules/tree/master/examples/jOOQ-DBUnit-flyway-example/[jOOQ Flyway DBUnit^]
-* https://github.com/rmpestano/dbunit-rules/tree/master/examples/spring-boot-dbunit-sample/[SpringBoot Data DBUnit^]
-* Each module contain a lot of tests that you can use as examples
