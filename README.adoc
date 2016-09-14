@@ -489,7 +489,8 @@ In case of `ExpectedDataSet` you'll usually need a transaction to modify databas
 [source, java, subs="quotes"]
 ----
     @Test
-    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id", *transactional=true*)
+    @DataSet(*transactional=true*)
+    @ExpectedDataSet(value = "yml/expectedUsers.yml",ignoreCols = "id")
     public void shouldMatchExpectedDataSet() {
         User u = new User();
         u.setName("non expected user1");
