@@ -15,6 +15,7 @@
         <module>jpa-productivity-boosters</module>
         <module>jOOQ-DBUnit-flyway-example</module>
         <module>dbunit-tomee-appcomposer-sample</module>
+	    <module>spring-boot-dbunit-sample</module>
     </modules>
 
     <name>DBUnit Rules examples</name>

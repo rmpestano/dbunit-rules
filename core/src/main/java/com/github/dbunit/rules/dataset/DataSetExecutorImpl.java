@@ -331,6 +331,11 @@ public class DataSetExecutorImpl implements DataSetExecutor {
 
     public void setConnectionHolder(ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
+        try {
+            initDatabaseConnection();
+        }catch (Exception e){
+            log.error("Could not initialize dbunit connection.",e);
+        }
     }
 
     public Connection getConnection() {

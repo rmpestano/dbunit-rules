@@ -86,7 +86,7 @@ public class DBUnitRule implements TestRule {
                     }
                     try {
                         if (executor.getConnectionHolder() == null || executor.getConnectionHolder().getConnection() == null) {
-                            createConnection(dbUnitConfig);
+                            executor.setConnectionHolder(new ConnectionHolderImpl(getConnectionFrom(dbUnitConfig)));
                         }
                         executor.setDBUnitConfig(dbUnitConfig);
                         executor.createDataSet(dataSetConfig);
@@ -168,6 +168,9 @@ public class DBUnitRule implements TestRule {
                     }
                     //no dataset provided, only export and evaluate expected dataset
                 } else {
+                    if(executor.getConnectionHolder() == null || executor.getConnectionHolder().getConnection() == null){
+                        executor.setConnectionHolder(new ConnectionHolderImpl(getConnectionFrom(dbUnitConfig)));
+                    }
                     exportDataSet(executor, description);
                     statement.evaluate();
                     performDataSetComparison(description);
@@ -175,20 +178,20 @@ public class DBUnitRule implements TestRule {
 
             }
 
-            private void createConnection(DBUnitConfig dbUnitConfig) {
+            private Connection getConnectionFrom(DBUnitConfig dbUnitConfig) {
                 ConnectionConfig connectionConfig = dbUnitConfig.getConnectionConfig();
                 if ("".equals(connectionConfig.getUrl()) || "".equals(connectionConfig.getUser())) {
                     throw new RuntimeException(String.format("Could not create JDBC connection for method %s, provide a connection at test level or via configuration, see documentation here: https://github.com/rmpestano/dbunit-rules#jdbc-connection", currentMethod));
                 }
-
                 try {
                     if (!"".equals(connectionConfig.getDriver())) {
                         Class.forName(connectionConfig.getDriver());
                     }
-                    executor.setConnectionHolder(new ConnectionHolderImpl(DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword())));
+                    return DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword());
                 } catch (Exception e) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not create JDBC connection for method " + currentMethod, e);
                 }
+                return null;
             }
 
 
