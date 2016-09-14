@@ -72,18 +72,6 @@
             <version>4.12</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.12</version>
-        </dependency>
-
         <!-- test -->
         <dependency>
             <groupId>org.hsqldb</groupId>
@@ -224,6 +212,7 @@
                                 <exclude>**/*UserRepository.*</exclude>
                                 <exclude>**/*UserController.*</exclude>
                                 <exclude>**/*Application.*</exclude>
+                                <exclude>**/*MainController.*</exclude>
                                 <exclude>**/*UserRepositoryTest.*</exclude>
                                 <exclude>**/*Contact*</exclude>
                                 <exclude>**/*Company*</exclude>

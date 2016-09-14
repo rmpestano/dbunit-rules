@@ -4,7 +4,7 @@ import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.junit5.model.User;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -29,9 +29,11 @@ public class DBUnitJUnit5It {
 //DBUnitExtension will get connection by reflection so either declare a field or a method with ConncetionHolder as return type
 //tag::connectionField[]
     private ConnectionHolder connectionHolder = () -> //<3>
-            instance("junit5-pu").connection();//<4>
+            instance("junit5-pu").clear().connection();//<4>
 
 //end::connectionField[]
+
+ 
 
 //tag::test[]
     @Test
@@ -92,5 +94,27 @@ public class DBUnitJUnit5It {
     public User getUser(Long id){
         return (User) em().createQuery("select u from User u where u.id = :id").
                 setParameter("id", id).getSingleResult();
+    }
+
+    @Test
+    @DataSet(value = "usersWithTweet.yml", executeStatementsBefore = "SET DATABASE REFERENTIAL INTEGRITY FALSE;", executeStatementsAfter = "SET DATABASE REFERENTIAL INTEGRITY TRUE;")
+    public void shouldSeedDataSetDisablingContraintsViaStatement() {
+        User user = (User) em().createQuery("select u from User u join fetch u.tweets where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+        assertThat(user.getTweets()).hasSize(1);
+    }
+
+
+
+    @Test
+    @DataSet(value = "usersWithTweet.yml",
+            useSequenceFiltering = false,
+            tableOrdering = {"USER","TWEET"},
+            executeStatementsBefore = {"DELETE FROM TWEET","DELETE FROM USER"}
+    )
+    public void shouldSeedDataSetUsingTableCreationOrder() {
+        List<User> users =  em().createQuery("select u from User u left join fetch u.tweets").getResultList();
+        assertThat(users).hasSize(2);
     }
 }

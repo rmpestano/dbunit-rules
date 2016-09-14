@@ -3,6 +3,8 @@ package com.github.dbunit.rules.junit5.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 
 /**
  * Created by pestano on 22/07/15.
@@ -15,6 +17,9 @@ public class User {
     private long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "user")
+    private List<Tweet> tweets;
 
 
     public User() {
@@ -43,6 +48,14 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<Tweet> getTweets() {
+        return tweets;
+    }
+
+    public void setTweets(List<Tweet> tweets) {
+        this.tweets = tweets;
     }
 
     @Override

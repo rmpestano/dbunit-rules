@@ -64,23 +64,41 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             annotation = testExtensionContext.getTestClass().get().getAnnotation(DataSet.class);
         }
 
-        if (annotation == null) {
-            throw new RuntimeException("Could not find DataSet annotation for test " + testExtensionContext.getTestMethod().get().getName());
-        }
 
         DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
-        final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
+        final DataSetConfig dataSetConfig = new DataSetConfig().from(annotation);
         if(connectionHolder == null || connectionHolder.getConnection() == null){
             connectionHolder = createConnection(dbUnitConfig,testExtensionContext.getTestMethod().get().getName());
         }
-        DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
+        DataSetExecutor executor = DataSetExecutorImpl.instance(dataSetConfig.getExecutorId(), connectionHolder);
         executor.setDBUnitConfig(dbUnitConfig);
 
 
 
+        if (dataSetConfig != null && dataSetConfig.getExecuteStatementsBefore() != null && dataSetConfig.getExecuteStatementsBefore().length > 0) {
+            try {
+                executor.executeStatements(dataSetConfig.getExecuteStatementsBefore());
+            } catch (Exception e) {
+                LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements Before:" + e.getMessage(), e);
+            }
+        }//end execute statements
+
+        if (dataSetConfig.getExecuteScriptsBefore() != null && dataSetConfig.getExecuteScriptsBefore().length > 0) {
+            try {
+                for (int i = 0; i < dataSetConfig.getExecuteScriptsBefore().length; i++) {
+                    executor.executeScript(dataSetConfig.getExecuteScriptsBefore()[i]);
+                }
+            } catch (Exception e) {
+                if (e instanceof DatabaseUnitException) {
+                    throw e;
+                }
+                LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsBefore:" + e.getMessage(), e);
+            }
+        }//end execute scripts
+        
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
         testExtensionContext.getStore(namespace).put(EXECUTOR_STORE, executor);
-        testExtensionContext.getStore(namespace).put(DATASET_CONFIG_STORE, dasetConfig);
+        testExtensionContext.getStore(namespace).put(DATASET_CONFIG_STORE, dataSetConfig);
         if (dbUnitConfig.isLeakHunter()) {
             LeakHunter leakHunter = LeakHunterFactory.from(connectionHolder.getConnection());
             testExtensionContext.getStore(namespace).put(LEAK_STORE, leakHunter);
@@ -88,12 +106,12 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
         }
 
         try {
-            executor.createDataSet(dasetConfig);
+            executor.createDataSet(dataSetConfig);
         } catch (final Exception e) {
             throw new RuntimeException(String.format("Could not create dataset for test method %s due to following error " + e.getMessage(), testExtensionContext.getTestMethod().get().getName()), e);
         }
 
-        boolean isTransactional = dasetConfig.isTransactional();
+        boolean isTransactional = dataSetConfig.isTransactional();
         if (isTransactional) {
             if (isEntityManagerActive()) {
                 em().getTransaction().begin();
@@ -195,18 +213,13 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                 exportDataSet(executor,testExtensionContext.getTestMethod().get());
             }
 
-            if (dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
+            if (dataSetConfig != null && dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                 try {
-                    for (int i = 0; i < dataSetConfig.getExecuteScriptsAfter().length; i++) {
-                        executor.executeScript(dataSetConfig.getExecuteScriptsAfter()[i]);
-                    }
+                    executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
                 } catch (Exception e) {
-                    if (e instanceof DatabaseUnitException) {
-                        throw e;
-                    }
-                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements after:" + e.getMessage(), e);
                 }
-            }//end execute scripts
+            }//end execute statements
 
             if (dataSetConfig.getExecuteScriptsAfter() != null && dataSetConfig.getExecuteScriptsAfter().length > 0) {
                 try {

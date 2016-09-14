@@ -22,7 +22,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
  */
 @ExtendWith(DBUnitExtension.class)
 @RunWith(JUnitPlatform.class)
-@DBUnit(url = "jdbc:hsqldb:mem:flyway;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa")
+@DBUnit(cacheConnection=false,cacheTableNames = false, url = "jdbc:hsqldb:mem:flyway;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa")
 public class FlywayIt {
 
     private static Flyway flyway;

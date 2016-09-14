@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.fail;
 public class ScriptsIt {
 
     private ConnectionHolder connectionHolder = () ->
-            instance("junit5-pu").connection();
+            instance("junit5-pu").clear().connection();
 
     @BeforeAll
     public static void before() {

@@ -49,6 +49,18 @@
             <scope>test</scope>
         </dependency>
 
+		  <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.12</version>
+        </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
@@ -84,6 +96,8 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+			
+
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -91,10 +105,14 @@
                 <configuration>
                     <includes>
                         <include>**/Test*.java</include>
+                        <include>**/*It.java</include>
                         <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                        <include>**/*TestCase.java</include>
                     </includes>
+					<systemPropertyVariables>
+                                <java.util.logging.config.file>
+                                    src/test/resources/logging.properties
+                                </java.util.logging.config.file>
+                            </systemPropertyVariables>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -103,6 +121,7 @@
                         <version>1.0.0-M2</version>
                     </dependency>
                 </dependencies>
+				 
             </plugin>
 
         </plugins>
