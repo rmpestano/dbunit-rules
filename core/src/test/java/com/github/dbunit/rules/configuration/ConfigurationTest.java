@@ -3,8 +3,6 @@ package com.github.dbunit.rules.configuration;
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.SeedStrategy;
-
-import org.apache.xmlbeans.impl.common.IOUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -36,9 +34,12 @@ public class ConfigurationTest {
                 containsEntry("allowEmptyFields", false).
                 containsEntry("batchedStatements", false).
                 containsEntry("qualifiedTableNames", false).
+                containsEntry("caseSensitiveTableNames", false).
                 containsEntry("batchSize", 100).
                 containsEntry("fetchSize",100).
                 doesNotContainKey("escapePattern");
+        assertThat(globaConfig.getDbUnitConfig().getConnectionConfig()).extracting("driver", "url", "user","password").
+                contains("", "", "", "");
     }
 
     @Test

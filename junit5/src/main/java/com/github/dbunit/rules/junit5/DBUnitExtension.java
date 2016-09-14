@@ -7,8 +7,10 @@ import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
 import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.api.leak.LeakHunter;
+import com.github.dbunit.rules.configuration.ConnectionConfig;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.connection.ConnectionHolderImpl;
 import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
 import com.github.dbunit.rules.exporter.DataSetExporterImpl;
 import com.github.dbunit.rules.leak.LeakHunterException;
@@ -22,9 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
@@ -65,8 +70,13 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 
         DBUnitConfig dbUnitConfig = DBUnitConfig.from(testExtensionContext.getTestMethod().get());
         final DataSetConfig dasetConfig = new DataSetConfig().from(annotation);
+        if(connectionHolder == null || connectionHolder.getConnection() == null){
+            connectionHolder = createConnection(dbUnitConfig,testExtensionContext.getTestMethod().get().getName());
+        }
         DataSetExecutor executor = DataSetExecutorImpl.instance(dasetConfig.getExecutorId(), connectionHolder);
         executor.setDBUnitConfig(dbUnitConfig);
+
+
 
         ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
         testExtensionContext.getStore(namespace).put(EXECUTOR_STORE, executor);
@@ -83,9 +93,14 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             throw new RuntimeException(String.format("Could not create dataset for test method %s due to following error " + e.getMessage(), testExtensionContext.getTestMethod().get().getName()), e);
         }
 
-        boolean isTransactional = dasetConfig.isTransactional() && isEntityManagerActive();
+        boolean isTransactional = dasetConfig.isTransactional();
         if (isTransactional) {
-            em().getTransaction().begin();
+            if (isEntityManagerActive()) {
+                em().getTransaction().begin();
+            } else{
+                Connection connection = executor.getConnectionHolder().getConnection();
+                connection.setAutoCommit(false);
+            }
         }
 
     }
@@ -144,9 +159,15 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                     ExtensionContext.Namespace namespace = getExecutorNamespace(testExtensionContext);//one executor per test class
                     DataSetExecutor executor = testExtensionContext.getStore(namespace).get(EXECUTOR_STORE, DataSetExecutor.class);
                     DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
-                    boolean isTransactional = datasetConfig.isTransactional() && isEntityManagerActive();
+                    boolean isTransactional = datasetConfig.isTransactional();
                     if (isTransactional) {
-                        em().getTransaction().commit();
+                        if(isEntityManagerActive()){
+                            em().getTransaction().commit();
+                        } else{
+                            Connection connection = executor.getConnectionHolder().getConnection();
+                            connection.commit();
+                            connection.setAutoCommit(false);
+                        }
                     }
                     executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());
                 }
@@ -256,6 +277,24 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
         return null;
 
 
+    }
+
+
+    private ConnectionHolder createConnection(DBUnitConfig dbUnitConfig, String currentMethod) {
+        ConnectionConfig connectionConfig = dbUnitConfig.getConnectionConfig();
+        if ("".equals(connectionConfig.getUrl()) || "".equals(connectionConfig.getUser())) {
+            throw new RuntimeException(String.format("Could not create JDBC connection for method %s, provide a connection at test level or via configuration, see documentation here: https://github.com/rmpestano/dbunit-rules#jdbc-connection", currentMethod));
+        }
+
+        try {
+            if (!"".equals(connectionConfig.getDriver())) {
+                Class.forName(connectionConfig.getDriver());
+            }
+            return new ConnectionHolderImpl(DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword()));
+        } catch (Exception e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not create JDBC connection for method " + currentMethod, e);
+        }
+        return null;
     }
 
 }

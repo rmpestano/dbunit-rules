@@ -18,9 +18,13 @@ public class DBUnitConfig {
 
     private boolean cacheTableNames = false;
 
+    private boolean caseSensitiveTableNames = false;
+
     private boolean leakHunter = false;
 
     private Map<String, Object> properties;
+
+    private ConnectionConfig connectionConfig = new ConnectionConfig();
 
     public DBUnitConfig() {
         this.executorId = DataSetExecutorImpl.DEFAULT_EXECUTOR_ID;
@@ -45,11 +49,18 @@ public class DBUnitConfig {
                 addDBUnitProperty("batchSize", dbUnit.batchSize()).
                 addDBUnitProperty("allowEmptyFields", dbUnit.allowEmptyFields()).
                 addDBUnitProperty("fetchSize", dbUnit.fetchSize()).
+                addDBUnitProperty("caseSensitiveTableNames",dbUnit.caseSensitiveTableNames()).
                 addDBUnitProperty("qualifiedTableNames", dbUnit.qualifiedTableNames());
 
         if (!"".equals(dbUnit.escapePattern())) {
             dbUnitConfig.addDBUnitProperty("escapePattern", dbUnit.escapePattern());
         }
+
+        //declarative connection config
+        dbUnitConfig.driver(dbUnit.driver()).
+                url(dbUnit.url()).
+                    user(dbUnit.user()).
+                password(dbUnit.password());
 
         return dbUnitConfig;
     }
@@ -81,6 +92,11 @@ public class DBUnitConfig {
         return this;
     }
 
+    public DBUnitConfig caseSensitiveTableNames(boolean caseSensitiveTableNames) {
+        this.caseSensitiveTableNames = caseSensitiveTableNames;
+        return this;
+    }
+
     public DBUnitConfig leakHunter(boolean leakHunter){
         this.leakHunter = leakHunter;
         return this;
@@ -96,6 +112,32 @@ public class DBUnitConfig {
         properties.put(name, value);
         return this;
     }
+
+    public DBUnitConfig driver(String driverClass){
+        connectionConfig.setDriver(driverClass);
+        return this;
+    }
+
+    public DBUnitConfig url(String url){
+        connectionConfig.setUrl(url);
+        return this;
+    }
+
+    public DBUnitConfig user(String user){
+        connectionConfig.setUser(user);
+        return this;
+    }
+
+    public DBUnitConfig password(String password){
+        connectionConfig.setPassword(password);
+        return this;
+    }
+
+    public ConnectionConfig getConnectionConfig() {
+        return connectionConfig;
+    }
+
+    //methods above are for snakeyml library
 
     public void setCacheConnection(boolean cacheConnection) {
         this.cacheConnection = cacheConnection;
@@ -113,6 +155,13 @@ public class DBUnitConfig {
         return cacheConnection;
     }
 
+    public boolean isCaseSensitiveTableNames() {
+        return caseSensitiveTableNames;
+    }
+
+    public void setCaseSensitiveTableNames(boolean caseSensitiveTableNames) {
+        this.caseSensitiveTableNames = caseSensitiveTableNames;
+    }
 
     public boolean isCacheTableNames() {
         return cacheTableNames;
@@ -134,5 +183,7 @@ public class DBUnitConfig {
         return executorId;
     }
 
-
+    public void setConnectionConfig(ConnectionConfig connectionConfig) {
+        this.connectionConfig = connectionConfig;
+    }
 }

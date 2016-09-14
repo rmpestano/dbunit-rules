@@ -1,14 +1,15 @@
 package com.github.dbunit.rules.junit5;
 
-import com.github.dbunit.rules.junit5.model.User;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import com.github.dbunit.rules.junit5.model.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import javax.persistence.Persistence;
 import java.util.List;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.*;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 //tag::declaration[]
 @ExtendWith(DBUnitExtension.class) //<1>
 @RunWith(JUnitPlatform.class) //<2>
+@DataSet(cleanBefore = true)
 public class DBUnitJUnit5It {
 
 //end::declaration[]
@@ -41,7 +43,7 @@ public class DBUnitJUnit5It {
 //end::test[]
 
     @Test
-    @DataSet(cleanBefore=true,cleanAfter = true) //avoid conflict with other tests
+    @DataSet(cleanBefore = true) //avoid conflict with other tests
     public void shouldInsertUser() {
         User user = new User();
         user.setName("user");
@@ -55,7 +57,7 @@ public class DBUnitJUnit5It {
     }
 
     @Test
-    @DataSet(value="users.yml",cleanAfter = true) //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
+    @DataSet("users.yml") //no need for clean before because DBUnit uses CLEAN_INSERT seeding strategy which clears involved tables before seeding
     public void shouldUpdateUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();

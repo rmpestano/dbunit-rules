@@ -419,7 +419,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                 connection.createStatement().executeUpdate("DELETE FROM " + tableName + " where 1=1");
                 connection.commit();
             } catch (Exception e) {
-                log.warn("Could not clear table " + tableName, e);
+                log.warn("Could not clear table " + tableName + ", message:"+e.getMessage()+", cause: "+e.getCause());
             }
         }
 

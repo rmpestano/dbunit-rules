@@ -1,7 +1,6 @@
 package com.github.dbunit.rules.api.dataset;
 
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
-
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import org.dbunit.DatabaseUnitException;
@@ -27,6 +26,8 @@ public interface DataSetExecutor{
 
     ConnectionHolder getConnectionHolder();
 
+    void setConnectionHolder(ConnectionHolder connectionHolder);
+
     void clearDatabase(DataSetConfig dataset) throws SQLException;
 
     void executeStatements(String[] statements);
@@ -47,6 +48,7 @@ public interface DataSetExecutor{
 
     DBUnitConfig getDBUnitConfig();
 
-
     DatabaseConnection getDBUnitConnection();
+
+
 }

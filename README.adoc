@@ -163,7 +163,7 @@ This module is the basis for subsequent modules. It contains a JUnit rule (shown
 <dependency>
       <groupId>com.github.dbunit-rules</groupId>
       <artifactId>core</artifactId>
-      <version>0.13.2</version>
+      <version>0.14.0</version>
       <scope>test</scope>
 </dependency>
 ----
@@ -282,14 +282,14 @@ Here are possible values:
 |disableConstraints| Disable database constraints.| false
 |cleanBefore| If true DBUnit Rules will try to delete database before test in a smart way by using table ordering and brute force.| false
 |cleanAfter| If true DBUnit Rules will try to delete database after test in a smart way by using table ordering and brute force.| false
-|transactional| If true a transaction will be started before test and committed after test execution. Note that it will only work for JPA based tests, in other words, EntityManagerProvider.isEntityManagerActive() must be true.| false
+|transactional| If true a transaction will be started before test and committed after test execution. | false
 |executeStatementsBefore| A list of jdbc statements to execute before test.| {}
 |executeStatementsAfter| A list of jdbc statements to execute after test.| {}
 |executeScriptsBefore| A list of sql script files to execute before test. Note that commands inside sql file must be separated by `;`.| {}
 |executeScriptsAfter| A list of sql script files to execute after test. Note that commands inside sql file must be separated by `;`.| {}
 |===
 
-DBUnit Configuration:: this basically setup the `DBUnit` itself. It can be configured by `@DBUnit` annotation (class or method level) and `dbunit.yml` file present in test resources folder.
+DBUnit Configuration:: this basically setup `DBUnit` itself. It can be configured by *@DBUnit* annotation (class or method level) and *dbunit.yml* file present in test resources folder.
 +
 [source,java]
 ----
@@ -310,16 +310,61 @@ leakHunter: false
 properties:
   batchedStatements:  false
   qualifiedTableNames: false
+  caseSensitiveTableNames: false
   batchSize: 100
   fetchSize: 100
   allowEmptyFields: false
   escapePattern:
+connectionConfig:
+  driver: ""
+  url: ""
+  user: ""
+  password: ""
 ----
 +
 NOTE: `@DBUnit` annotation takes precedence over `dbunit.yml` global configuration which will be used only if the annotation is not present.
 
 
 TIP: Both configuration mechanisms work for all DBUnit Rules modules.
+
+=== JDBC Connection
+
+As seen in examples above `DBUnit` needs a JDBC connection to be instantiated. To avoid creating connection for each test you can define it in *dbunit.yml* for all tests or define in *@DBUnit* on each test.
+
+NOTE: `@DBUnit` annotation takes precedence over dbunit.yml global configuration.
+
+==== Example
+
+[source, java, linenums]
+----
+@RunWith(JUnit4.class)
+@DBUnit(url = "jdbc:hsqldb:mem:test;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa") <1>
+public class ConnectionConfigIt {
+
+    @Rule
+    public DBUnitRule dbUnitRule = DBUnitRule.instance(); <2>
+
+
+
+    @BeforeClass
+    public static void initDB(){
+        //trigger db creation
+        EntityManagerProvider.instance("rules-it");
+    }
+
+    @Test
+    @DataSet(value = "datasets/yml/user.yml")
+    public void shouldSeedFromDeclaredConnection() {
+        User user = (User) em().createQuery("select u from User u where u.id = 1").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getId()).isEqualTo(1);
+    }
+}
+----
+<1> driver class can be ommited in new JDBC drivers since version 4.
+<2> Note that the rule instantiation doesn't need a connection anymore.
+
+IMPORTANT: As CDI module depends on a produced entity manager, connection configuration will be ignored.
 
 === Rule chaining
 
@@ -503,7 +548,28 @@ In case of `ExpectedDataSet` you'll usually need a transaction to modify databas
 
 Note that DBUnit Rules will start a transaction before test and commit the transaction *after* test execution but *before* expected dataset comparison.
 
-IMPORTANT: It will only work for tests that use *EntityManagerProvider* component.
+Below is a pure JDBC example where commented code is not needed because the test is transactional:
+
+[source, java, linenums]
+----
+    @Test
+    @DataSet(cleanBefore = true, transactional = true)
+    @ExpectedDataSet(value = "usersInserted.yml")
+    public void shouldInserUsers() throws SQLException {
+        Connection connection = flyway.getDataSource().getConnection();
+        //connection.setAutoCommit(false); //transactional=true
+        java.sql.Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+
+        statement.addBatch("INSERT INTO User VALUES (1, 'user1')");
+        statement.addBatch("INSERT INTO User VALUES (2, 'user2')");
+        statement.addBatch("INSERT INTO User VALUES (3, 'user3')");
+        statement.executeBatch();
+        //connection.commit();
+        //connection.setAutoCommit(false);
+    }
+----
+TIP: Above example code (which uses JUnit5 and Flyway) can be https://github.com/rmpestano/dbunit-rules/blob/master/junit5/src/test/java/com/github/dbunit/rules/junit5/FlywayIt.java#L26[found here^].
 
 === EntityManagerProvider
 
@@ -591,7 +657,7 @@ If you use CDI in your tests then you should give a try in DBUnit rules https://
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cdi</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -648,7 +714,7 @@ property in test/resources/META-INF/apache-deltaspike.properties:
 
 == Cucumber module
 
-this module brings a Cucumber runner which is CDI aware. 
+this module brings a Cucumber runner which is CDI aware.
 
 NOTE: If you don't use CDI you need to <<Programmatically creating datasets, create datasets Programmatically>> because Cucumber `official` runner https://github.com/cucumber/cucumber-jvm/issues/393[doesn't support JUnit rules^].
 
@@ -658,7 +724,7 @@ NOTE: If you don't use CDI you need to <<Programmatically creating datasets, cre
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>cucumber</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -735,6 +801,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+@DBUnitInterceptor <2>
 public class ContactSteps {
 
     @Inject
@@ -775,7 +842,7 @@ public class ContactSteps {
 ----
 
 <1> Step definitions must be in the same package of the runner. To use different package you can use *glues* as commented above.
-<2> DBUnit cdi interceptor can be used in any cucumber step to prepare the database.
+<2> Activates DBUnit CDI interceptor which will read @DataSet annotation in cucumber steps to prepare the database.
 
 == Programmatic creating datasets
 
@@ -860,7 +927,7 @@ http://junit.org/junit5/[JUnit 5] is the new version of JUnit and comes with a n
 <dependency>
     <groupId>com.github.dbunit-rules</groupId>
     <artifactId>junit5</artifactId>
-    <version>0.13.2</version>
+    <version>0.14.0</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -882,6 +949,8 @@ public class DBUnitJUnit5Test {
     }
 ----
 <1> DBUnit extension will get JDBC connection by reflection so you need to declare a *field* or *method* with `ConnectionHolder` as return type.
+
+TIP: You can configure JDBC connection using @DBUnit annotation or dbunit.yml, see <<JDBC Connection>>.
 
 == Leak Hunter
 

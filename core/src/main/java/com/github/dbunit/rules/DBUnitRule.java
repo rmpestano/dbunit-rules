@@ -8,6 +8,7 @@ import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
 import com.github.dbunit.rules.api.expoter.DataSetExportConfig;
 import com.github.dbunit.rules.api.expoter.ExportDataSet;
 import com.github.dbunit.rules.api.leak.LeakHunter;
+import com.github.dbunit.rules.configuration.ConnectionConfig;
 import com.github.dbunit.rules.configuration.DBUnitConfig;
 import com.github.dbunit.rules.configuration.DataSetConfig;
 import com.github.dbunit.rules.connection.ConnectionHolderImpl;
@@ -22,7 +23,7 @@ import org.junit.runners.model.Statement;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +41,10 @@ public class DBUnitRule implements TestRule {
     private DataSetExecutor executor;
 
     private DBUnitRule() {
+    }
+
+    public final static DBUnitRule instance() {
+        return instance(new ConnectionHolderImpl(null));
     }
 
     public final static DBUnitRule instance(Connection connection) {
@@ -68,28 +73,36 @@ public class DBUnitRule implements TestRule {
 
             @Override
             public void evaluate() throws Throwable {
+                DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
                 currentMethod = description.getMethodName();
                 DataSet dataSet = resolveDataSet(description);
                 if (dataSet != null) {
                     final DataSetConfig dataSetConfig = new DataSetConfig().from(dataSet);
                     final String datasetExecutorId = dataSetConfig.getExecutorId();
-                    DBUnitConfig dbUnitConfig = resolveDBUnitConfig(description);
                     LeakHunter leakHunter = null;
                     boolean executorNameIsProvided = datasetExecutorId != null && !"".equals(datasetExecutorId.trim());
                     if (executorNameIsProvided) {
                         executor = DataSetExecutorImpl.getExecutorById(datasetExecutorId);
                     }
                     try {
+                        if (executor.getConnectionHolder() == null || executor.getConnectionHolder().getConnection() == null) {
+                            createConnection(dbUnitConfig);
+                        }
                         executor.setDBUnitConfig(dbUnitConfig);
                         executor.createDataSet(dataSetConfig);
                     } catch (final Exception e) {
-                        throw new RuntimeException(String.format("Could not create dataset for test '%s'.",description.getMethodName()), e);
+                        throw new RuntimeException(String.format("Could not create dataset for test '%s'.", description.getMethodName()), e);
                     }
                     boolean isTransactional = false;
                     try {
-                        isTransactional = dataSetConfig.isTransactional() && isEntityManagerActive();
+                        isTransactional = dataSetConfig.isTransactional();
                         if (isTransactional) {
-                            em().getTransaction().begin();
+                            if(isEntityManagerActive()){
+                                em().getTransaction().begin();
+                            }else{
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.setAutoCommit(false);
+                            }
                         }
                         boolean leakHunterActivated = dbUnitConfig.isLeakHunter();
                         int openConnectionsBefore = 0;
@@ -100,24 +113,35 @@ public class DBUnitRule implements TestRule {
                         statement.evaluate();
 
                         int openConnectionsAfter = 0;
-                        if(leakHunterActivated){
+                        if (leakHunterActivated) {
                             openConnectionsAfter = leakHunter.openConnections();
-                            if(openConnectionsAfter > openConnectionsBefore){
-                                throw new LeakHunterException(currentMethod,openConnectionsAfter - openConnectionsBefore);
+                            if (openConnectionsAfter > openConnectionsBefore) {
+                                throw new LeakHunterException(currentMethod, openConnectionsAfter - openConnectionsBefore);
                             }
                         }
 
                         if (isTransactional) {
-                            em().getTransaction().commit();
+                            if(isEntityManagerActive() && em().getTransaction().isActive()){
+                                em().getTransaction().commit();
+                            } else{
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.commit();
+                                connection.setAutoCommit(false);
+                            }
                         }
                         performDataSetComparison(description);
                     } catch (Exception e) {
-                        if (isTransactional && em().getTransaction().isActive()) {
-                            em().getTransaction().rollback();
+                        if (isTransactional){
+                            if(isEntityManagerActive() && em().getTransaction().isActive()) {
+                                em().getTransaction().rollback();
+                            } else {
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.rollback();
+                            }
                         }
                         throw e;
                     } finally {
-                        exportDataSet(executor,description);
+                        exportDataSet(executor, description);
                         if (dataSetConfig != null && dataSetConfig.getExecuteStatementsAfter() != null && dataSetConfig.getExecuteStatementsAfter().length > 0) {
                             try {
                                 executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
@@ -142,13 +166,29 @@ public class DBUnitRule implements TestRule {
                             executor.clearDatabase(dataSetConfig);
                         }
                     }
-                //no dataset provided, only export and evaluate expected dataset
+                    //no dataset provided, only export and evaluate expected dataset
                 } else {
-                    exportDataSet(executor,description);
+                    exportDataSet(executor, description);
                     statement.evaluate();
                     performDataSetComparison(description);
                 }
 
+            }
+
+            private void createConnection(DBUnitConfig dbUnitConfig) {
+                ConnectionConfig connectionConfig = dbUnitConfig.getConnectionConfig();
+                if ("".equals(connectionConfig.getUrl()) || "".equals(connectionConfig.getUser())) {
+                    throw new RuntimeException(String.format("Could not create JDBC connection for method %s, provide a connection at test level or via configuration, see documentation here: https://github.com/rmpestano/dbunit-rules#jdbc-connection", currentMethod));
+                }
+
+                try {
+                    if (!"".equals(connectionConfig.getDriver())) {
+                        Class.forName(connectionConfig.getDriver());
+                    }
+                    executor.setConnectionHolder(new ConnectionHolderImpl(DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword())));
+                } catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not create JDBC connection for method " + currentMethod, e);
+                }
             }
 
 
@@ -157,17 +197,17 @@ public class DBUnitRule implements TestRule {
 
     private void exportDataSet(DataSetExecutor executor, Description description) {
         ExportDataSet exportDataSet = resolveExportDataSet(description);
-        if(exportDataSet != null){
+        if (exportDataSet != null) {
             DataSetExportConfig exportConfig = DataSetExportConfig.from(exportDataSet);
             String outputName = exportConfig.getOutputFileName();
-            if(outputName == null || "".equals(outputName.trim())){
-                outputName = description.getMethodName().toLowerCase()+"."+exportConfig.getDataSetFormat().name().toLowerCase();
+            if (outputName == null || "".equals(outputName.trim())) {
+                outputName = description.getMethodName().toLowerCase() + "." + exportConfig.getDataSetFormat().name().toLowerCase();
             }
             exportConfig.outputFileName(outputName);
             try {
-                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(),exportConfig);
+                DataSetExporterImpl.getInstance().export(executor.getDBUnitConnection(), exportConfig);
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+description.getMethodName(),e);
+                Logger.getLogger(getClass().getName()).log(Level.WARNING, "Could not export dataset after method " + description.getMethodName(), e);
             }
         }
     }
