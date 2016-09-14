@@ -197,7 +197,7 @@ public class DataSetExecutorImpl implements DataSetExecutor {
                     break;
                 }
                 case "csv": {
-                    target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()));
+                    target = new CsvDataSet(new File(getClass().getClassLoader().getResource(dataSetName).getFile()).getParentFile());
                     break;
                 }
                 case "xls": {

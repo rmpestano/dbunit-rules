@@ -148,6 +148,15 @@ public class DBUnitRulesIt {
         assertThat(user.getFollowers()).contains(expectedFollower);
     }
 
+    @Test
+    @DataSet("datasets/csv/USER.csv")
+    public void shouldSeedDatabaseWithCSVDataSet(){
+        User user = (User) em().createQuery("select u from User u join u.tweets t where t.content = 'dbunit rules!'").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo("@realpestano");
+    }
+
+
     @AfterClass//optional
     public static void close() throws SQLException {
         DataSetExecutorImpl.getExecutorById(DataSetExecutorImpl.DEFAULT_EXECUTOR_ID).getConnection().close();
