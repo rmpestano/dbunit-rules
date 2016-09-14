@@ -156,6 +156,13 @@ public class DBUnitRulesIt {
         assertThat(user.getName()).isEqualTo("@realpestano");
     }
 
+    @Test
+    @DataSet("xls/users.xls")
+    public void shouldSeedDatabaseWithXLSDataSet(){
+        User user = (User) em().createQuery("select u from User u join u.tweets t where t.content = 'dbunit rules!'").getSingleResult();
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo("@realpestano");
+    }
 
     @AfterClass//optional
     public static void close() throws SQLException {
