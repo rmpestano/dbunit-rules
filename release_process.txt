@@ -9,4 +9,4 @@
 
 2 - mvn release:prepare -Prelease -Darguments="-DskipTests" -Dmaven.javadoc.skip=true -Dmaven.test.skip=true
 
-3 - mvn deploy -Prelease -DskipTests=true
+3 - mvn release:prepare -Prelease -Darguments="-DskipTests" -Dmaven.javadoc.skip=true -Dmaven.test.skip=true
