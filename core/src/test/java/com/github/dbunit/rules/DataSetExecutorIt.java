@@ -139,4 +139,27 @@ public class DataSetExecutorIt {
         assertThat(user.getFollowers()).contains(expectedFollower);
     }
 
+
+    @Test
+    public void shouldNotCreateDataSetWithoutConnection(){
+        DataSetExecutorImpl executor = DataSetExecutorImpl.instance(new ConnectionHolderImpl(null));
+        try{
+            executor.createDataSet(new DataSetConfig("test-dataset"));
+        }catch (DataBaseSeedingException e){
+            assertThat(e.getMessage()).isEqualTo("Could not initialize dataset: test-dataset");
+        }
+
+    }
+
+    @Test
+    public void shouldNotCreateExecutiorWithoutConnection(){
+        try{
+            DataSetExecutorImpl executor = DataSetExecutorImpl.instance(null);
+        }catch (RuntimeException e){
+            assertThat(e.getMessage()).isEqualTo("Invalid connection");
+        }
+
+    }
+
+
 }

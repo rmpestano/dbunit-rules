@@ -215,12 +215,15 @@
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${jacoco.version}</version>
                         <configuration>
+                            <!-- basically excludes classes from examples projects-->
                             <excludes>
                                 <exclude>**/*Repository.*</exclude>
                                 <exclude>**/Q*</exclude>
                                 <exclude>**/*Service.*</exclude>
                                 <exclude>**/*User.*</exclude>
                                 <exclude>**/*UserRepository.*</exclude>
+                                <exclude>**/*UserController.*</exclude>
+                                <exclude>**/*Application.*</exclude>
                                 <exclude>**/*UserRepositoryTest.*</exclude>
                                 <exclude>**/*Contact*</exclude>
                                 <exclude>**/*Company*</exclude>
