@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |4
-|667ms
+|866ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -88,7 +88,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |3
-|000ms
+|002ms
 |[green]#*passed*#
 
 12+^|*<<Dynamic-data-using-scritable-datasets>>*
@@ -102,7 +102,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |7
-|001ms
+|000ms
 |[green]#*passed*#
 
 12+^|*<<Database-assertion-using-expected-datasets>>*
@@ -119,7 +119,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |000ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|670ms
+|11|0|11|39|0|0|0|0|0|39 2+|870ms
 |===
 
 == *Features*
@@ -270,7 +270,7 @@ include::../../../pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(667ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(866ms)#
 ******
 
 [discrete]
@@ -525,7 +525,7 @@ include::../../../junit5/src/test/resources/datasets/users.yml[]
 =====
 When ::
 =====
-The following junit5 test is executed icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following junit5 test is executed icon:thumbs-up[role="green",title="Passed"] [small right]#(002ms)#
 ******
 
 [discrete]
