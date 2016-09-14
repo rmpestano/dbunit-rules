@@ -27,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class SpringBootDBUnitTest {
 
     @Autowired
