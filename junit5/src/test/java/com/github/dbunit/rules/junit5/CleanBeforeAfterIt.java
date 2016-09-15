@@ -1,8 +1,11 @@
 package com.github.dbunit.rules.junit5;
 
-import com.github.dbunit.rules.junit5.model.User;
 import com.github.dbunit.rules.api.connection.ConnectionHolder;
 import com.github.dbunit.rules.api.dataset.DataSet;
+import com.github.dbunit.rules.configuration.DataSetConfig;
+import com.github.dbunit.rules.connection.ConnectionHolderImpl;
+import com.github.dbunit.rules.dataset.DataSetExecutorImpl;
+import com.github.dbunit.rules.junit5.model.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -10,10 +13,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.github.dbunit.rules.util.EntityManagerProvider.em;
-import static com.github.dbunit.rules.util.EntityManagerProvider.instance;
+import static com.github.dbunit.rules.util.EntityManagerProvider.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -29,12 +33,15 @@ public class CleanBeforeAfterIt {
 
 
     @BeforeAll
-    public static void before(){
-        em("junit5-pu").getTransaction().begin();
-        em().createNativeQuery("DELETE FROM USER").executeUpdate();
+    public static void before() throws SQLException {
+        DataSetExecutorImpl.
+                instance(new ConnectionHolderImpl(instance("junit5-pu").connection())).
+                clearDatabase(new DataSetConfig().tableOrdering(Arrays.asList("TWEET","USER").toArray(new String[2])));
+        tx().begin();
+        //em().createNativeQuery("DELETE FROM TWEET").executeUpdate();
+        //em().createNativeQuery("DELETE FROM USER").executeUpdate();
         em().createNativeQuery("INSERT INTO USER VALUES (6,'user6')").executeUpdate();
-        em().flush();
-        em().getTransaction().commit();
+        tx().commit();
         List<User> users = em().createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().hasSize(1);
 

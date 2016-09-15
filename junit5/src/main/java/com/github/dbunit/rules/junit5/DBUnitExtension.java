@@ -150,7 +150,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             try {
                 DataSetExporter.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig);
             } catch (Exception e) {
-            	log.warn("Could not export dataset after method "+method.getName(),e);
+            	log.warn("Could not export dataset after method " + method.getName(), e);
             }
         }
     }
@@ -326,7 +326,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
 	private DBUnitTestContext getTestContext(ExtensionContext context) {
 		Class<?> testClass = context.getTestClass().get();
 		Store store = context.getStore(namespace);
-		DBUnitTestContext testContext = store.get(testClass,DBUnitTestContext.class);
+		DBUnitTestContext testContext = store.get(testClass, DBUnitTestContext.class);
 		if(testContext == null){
 			testContext = new DBUnitTestContext();
 			store.put(testClass, testContext);

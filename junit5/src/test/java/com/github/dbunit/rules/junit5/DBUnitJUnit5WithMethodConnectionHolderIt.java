@@ -39,7 +39,9 @@ public class DBUnitJUnit5WithMethodConnectionHolderIt {
         User user = new User();
         user.setName("user");
         user.setName("@rmpestano");
-        tx().begin();
+        if(!tx().isActive()){
+            tx().begin();
+        }
         em().persist(user);
         tx().commit();
         User insertedUser = (User)em().createQuery("select u from User u where u.name = '@rmpestano'").getSingleResult();
