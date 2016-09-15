@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
+import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
 
 /**
  * Created by pestano on 27/08/16.
@@ -114,7 +115,9 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
         boolean isTransactional = dataSetConfig.isTransactional();
         if (isTransactional) {
             if (isEntityManagerActive()) {
-                em().getTransaction().begin();
+                if(!tx().isActive()){
+                    em().getTransaction().begin();
+                }
             } else{
                 Connection connection = executor.getConnectionHolder().getConnection();
                 connection.setAutoCommit(false);
@@ -179,12 +182,24 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                     DataSetConfig datasetConfig = testExtensionContext.getStore(namespace).get(DATASET_CONFIG_STORE, DataSetConfig.class);
                     boolean isTransactional = datasetConfig.isTransactional();
                     if (isTransactional) {
-                        if(isEntityManagerActive()){
-                            em().getTransaction().commit();
-                        } else{
-                            Connection connection = executor.getConnectionHolder().getConnection();
-                            connection.commit();
-                            connection.setAutoCommit(false);
+                        try {
+                            if (isEntityManagerActive()) {
+                                if(tx().isActive()){
+                                    tx().commit();
+                                }
+                            } else {
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.commit();
+                                connection.setAutoCommit(false);
+                            }
+                        }catch (Exception e){
+                            if(isEntityManagerActive()){
+                                tx().rollback();
+                            } else{
+                                Connection connection = executor.getConnectionHolder().getConnection();
+                                connection.setAutoCommit(false);
+                                connection.setReadOnly(true);
+                            }
                         }
                     }
                     executor.compareCurrentDataSetWith(new DataSetConfig(expectedDataSet.value()).disableConstraints(true), expectedDataSet.ignoreCols());

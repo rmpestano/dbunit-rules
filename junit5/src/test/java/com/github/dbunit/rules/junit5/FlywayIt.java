@@ -3,6 +3,7 @@ package com.github.dbunit.rules.junit5;
 import com.github.dbunit.rules.api.configuration.DBUnit;
 import com.github.dbunit.rules.api.dataset.DataSet;
 import com.github.dbunit.rules.api.dataset.ExpectedDataSet;
+import org.assertj.core.api.Assertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
  */
 @ExtendWith(DBUnitExtension.class)
 @RunWith(JUnitPlatform.class)
-@DBUnit(cacheConnection=false,cacheTableNames = false, url = "jdbc:hsqldb:mem:flyway;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa")
+@DBUnit(url = "jdbc:hsqldb:mem:flyway;DB_CLOSE_DELAY=-1", driver = "org.hsqldb.jdbcDriver", user = "sa")
 public class FlywayIt {
 
     private static Flyway flyway;
@@ -32,7 +33,6 @@ public class FlywayIt {
 
     @BeforeAll
     public static void initDB(){
-
         flyway = new Flyway();
         flyway.setDataSource("jdbc:hsqldb:mem:flyway;DB_CLOSE_DELAY=-1", "sa", "");
         flyway.setLocations("filesystem:src/test/resources/migration");
@@ -41,7 +41,7 @@ public class FlywayIt {
     }
 
     @Test
-    @DataSet("users.yml")
+    @DataSet(value = "users.yml",executorId = "flyway")
     public void shouldListUsers() throws SQLException {
         try (Statement stmt = flyway.getDataSource().getConnection().createStatement()) {
             ResultSet resultSet = stmt.executeQuery("select * from user u order by id");
@@ -51,7 +51,7 @@ public class FlywayIt {
     }
 
     @Test
-    @DataSet(cleanBefore = true, transactional = true)
+    @DataSet(cleanBefore = true, transactional = true,executorId = "flyway")
     @ExpectedDataSet(value = "usersInserted.yml")
     public void shouldInserUsers() throws SQLException {
         Connection connection = flyway.getDataSource().getConnection();

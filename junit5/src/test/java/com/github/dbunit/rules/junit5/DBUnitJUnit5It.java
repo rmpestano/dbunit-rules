@@ -74,12 +74,13 @@ public class DBUnitJUnit5It {
     }
 
     @Test
-    @DataSet(value = "users.yml", transactional = true, cleanAfter = true)
+    @DataSet(value = "usersWithTweet.yml", transactional = true, cleanBefore = true)
     @ExpectedDataSet("expectedUser.yml")
     public void shouldDeleteUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getName()).isEqualTo("@realpestano");
+        em().remove(user.getTweets().get(0));
         em().remove(user);
     }
 

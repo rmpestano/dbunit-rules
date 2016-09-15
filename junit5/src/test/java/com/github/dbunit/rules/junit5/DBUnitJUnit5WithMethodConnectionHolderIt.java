@@ -27,7 +27,7 @@ public class DBUnitJUnit5WithMethodConnectionHolderIt {
     }
 
     @Test
-    @DataSet("users.yml")
+    @DataSet(value = "users.yml",cleanBefore = true)
     public void shouldListUsers() {
         List<User> users = em().createQuery("select u from User u").getResultList();
         assertThat(users).isNotNull().isNotEmpty().hasSize(2);
@@ -63,12 +63,13 @@ public class DBUnitJUnit5WithMethodConnectionHolderIt {
     }
 
     @Test
-    @DataSet(value = "users.yml", transactional = true)
+    @DataSet(value = "usersWithTweet.yml", transactional = true)
     @ExpectedDataSet("expectedUser.yml")
     public void shouldDeleteUser() {
         User user = (User) em().createQuery("select u from User u  where u.id = 1").getSingleResult();
         assertThat(user).isNotNull();
         assertThat(user.getName()).isEqualTo("@realpestano");
+        em().remove(user.getTweets().get(0));
         em().remove(user);
     }
 
