@@ -19,4 +19,4 @@ script:
 - cd core && mvn -q cukedoctor:execute scm-publish:publish-scm -Pdocs
 
 after_script:
-- cd .. && ls && python html2text.py target/site/surefire-report.html
+- cd .. && python html2text.py target/site/surefire-report.html
