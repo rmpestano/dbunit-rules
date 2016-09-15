@@ -13,6 +13,9 @@ before_script:
 - git config --global user.name rmpestano
 - git config --global user.email rmpestano@gmail.com
 script:
-- mvn clean install jacoco:report coveralls:report -Pcoverage
+- mvn clean install jacoco:report coveralls:report -Pcoverage surefire-report:report-only
 - cd core && mvn -q cukedoctor:execute scm-publish:publish-scm -Pdocs
 #- cd.. && mvn deploy --settings settings.xml -DskipTests=true
+
+after_script:
+cd .. &&  ls && python html2text.py target/site/surefire-report.html
