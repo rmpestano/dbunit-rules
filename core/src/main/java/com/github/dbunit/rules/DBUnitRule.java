@@ -17,15 +17,15 @@ import com.github.dbunit.rules.exporter.DataSetExporter;
 import com.github.dbunit.rules.leak.LeakHunterException;
 import com.github.dbunit.rules.leak.LeakHunterFactory;
 import org.dbunit.DatabaseUnitException;
+import org.dbunit.assertion.DbUnitAssert;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
@@ -34,6 +34,9 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManager
  * Created by rafael-pestano on 22/07/2015.
  */
 public class DBUnitRule implements TestRule {
+
+	
+    private static final Logger logger = LoggerFactory.getLogger(DbUnitAssert.class);
 
 
     private String currentMethod;
@@ -146,7 +149,7 @@ public class DBUnitRule implements TestRule {
                             try {
                                 executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
                             } catch (Exception e) {
-                                LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
+                                logger.error(currentMethod + "() - Could not execute statements after:" + e.getMessage(), e);
                             }
                         }//end execute statements
                         if (dataSetConfig != null && dataSetConfig.getExecuteScriptsAfter() != null && dataSetConfig.getExecuteScriptsAfter().length > 0) {
@@ -158,7 +161,7 @@ public class DBUnitRule implements TestRule {
                                 if (e instanceof DatabaseUnitException) {
                                     throw e;
                                 }
-                                LoggerFactory.getLogger(getClass().getName()).error(currentMethod + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+                                logger.error(currentMethod + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
                             }
                         }//end execute scripts
 
@@ -189,7 +192,7 @@ public class DBUnitRule implements TestRule {
                     }
                     return DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword());
                 } catch (Exception e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not create JDBC connection for method " + currentMethod, e);
+                    logger.error("Could not create JDBC connection for method " + currentMethod, e);
                 }
                 return null;
             }
@@ -210,7 +213,7 @@ public class DBUnitRule implements TestRule {
             try {
                 DataSetExporter.getInstance().export(executor.getDBUnitConnection(), exportConfig);
             } catch (Exception e) {
-                Logger.getLogger(getClass().getName()).log(Level.WARNING, "Could not export dataset after method " + description.getMethodName(), e);
+            	logger.error("Could not export dataset after method " + description.getMethodName(), e);
             }
         }
     }

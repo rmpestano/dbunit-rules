@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestExtensionContext;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
@@ -30,8 +31,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.github.dbunit.rules.util.EntityManagerProvider.em;
 import static com.github.dbunit.rules.util.EntityManagerProvider.isEntityManagerActive;
@@ -42,7 +41,8 @@ import static com.github.dbunit.rules.util.EntityManagerProvider.tx;
  */
 public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 	
-	
+    private static final Logger log = LoggerFactory.getLogger(DBUnitExtension.class);
+
 	private static final Namespace namespace = Namespace.create(DBUnitExtension.class);
 
     @Override
@@ -82,7 +82,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             try {
                 executor.executeStatements(dataSetConfig.getExecuteStatementsBefore());
             } catch (Exception e) {
-                LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements Before:" + e.getMessage(), e);
+                log.error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements Before:" + e.getMessage(), e);
             }
         }//end execute statements
 
@@ -95,7 +95,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                 if (e instanceof DatabaseUnitException) {
                     throw e;
                 }
-                LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsBefore:" + e.getMessage(), e);
+                log.error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsBefore:" + e.getMessage(), e);
             }
         }//end execute scripts
         
@@ -150,7 +150,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             try {
                 DataSetExporter.getInstance().export(dataSetExecutor.getDBUnitConnection(),exportConfig);
             } catch (Exception e) {
-                java.util.logging.Logger.getLogger(getClass().getName()).log(Level.WARNING,"Could not export dataset after method "+method.getName(),e);
+            	log.warn("Could not export dataset after method "+method.getName(),e);
             }
         }
     }
@@ -230,7 +230,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                 try {
                     executor.executeStatements(dataSetConfig.getExecuteStatementsAfter());
                 } catch (Exception e) {
-                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements after:" + e.getMessage(), e);
+                    log.error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute statements after:" + e.getMessage(), e);
                 }
             }//end execute statements
 
@@ -243,7 +243,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
                     if (e instanceof DatabaseUnitException) {
                         throw e;
                     }
-                    LoggerFactory.getLogger(getClass().getName()).error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
+                    log.error(testExtensionContext.getTestMethod().get().getName() + "() - Could not execute scriptsAfter:" + e.getMessage(), e);
                 }
             }//end execute scripts
 
@@ -314,7 +314,7 @@ public class DBUnitExtension implements BeforeTestExecutionCallback, AfterTestEx
             }
             return new ConnectionHolderImpl(DriverManager.getConnection(connectionConfig.getUrl(), connectionConfig.getUser(), connectionConfig.getPassword()));
         } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Could not create JDBC connection for method " + currentMethod, e);
+            log.error("Could not create JDBC connection for method " + currentMethod, e);
         }
         return null;
     }

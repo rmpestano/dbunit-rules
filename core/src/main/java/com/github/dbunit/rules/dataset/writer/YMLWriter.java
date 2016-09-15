@@ -6,12 +6,12 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITableMetaData;
 import org.dbunit.dataset.stream.DataSetProducerAdapter;
 import org.dbunit.dataset.stream.IDataSetConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by pestano on 11/09/16.
@@ -20,7 +20,7 @@ public class YMLWriter implements IDataSetConsumer {
 
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String DOUBLE_SPACES = "  ";
-    private static final Logger LOG = Logger.getLogger(YMLWriter.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(YMLWriter.class);
 
 
     private OutputStreamWriter out;
@@ -40,7 +40,7 @@ public class YMLWriter implements IDataSetConsumer {
         try {
             out.flush();
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Could not end dataset.", e);
+        	logger.warn("Could not end dataset.", e);
         }
     }
 
@@ -50,7 +50,7 @@ public class YMLWriter implements IDataSetConsumer {
         try {
             out.write(metaData.getTableName()+":"+NEW_LINE);
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Could not start table.", e);
+        	logger.warn("Could not start table.", e);
         }
     }
 
@@ -59,7 +59,7 @@ public class YMLWriter implements IDataSetConsumer {
         try {
             out.write(NEW_LINE);
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Could end table.", e);
+        	logger.warn("Could end table.", e);
         }
     }
 
@@ -88,7 +88,7 @@ public class YMLWriter implements IDataSetConsumer {
                 out.write(NEW_LINE);
             }
         }catch (Exception e){
-            LOG.log(Level.WARNING, "Could not write row.",e);
+        	logger.warn("Could not write row.",e);
         }
     }
 

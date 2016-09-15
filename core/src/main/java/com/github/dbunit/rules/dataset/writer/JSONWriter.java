@@ -1,17 +1,18 @@
 package com.github.dbunit.rules.dataset.writer;
 
+import org.dbunit.assertion.DbUnitAssert;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITableMetaData;
 import org.dbunit.dataset.stream.DataSetProducerAdapter;
 import org.dbunit.dataset.stream.IDataSetConsumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by pestano on 11/09/16.
@@ -21,7 +22,9 @@ public class JSONWriter implements IDataSetConsumer {
 	private static final String NEW_LINE = System.getProperty("line.separator");
 	private static final String DOUBLE_SPACES = "  ";
 	private static final String FOUR_SPACES = DOUBLE_SPACES+DOUBLE_SPACES;
-	private static final Logger LOG = Logger.getLogger(JSONWriter.class.getName());
+	
+    private static final Logger logger = LoggerFactory.getLogger(JSONWriter.class);
+
 	
 	private IDataSet dataSet;
 
@@ -41,7 +44,7 @@ public class JSONWriter implements IDataSetConsumer {
 			tableCount = 0;
 			out.write("{"+NEW_LINE);
 		} catch (IOException e) {
-			LOG.log(Level.WARNING, "Could not start dataset.", e);
+			logger.warn("Could not start dataset.", e);
 		}
 	}
 
@@ -51,7 +54,7 @@ public class JSONWriter implements IDataSetConsumer {
 			out.write("}");
 			out.flush();
 		} catch (IOException e) {
-			LOG.log(Level.WARNING, "Could not end dataset.", e);
+			logger.warn("Could not end dataset.", e);
 		}
 	}
 
@@ -62,7 +65,7 @@ public class JSONWriter implements IDataSetConsumer {
 		try {
 			out.write(DOUBLE_SPACES+"\""+metaData.getTableName() + "\": [" + NEW_LINE);
 		} catch (IOException e) {
-			LOG.log(Level.WARNING, "Could not start table.", e);
+			logger.warn("Could not start table.", e);
 		}
 	}
 
@@ -76,7 +79,7 @@ public class JSONWriter implements IDataSetConsumer {
 				out.write(DOUBLE_SPACES+"],"+NEW_LINE);
 			}
 		} catch (IOException e) {
-			LOG.log(Level.WARNING, "Could end table.", e);
+			logger.warn("Could end table.", e);
 		}
 	}
 
@@ -117,7 +120,7 @@ public class JSONWriter implements IDataSetConsumer {
 
 			
 		} catch (Exception e) {
-			LOG.log(Level.WARNING, "Could not write row.", e);
+			logger.warn("Could not write row.", e);
 		}
 	}
 
