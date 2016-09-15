@@ -16,10 +16,6 @@ public class DBUnitTestContext {
 	private int openConnections;
 
 
-	public DBUnitTestContext DBUnitTestContext(Class<?> aClass){
-		return new DBUnitTestContext();
-	}
-
 	public DataSetExecutor getExecutor() {
 		return executor;
 	}
