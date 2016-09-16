@@ -10,7 +10,7 @@
 :docinfo:
 :source-highlighter: highlightjs
 :toclevels: 3
-:revnumber: 0.15.2-SNAPSHOT
+:revnumber: 0.15.1
 :hardbreaks:
 
 = *Living Documentation*
@@ -60,7 +60,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |4
-|820ms
+|01s 173ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-Cucumber>>*
@@ -74,7 +74,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |0
 |0
 |5
-|000ms
+|016ms
 |[green]#*passed*#
 
 12+^|*<<Manage-database-with-DBUnit-Rules-and-JUnit-5>>*
@@ -119,7 +119,7 @@ include::/home/travis/build/rmpestano/dbunit-rules/core/target/test-classes/cuke
 |000ms
 |[green]#*passed*#
 12+^|*Totals*
-|11|0|11|39|0|0|0|0|0|39 2+|822ms
+|11|0|11|39|0|0|0|0|0|39 2+|01s 190ms
 |===
 
 == *Features*
@@ -270,7 +270,7 @@ include::../../../pom.xml[tags=version]
 ****
 Given ::
 =====
-DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(820ms)#
+DBUnit interceptor is enabled in your test beans.xml: icon:thumbs-up[role="green",title="Passed"] [small right]#(01s 172ms)#
 ******
 
 [discrete]
@@ -408,7 +408,7 @@ To use this module just add the following maven dependency:
 ****
 Given ::
 =====
-The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(000ms)#
+The following feature icon:thumbs-up[role="green",title="Passed"] [small right]#(016ms)#
 ******
 
 ----
