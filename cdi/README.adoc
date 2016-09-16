@@ -1,4 +1,4 @@
-= DBUnit rules CDI
+= DBUnit rules CDI (https://github.com/database-rider/database-rider[Project MIGRATED to Database Rider organization])
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
