@@ -1,4 +1,4 @@
-= DBUnit rules
+= DBUnit rules (https://github.com/database-rider/database-rider[Project MIGRATED to Database Rider organization])
 :page-layout: base
 :source-language: java
 :icons: font
